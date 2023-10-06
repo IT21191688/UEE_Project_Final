@@ -1,49 +1,57 @@
 import React, { useState } from "react";
-import axios from 'axios';
+import axios from "axios";
 import { Image } from "expo-image";
-import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { CheckBox } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { Border, FontFamily, FontSize, Color } from "../GlobalStyles";
+import Login from "./Login";
 
 const SignUp = () => {
   const [rectangleCheckboxchecked, setRectangleCheckboxchecked] =
     useState(false);
 
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-
-
-
+  const navigation = useNavigation();
 
   const registerUser = async (userData) => {
     try {
-      const response = await axios.post('https://192.168.43.93:5000/user/register', {
-        user: userData,
-      });
+      const response = await axios.post(
+        "https://192.168.43.93:5000/user/register",
+        {
+          user: userData,
+        }
+      );
 
       // Check if the response indicates success (you may need to adjust this based on your backend's response format)
       if (response.status === 201) {
-        console.log('User registered successfully:', response.data);
+        console.log("User registered successfully:", response.data);
         return response.data; // You can return data or handle it as needed
       }
     } catch (error) {
       // Handle network error
-      if (error.message === 'Network Error') {
-        console.error('Network error. Please check your internet connection.');
+      if (error.message === "Network Error") {
+        console.error("Network error. Please check your internet connection.");
         throw error;
       } else {
-        console.error('Registration error:', error);
+        console.error("Registration error:", error);
         throw error;
       }
     }
   };
 
-
+  // const
 
   const handleSignup = async () => {
     const userData = {
@@ -61,8 +69,6 @@ const SignUp = () => {
     }
   };
 
-
-
   return (
     <View style={styles.signUp}>
       {/* Password Input */}
@@ -78,7 +84,7 @@ const SignUp = () => {
           autoCapitalize="none"
           secureTextEntry={true}
           placeholderTextColor="rgba(13, 1, 64, 0.6)"
-          onChangeText={text => setPassword(text)}
+          onChangeText={(text) => setPassword(text)}
         />
         <Text style={[styles.password1, styles.email1Typo]}>Password</Text>
       </View>
@@ -95,7 +101,7 @@ const SignUp = () => {
           placeholder="Enter your Email"
           keyboardType="email-address"
           placeholderTextColor="rgba(13, 1, 64, 0.6)"
-          onChangeText={text => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
         />
         <Text style={[styles.email1, styles.email1Position]}>Email</Text>
       </View>
@@ -111,7 +117,7 @@ const SignUp = () => {
           style={[styles.brandoneLouis, styles.passwordTypo]}
           placeholder="Enter your full name"
           placeholderTextColor="rgba(13, 1, 64, 0.6)"
-          onChangeText={text => setFullName(text)}
+          onChangeText={(text) => setFullName(text)}
         />
         <Text style={[styles.email1, styles.email1Position]}>Full name</Text>
       </View>
@@ -129,7 +135,10 @@ const SignUp = () => {
       </View>
 
       {/* Signup Button */}
-      <Pressable style={[styles.save, styles.savePosition]} onPress={handleSignup}>
+      <Pressable
+        style={[styles.save, styles.savePosition]}
+        onPress={handleSignup}
+      >
         <View style={[styles.saveChild, styles.savePosition]} />
         <Text style={[styles.signUp1]}>Sign up</Text>
       </Pressable>
@@ -144,14 +153,19 @@ const SignUp = () => {
         style={[styles.youDontHaveContainer, styles.password1Position]}
       >
         <Text style={[styles.text, styles.passwordTypo]}>
-          <Text style={styles.youDontHave}>You don't have an account yet? </Text>
-          <Text style={styles.signIn}>Sign in</Text>
+          <Text style={styles.youDontHave}>
+            You don't have an account yet?{" "}
+          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.signIn}>Sign in</Text>
+          </TouchableOpacity>
         </Text>
       </Pressable>
 
       {/* Additional text */}
       <Text style={[styles.loremIpsumDolor, styles.passwordTypo]}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor
       </Text>
 
       {/* "Create an Account" text */}

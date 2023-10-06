@@ -1,50 +1,51 @@
 import React, { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Pressable, Text, TextInput, View } from "react-native";
+import {
+  StyleSheet,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { CheckBox } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 
 const Login = () => {
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const navigation = useNavigation();
 
   const handleLogin = async () => {
     try {
       const response = await axios.post(`https://192.168.43.93:5000/login`, {
         email,
         password,
-
       });
 
       if (response.status === 200) {
-
         const { token, role } = response.data;
 
-        AsyncStorage.setItem('token', token);
-        AsyncStorage.setItem('role', role);
+        AsyncStorage.setItem("token", token);
+        AsyncStorage.setItem("role", role);
 
-        if (role === 'admin') {
-          navigation.navigate('AdminHome');
+        if (role === "admin") {
+          navigation.navigate("AdminHome");
         } else {
-          navigation.navigate('UserHome');
+          navigation.navigate("UserHome");
         }
-        Alert.alert('Success', 'Login successful');
+        Alert.alert("Success", "Login successful");
       } else {
-        Alert.alert('UnSuccess', 'Login Unsuccessful');
-        console.error('Login failed:', response.statusText);
-
+        Alert.alert("UnSuccess", "Login Unsuccessful");
+        console.error("Login failed:", response.statusText);
       }
     } catch (error) {
-      Alert.alert('UnSuccess', 'Login Unsuccessful');
-      console.error('Login error:', error);
-
+      Alert.alert("UnSuccess", "Login Unsuccessful");
+      console.error("Login error:", error);
     }
   };
-
-
 
   const [rectangleCheckboxchecked, setRectangleCheckboxchecked] =
     useState(false);
@@ -62,7 +63,7 @@ const Login = () => {
           style={[styles.brandonelouisgmailcom, styles.passwordTypo]}
           placeholder="Brandonelouis@gmail.com"
           placeholderTextColor="rgba(13, 1, 64, 0.6)"
-          onChangeText={text => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
         />
         <Text style={[styles.email1, styles.email1Typo]}>Email</Text>
       </View>
@@ -79,7 +80,7 @@ const Login = () => {
           placeholder="Password"
           secureTextEntry={true}
           placeholderTextColor="rgba(13, 1, 64, 0.6)"
-          onChangeText={text => setPassword(text)}
+          onChangeText={(text) => setPassword(text)}
         />
         <Text style={[styles.password1, styles.passwordClr]}>Password</Text>
       </View>
@@ -99,7 +100,10 @@ const Login = () => {
       </View>
 
       {/* Login Button */}
-      <Pressable style={[styles.save, styles.savePosition]} onPress={handleLogin}>
+      <Pressable
+        style={[styles.save, styles.savePosition]}
+        onPress={handleLogin}
+      >
         <View style={[styles.saveChild, styles.savePosition]} />
         <Text style={[styles.login1, styles.login1Position]}>Login</Text>
       </Pressable>
@@ -114,14 +118,19 @@ const Login = () => {
         style={[styles.youDontHaveContainer, styles.passwordChildPosition]}
       >
         <Text style={[styles.text, styles.passwordTypo]}>
-          <Text style={styles.youDontHave}>You don't have an account yet? </Text>
-          <Text style={styles.signUp}>Sign up</Text>
+          <Text style={styles.youDontHave}>
+            You don't have an account yet?{" "}
+          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+            <Text style={styles.signUp}>Sign up</Text>
+          </TouchableOpacity>
         </Text>
       </Pressable>
 
       {/* Additional text */}
       <Text style={[styles.loremIpsumDolor, styles.passwordTypo]}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor
       </Text>
 
       {/* Welcome Back text */}
