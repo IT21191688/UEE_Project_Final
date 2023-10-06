@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View, Pressable } from "react-native";
 import { Image } from "expo-image";
 import SeniorManagementAppointmentCon2 from "../components/SeniorManagementAppointmentCon2";
 import { Color, FontFamily, FontSize, Padding, Border } from "../GlobalStyles";
@@ -49,39 +49,9 @@ const AppointmentView = () => {
           Time slot : 8.00AM - 8.30AM
         </Text>
       </View>
-      <View style={styles.size}>
-        <Property1Primary
-          next="Approve"
-          property1PrimaryPosition="absolute"
-          property1PrimaryBorderRadius={6}
-          property1PrimaryBackgroundColor="#130160"
-          property1PrimaryMarginTop="unset"
-          property1PrimaryMarginLeft="unset"
-          property1PrimaryTop={667}
-          property1PrimaryLeft={21}
-          property1PrimaryHeight={40}
-          property1PrimaryWidth={162}
-          property1PrimaryBorderStyle="unset"
-          property1PrimaryBorderColor="unset"
-          nextColor="#fff"
-        />
-        <Property1Primary
-          next="Reject"
-          property1PrimaryPosition="absolute"
-          property1PrimaryBorderRadius={6}
-          property1PrimaryBackgroundColor="unset"
-          property1PrimaryMarginTop="unset"
-          property1PrimaryMarginLeft="unset"
-          property1PrimaryTop={667}
-          property1PrimaryLeft={200}
-          property1PrimaryHeight={40}
-          property1PrimaryWidth={148}
-          property1PrimaryBorderStyle="solid"
-          property1PrimaryBorderColor="#130160"
-          property1PrimaryBorderWidth={1}
-          nextColor="#130160"
-        />
-      </View>
+      <Pressable style={styles.button} >
+        <Text style={styles.buttonText}>Pending</Text>
+      </Pressable>
       {/* <Image
         style={styles.menuBarIcon}
         contentFit="cover"
@@ -98,8 +68,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   size: {
-    left: 17,
-    position: "absolute",
+    left: 107,
+    position: "relative",
   },
   menuBarIcon: {
     bottom: -163,
@@ -110,7 +80,7 @@ const styles = StyleSheet.create({
   },
   timeSlotPosition: {
     left: "50%",
-    top: "50%",
+    top: "60%",
   },
   groupChildLayout: {
     width: 375,
@@ -223,6 +193,26 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 812,
     overflow: "hidden",
+  },
+
+
+  button: {
+    width: 100,
+    height: 40,
+    top: '50%',
+    left: '30%',
+    borderRadius: 97,
+    backgroundColor: '#130160',
+    flexDirection: 'row',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 8,
+  },
+  buttonText: {
+    fontSize: 12,
+    color: 'white',
   },
 });
 

@@ -1,36 +1,58 @@
 import * as React from "react";
-import { ScrollView, StyleSheet, Text, View, TextInput } from "react-native";
+import { ScrollView, StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Pressable, FlatList } from "react-native";
 import { Image } from "expo-image";
 import Philippines from "../components/NewsCard";
 import Property1Unselected from "../components/Property1Unselected";
 import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
 import DesignSection1 from "../components/DesignSection1";
+import { Button } from "@rneui/base";
+
+const { width } = Dimensions.get('window');
+
+const isSmallScreen = width < 360;
 
 const Appointments = () => {
+
+  //https://uee-12.onrender.com
+
+
+
+
   return (
     <View style={styles.myNews}>
-      {/* Header */}
+      {/* Rectangle */}
       <Image
         style={[styles.myNewsChild, styles.searchPosition]}
         contentFit="cover"
         source={require("../assets/rectangle-5.png")}
       />
-      <Image
-        style={styles.ellipseIcon}
-        contentFit="cover"
-        source={require("../assets/ellipse.png")}
-      />
-      <View style={styles.headlineParent}>
-        <Text style={[styles.headline1, styles.headlineFlexBox]}>
-          Appointments
-        </Text>
-      </View>
-      <View style={[styles.header, styles.headerLayout]}>
+
+      <View style={styles.AppoinmentTextAndProfile}>
         <Image
-          style={styles.filterIcon}
+          style={styles.ellipseIcon}
           contentFit="cover"
-          source={require("../assets/filter.png")}
+          source={require("../assets/ellipse.png")}
         />
+        <View style={styles.headlineParent}>
+          <Text style={[styles.headline1, styles.headlineFlexBox]}>
+            Appointments
+          </Text>
+        </View>
+      </View>
+
+
+
+      {/*profile*/}
+
+      <View style={styles.header}>
+
+        <View >
+          <Image
+            style={styles.filterIcon}
+            contentFit="cover"
+            source={require("../assets/filter.png")}
+          />
+        </View>
         <View style={[styles.search, styles.headerLayout]}>
           <Image
             style={styles.searchChild}
@@ -51,6 +73,54 @@ const Appointments = () => {
       </View>
       {/* Header */}
 
+      <Pressable style={styles.newAppoinment} >
+        <Text style={styles.buttonTextAdd}>Add new Appointment</Text>
+      </Pressable>
+
+      <View style={styles.btnsetcontainer}>
+        <Pressable style={styles.button} onPress={() => console.log('Button 1 clicked!')}>
+          <Text style={styles.buttonText}>Pending</Text>
+        </Pressable>
+        <Pressable style={styles.button} onPress={() => console.log('Button 2 clicked!')}>
+          <Text style={styles.buttonText}>Approved</Text>
+        </Pressable>
+        <Pressable style={styles.button} onPress={() => console.log('Button 3 clicked!')}>
+          <Text style={styles.buttonText}>Declined</Text>
+        </Pressable>
+      </View>
+
+      <FlatList
+        //data={data}
+        renderItem={({ item }) => (
+          <Text></Text>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+
+      <View style={styles.componentContainer}>
+        {/* Your component content goes here */}
+        <Image
+          //source={{ uri: item.imageUri }} // Replace with your image source
+          source={require("../assets/ellipse.png")}
+          style={styles.circularImage}
+        />
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>
+            Senior management appointment
+          </Text>
+          <Text style={styles.dateText}>
+            13/05/22
+          </Text>
+          <Text style={styles.timeSlotText}>
+            Time slot: 8.00AM - 8.30AM
+          </Text>
+        </View>
+
+      </View>
+
+
+
+
       {/* Content */}
 
       {/* Content */}
@@ -65,10 +135,11 @@ const Appointments = () => {
   );
 };
 
+
 const styles = StyleSheet.create({
   scrollableSectionScrollViewContent: {
     flexDirection: "column",
-    paddingBottom: 552,
+    paddingBottom: 100, // Updated paddingBottom for responsiveness
     alignItems: "center",
     justifyContent: "flex-start",
   },
@@ -91,7 +162,7 @@ const styles = StyleSheet.create({
     color: Color.pureWhite,
     alignItems: "center",
     textAlign: "left",
-    width: 254,
+    width: "100%", // Updated width for responsiveness
     left: 0,
     position: "absolute",
   },
@@ -107,27 +178,26 @@ const styles = StyleSheet.create({
     fontSize: FontSize.medium14_size,
   },
   scrollableSection: {
-    marginTop: -159.5,
-    marginLeft: -196.5,
-    width: 393,
-    maxWidth: 393,
+    marginTop: -100, // Updated marginTop for responsiveness
+    marginLeft: -50, // Updated marginLeft for responsiveness
+    width: "100%", // Updated width for responsiveness
     flex: 1,
     height: "100%",
   },
   menuBarIcon: {
-    bottom: -163,
-    left: -159,
-    width: 736,
-    height: 390,
+    bottom: -100, // Updated bottom for responsiveness
+    left: -50, // Updated left for responsiveness
+    width: "100%", // Updated width for responsiveness
+    height: 100, // Updated height for responsiveness
     position: "absolute",
   },
   myNewsChild: {
-    width: 411.5,
+    width: "100%",
     height: 221,
     position: "absolute",
   },
   ellipseIcon: {
-    left: 338,
+    left: "80%", // Updated left for responsiveness
     width: 54,
     height: 54,
     top: 55,
@@ -155,36 +225,38 @@ const styles = StyleSheet.create({
   },
   headlineParent: {
     height: 48,
-    width: 254,
-    left: 27,
+    width: "100%", // Updated width for responsiveness
+    left: 40,
     top: 45,
     position: "absolute",
   },
   filterIcon: {
-    top: -146,
-    left: 169,
-    width: 340,
-    height: 340,
+    top: -110, // Updated top for responsiveness
+    // Updated left for responsiveness
+    width: 300,
+    left: 170, // Updated width for responsiveness
+    height: 300, // Updated height for responsiveness
     position: "absolute",
+
   },
   searchChild: {
-    top: -58,
-    left: -62,
+    top: -50, // Updated top for responsiveness
+    left: -50, // Updated left for responsiveness
     borderRadius: Border.br_3xs,
-    width: 435,
+    width: "100%", // Updated width for responsiveness
     height: 164,
     position: "absolute",
   },
   iconSearch: {
-    top: 8,
-    left: 15,
+    top: 17,
+    left: -20,
     width: 24,
     height: 24,
     position: "absolute",
   },
   search1: {
-    top: 7,
-    left: 49,
+    top: 15,
+    left: 20,
     fontSize: FontSize.size_xs,
     fontFamily: FontFamily.dMSansRegular,
     color: Color.colorDarkgray_100,
@@ -192,15 +264,18 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   search: {
-    width: 280,
-    left: 0,
-    top: 0,
+    width: "90%", // Updated width for responsiveness
+    left: 45,
+    top: 28,
   },
   header: {
-    top: 134,
-    width: 335,
-    left: 22,
+    top: 100, // Updated top for responsiveness
+    width: "100%", // Updated width for responsiveness
+    left: 0,
     height: 40,
+    flexDirection: 'row',
+    alignItems: 'center'
+
   },
   type8: {
     color: Color.colorDarkgray_200,
@@ -225,10 +300,136 @@ const styles = StyleSheet.create({
   },
   myNews: {
     backgroundColor: Color.colorWhitesmoke,
-    height: 893,
+    height: "100%", // Updated height for responsiveness
     width: "100%",
     flex: 1,
   },
+  AppoinmentTextAndProfileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  AppoinmentTextAndProfile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  newAppoinment: {
+    display: "flex",
+    width: 320,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 97,
+    textAlign: 'center',
+    alignItems: 'center',
+    backgroundColor: '#D1E1FE', // Use backgroundColor instead of background
+    flexDirection: 'row', // Use flexDirection to control the layout direction
+    justifyContent: 'space-between', // Use justifyContent to space elements horizontally
+    left: 20,
+    marginVertical: 8,
+    top: 190 // Add margin for spacing
+  },
+  buttonTextAdd: {
+    fontSize: 16,
+    color: 'white',
+    alignItems: 'center',
+    left: '250%'
+  },
+  buttonContainer: {
+    borderRadius: 97,
+    backgroundColor: '#130160',
+    flexDirection: 'row',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: 'white',
+  },
+  btnsetcontainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    top: 200
+  },
+  button: {
+    flex: 1,
+    borderRadius: 97,
+    backgroundColor: '#130160',
+    flexDirection: 'row',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 8,
+  },
+  buttonText: {
+    fontSize: 12,
+    color: 'white',
+  },
+  componentContainer: {
+    width: 335,
+    height: 134,
+    top: -250,
+    left: 10,
+    flexShrink: 0,
+    backgroundColor: 'blue',//#fff
+    shadowColor: 'rgba(153, 171, 198, 0.18)',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowRadius: 62,
+    shadowOpacity: 1,
+    elevation: 8, // For Android shadow
+    borderRadius: 8,
+  },
+  circularImage: {
+    width: 52,
+    height: 52,
+    left: 20,
+    top: 20,
+    borderRadius: 26, // Half of the width and height to make it a circle
+    marginRight: 16,
+    backgroundColor: 'green' // Spacing between the image and content
+  },
+  textContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    left: 90,
+    top: -20,
+  },
+  text: {
+    color: '#0D0D26', // Change to your desired text color
+    fontSize: 20,
+    fontWeight: '600',
+    lineHeight: 18.2,
+    letterSpacing: -0.14,
+    width: 238,
+    height: 38,
+  },
+  dateText: {
+    color: '#95969D', // Change to your desired text color
+    fontSize: 12,
+    fontWeight: '500',
+    lineHeight: 19.2,
+    letterSpacing: -0.12,
+  },
+  timeSlotText: {
+    color: '#95969D', // Change to your desired text color
+    textAlign: 'right',
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    left: -100,
+    padding: 10,
+    fontWeight: '500',
+    lineHeight: 19.2,
+    letterSpacing: -0.12,
+  },
 });
+
 
 export default Appointments;
