@@ -18,6 +18,8 @@ import Appointments from "./screens/Appointments";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import AppointmentView from "./screens/AppointmentView";
+import AddAppointments from "./screens/AddAppoinment";
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
@@ -48,6 +50,28 @@ const App = () => {
             // initialRouteName="SplashScreenJobs"
             screenOptions={{ headerShown: false }}
           >
+
+            <Stack.Screen
+              name="AddAppointments"
+              component={AddAppointments}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="AppointmentView"
+              component={AppointmentView}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="Appointments"
+              component={Appointments}
+              options={{ headerShown: false }}
+            />
+
+
+
+
 
             <Stack.Screen
               name="SignUp"
@@ -102,11 +126,7 @@ const App = () => {
               component={Sample}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="Appointments"
-              component={Appointments}
-              options={{ headerShown: false }}
-            />
+
           </Stack.Navigator>
         ) : null}
       </NavigationContainer>
