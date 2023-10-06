@@ -1,7 +1,10 @@
-const Stack = createNativeStackNavigator();
 import * as React from "react";
+import { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import Ionicons from "react-native-vector-icons/Ionicons"; // Import your chosen icon library
+
+//screens import
 import SignUp from "./screens/SignUp";
 import Login from "./screens/Login";
 import SplashScreenAppointments from "./screens/SplashScreenAppointments";
@@ -14,10 +17,127 @@ import AdminNews from "./screens/AdminNews";
 import CreateNews from "./screens/CreateNews";
 import Sample from "./screens/sample";
 import Appointments from "./screens/Appointments";
+import Dashboard from "./screens/Dashboard";
 
+//jobOpportunity import
+// User
+import HomeScreen from "./screens/jobOpportunity/User/HomeScreen";
+
+//Admin
+
+//bottomTabNavigation import
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import {
+  View,
+  Text,
+  Pressable,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+function TabNavigator() {
+  return (
+    <Tab.Navigator
+      initialRouteName="HomeScreen"
+      tarBarOptions={{
+        style: {
+          position: "absolute",
+          bottom: 25,
+          left: 20,
+          right: 20,
+          elevation: 0,
+          backgroundColor: "#ffffff",
+          borderRadius: 15,
+          height: 90,
+          showLabel: false,
+          ...styles.shadow,
+        },
+      }}
+    >
+      <Tab.Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{
+          tabBarLabel: "Dashboard",
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "ios-home" : "ios-home-outline"}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      {/* <Tab.Screen
+        name="null"
+        component={null}
+        options={{
+          tabBarLabel: "Dashboard",
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "ios-home" : "ios-home-outline"}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      /> */}
+      <Tab.Screen
+        name="Add"
+        component={HomeScreen} // Set component to null for the plus icon tab
+        // listeners={({ navigation }) => ({
+        //   tabPress: (e) => {
+        //     e.preventDefault(); // Prevent navigation to a screen
+        //     // You can add your logic here to perform an action when the plus icon is pressed
+        //   },
+        // })}
+        options={({ focused }) => ({
+          tabBarIcon: ({ size, color }) => (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                height: 50, // Adjust the height to increase the size
+                width: 50, // Adjust the width to increase the size
+                marginTop: 15,
+                borderRadius: 25, // Make it a circle
+                backgroundColor: "#007AFF", // Blue background
+              }}
+            >
+              <Ionicons
+                name="ios-add"
+                size={30} // Adjust the size of the plus icon
+                color="#FFFFFF" // White plus icon
+              />
+            </View>
+          ),
+          tabBarLabel: "", // This will hide the label
+        })}
+      />
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen} // Set the component for the Home tab
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={
+                focused ? "chatbubble-ellipses" : "chatbubble-ellipses-outline"
+              }
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
@@ -36,19 +156,24 @@ const App = () => {
     "Inter-SemiBold": require("./assets/fonts/Inter-SemiBold.ttf"),
   });
 
+  const [user, setUser] = React.useState(null);
+
+  useEffect(() => {
+    setUser(true);
+  }, []);
+
   if (!fontsLoaded && !error) {
     return null;
   }
 
-  return (
-    <>
-      <NavigationContainer>
+  if (!user) {
+    return (
+      <>
         {hideSplashScreen ? (
           <Stack.Navigator
             // initialRouteName="SplashScreenJobs"
             screenOptions={{ headerShown: false }}
           >
-
             <Stack.Screen
               name="SignUp"
               component={SignUp}
@@ -60,7 +185,6 @@ const App = () => {
               component={Login}
               options={{ headerShown: false }}
             />
-
 
             <Stack.Screen
               name="SplashScreenAppointments"
@@ -109,8 +233,42 @@ const App = () => {
             />
           </Stack.Navigator>
         ) : null}
-      </NavigationContainer>
-    </>
+      </>
+    );
+  } else {
+    return (
+      <>
+        {hideSplashScreen ? (
+          <Stack.Navigator>
+            <Stack.Screen
+              name="TabNavigator"
+              component={TabNavigator}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        ) : null}
+      </>
+    );
+  }
+};
+
+export default () => {
+  return (
+    <NavigationContainer>
+      <App />
+    </NavigationContainer>
   );
 };
-export default App;
+
+const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: "#7F5DF0",
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+    elevation: 5,
+  },
+});
