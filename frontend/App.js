@@ -37,60 +37,80 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import homeScreen from "./screens/jobOpportunity/User/HomeScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+const CustomTabBarButton = ({ onPress, focused }) => (
+  <TouchableOpacity onPress={onPress}>
+    <View
+      style={{
+        width: 60,
+        height: 60,
+        backgroundColor: focused ? "#007AFF" : "#FFFFFF",
+        borderRadius: 30, // Make it a circle
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 10, // Adjust the vertical position as needed
+        elevation: 5,
+      }}
+    >
+      <Ionicons
+        name="ios-add"
+        size={30}
+        color={focused ? "#FFFFFF" : "#007AFF"}
+      />
+    </View>
+  </TouchableOpacity>
+);
 
 function TabNavigator() {
   return (
     <Tab.Navigator
       initialRouteName="HomeScreen"
-      tarBarOptions={{
+      tabBarOptions={{
         style: {
           position: "absolute",
-          bottom: 25,
+          bottom: 20,
           left: 20,
           right: 20,
           elevation: 0,
           backgroundColor: "#ffffff",
           borderRadius: 15,
-          height: 90,
+          height: 100,
           showLabel: false,
           ...styles.shadow,
         },
       }}
     >
       <Tab.Screen
-        name="Dashboard"
-        component={Dashboard}
+        name="Featured Jobs"
+        component={homeScreen}
         options={{
-          tabBarLabel: "Dashboard",
+          tabBarLabel: "",
           tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons
-              name={focused ? "ios-home" : "ios-home-outline"}
-              size={size}
-              color={color}
-            />
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                height: 45,
+                width: 45,
+                marginTop: 15,
+              }}
+            >
+              <Ionicons
+                name={focused ? "ios-home" : "ios-home-outline"}
+                size={size}
+                color={color}
+              />
+            </View>
           ),
         }}
       />
-      {/* <Tab.Screen
-        name="null"
-        component={null}
-        options={{
-          tabBarLabel: "Dashboard",
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons
-              name={focused ? "ios-home" : "ios-home-outline"}
-              size={size}
-              color={color}
-            />
-          ),
-        }}
-      /> */}
       <Tab.Screen
         name="Add"
-        component={HomeScreen} // Set component to null for the plus icon tab
+        component={homeScreen}
         // listeners={({ navigation }) => ({
         //   tabPress: (e) => {
         //     e.preventDefault(); // Prevent navigation to a screen
@@ -103,17 +123,15 @@ function TabNavigator() {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                height: 50, // Adjust the height to increase the size
-                width: 50, // Adjust the width to increase the size
-                marginTop: 15,
-                borderRadius: 25, // Make it a circle
-                backgroundColor: "#007AFF", // Blue background
+                height: 60, // Adjust the height to increase the size
+                width: 60, // Adjust the width to increase the size
+                borderRadius: 30, // Make it a circle
               }}
             >
               <Ionicons
-                name="ios-add"
-                size={30} // Adjust the size of the plus icon
-                color="#FFFFFF" // White plus icon
+                name={focused ? "add-circle-sharp" : "add-circle-sharp"}
+                size={60} // Adjust the size of the plus icon
+                color={color} // White plus icon
               />
             </View>
           ),
@@ -122,16 +140,29 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="Home"
-        component={HomeScreen} // Set the component for the Home tab
+        component={HomeScreen}
         options={{
+          tabBarLabel: "",
           tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons
-              name={
-                focused ? "chatbubble-ellipses" : "chatbubble-ellipses-outline"
-              }
-              size={size}
-              color={color}
-            />
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                height: 45,
+                width: 45,
+                marginTop: 15,
+              }}
+            >
+              <Ionicons
+                name={
+                  focused
+                    ? "chatbubble-ellipses"
+                    : "chatbubble-ellipses-outline"
+                }
+                size={size}
+                color={color}
+              />
+            </View>
           ),
         }}
       />
