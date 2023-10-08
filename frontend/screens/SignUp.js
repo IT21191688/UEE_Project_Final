@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import { Image } from "expo-image";
-import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
+import { StyleSheet, Text, TextInput, View, Pressable, TouchableOpacity } from "react-native";
 import { CheckBox } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { Border, FontFamily, FontSize, Color } from "../GlobalStyles";
@@ -16,9 +16,11 @@ const SignUp = () => {
   const [fullName, setFullName] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
+  const navigation = useNavigation();
 
-
-
+  const handleSignInPress = () => {
+    navigation.navigate("Login");
+  };
 
   const registerUser = async (userData) => {
     try {
@@ -145,7 +147,9 @@ const SignUp = () => {
       >
         <Text style={[styles.text, styles.passwordTypo]}>
           <Text style={styles.youDontHave}>You don't have an account yet? </Text>
-          <Text style={styles.signIn}>Sign in</Text>
+          <TouchableOpacity onPress={handleSignInPress}>
+            <Text style={styles.signIn}>Sign in</Text>
+          </TouchableOpacity>
         </Text>
       </Pressable>
 

@@ -1,11 +1,8 @@
 import * as React from "react";
 import { ScrollView, StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Pressable, FlatList } from "react-native";
 import { Image } from "expo-image";
-import Philippines from "../components/NewsCard";
-import Property1Unselected from "../components/Property1Unselected";
 import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
-import DesignSection1 from "../components/DesignSection1";
-import { Button } from "@rneui/base";
+import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get('window');
 
@@ -13,10 +10,15 @@ const isSmallScreen = width < 360;
 
 const Appointments = () => {
 
+  const navigation = useNavigation();
+
   //https://uee-12.onrender.com
 
 
-
+  const handleAddNewAppointment = () => {
+    // Use navigation.navigate to navigate to the desired screen
+    navigation.navigate("AddAppointment"); // Replace "AddAppointment" with the name of the screen you want to navigate to
+  };
 
   return (
     <View style={styles.myNews}>
@@ -73,10 +75,12 @@ const Appointments = () => {
       </View>
       {/* Header */}
 
-      <Pressable style={styles.newAppoinment} >
+      <TouchableOpacity
+        style={styles.newAppointment}
+        onPress={handleAddNewAppointment}
+      >
         <Text style={styles.buttonTextAdd}>Add new Appointment</Text>
-      </Pressable>
-
+      </TouchableOpacity>
       <View style={styles.btnsetcontainer}>
         <Pressable style={styles.button} onPress={() => console.log('Button 1 clicked!')}>
           <Text style={styles.buttonText}>Pending</Text>
@@ -313,26 +317,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  newAppoinment: {
-    display: "flex",
+  newAppointment: {
     width: 320,
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 97,
-    textAlign: 'center',
-    alignItems: 'center',
-    backgroundColor: '#D1E1FE', // Use backgroundColor instead of background
-    flexDirection: 'row', // Use flexDirection to control the layout direction
-    justifyContent: 'space-between', // Use justifyContent to space elements horizontally
-    left: 20,
+    backgroundColor: "#D1E1FE",
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginVertical: 8,
-    top: 190 // Add margin for spacing
+    position: "absolute",
+    bottom: 450, // Adjust the bottom position as needed
+    alignSelf: "center", // Center it horizontally
+    zIndex: 1, // Ensure it's above other elements
   },
   buttonTextAdd: {
     fontSize: 16,
-    color: 'white',
-    alignItems: 'center',
-    left: '250%'
+    color: "black",
+    textAlign: "center",
+    flex: 1,
   },
   buttonContainer: {
     borderRadius: 97,
@@ -352,7 +355,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    top: 200
+    top: 250
   },
   button: {
     flex: 1,

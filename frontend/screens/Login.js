@@ -1,15 +1,27 @@
 import React, { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Pressable, Text, TextInput, View } from "react-native";
+import { StyleSheet, Pressable, Text, TextInput, View, TouchableOpacity } from "react-native";
 import { CheckBox } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 
 const Login = () => {
 
+
+  const navigation = useNavigation();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+
+
+  const handleSignUpPress = () => {
+    navigation.navigate("SignUp");
+  };
+
+  const handleLoginPress = () => {
+    navigation.navigate("Appointments");
+  };
 
   const handleLogin = async () => {
     try {
@@ -99,7 +111,7 @@ const Login = () => {
       </View>
 
       {/* Login Button */}
-      <Pressable style={[styles.save, styles.savePosition]} onPress={handleLogin}>
+      <Pressable style={[styles.save, styles.savePosition]} onPress={handleLoginPress}>
         <View style={[styles.saveChild, styles.savePosition]} />
         <Text style={[styles.login1, styles.login1Position]}>Login</Text>
       </Pressable>
@@ -115,7 +127,9 @@ const Login = () => {
       >
         <Text style={[styles.text, styles.passwordTypo]}>
           <Text style={styles.youDontHave}>You don't have an account yet? </Text>
-          <Text style={styles.signUp}>Sign up</Text>
+          <TouchableOpacity onPress={handleSignUpPress}>
+            <Text style={styles.signUp}>Sign up</Text>
+          </TouchableOpacity>
         </Text>
       </Pressable>
 
@@ -182,8 +196,9 @@ const styles = StyleSheet.create({
   login1Position: {
     marginTop: -8,
     textAlign: "left",
-    top: "50%",
+    top: "60%",
     position: "absolute",
+    alignItems: 'center'
   },
   savePosition: {
     height: 50,
@@ -274,14 +289,13 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(153, 171, 198, 0.18)",
   },
   login1: {
-    marginLeft: -23,
     fontSize: FontSize.size_sm,
     letterSpacing: 0.8,
     textTransform: "uppercase",
     color: Color.colorWhite,
-    fontFamily: FontFamily.dMSansBold,
     fontWeight: "700",
-    left: "50%",
+    left: 100,
+    top: -5
   },
   save: {
     marginTop: 91,
