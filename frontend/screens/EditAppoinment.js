@@ -1,167 +1,180 @@
 import * as React from "react";
-import { Text, StyleSheet, View, Pressable, TextInput, DatePickerIOS, ScrollView, DatePickerIOSBase } from "react-native";
-import { Image } from "expo-image";
-import SeniorManagementAppointmentCon2 from "../components/SeniorManagementAppointmentCon2";
-import { Color, FontFamily, FontSize, Padding, Border } from "../GlobalStyles";
-import Property1Primary from "../components/Property1Primary";
-import { Picker } from '@react-native-picker/picker';
-import DatePicker from 'react-native-datepicker';
+import { useState } from "react";
+import {
+    Text,
+    StyleSheet,
+    View,
+    Pressable,
+    TextInput,
+    ScrollView,
+    Button,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import { useNavigation } from "@react-navigation/native";
+import ModernDatePicker from "react-native-modern-datepicker";
 
-
-//hello
 const EditAppoinment = () => {
+    const navigation = useNavigation();
+    const [title, setTitle] = useState(""); // State to store title
+    const [department, setDepartment] = useState("option1"); // State to store department
+    const [selectedDate, setSelectedDate] = useState(null);
 
-    const date = 0;
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+    };
+    const handleSave = () => {
+        if (selectedDate) {
+            // Handle the selected date here
+            console.log("Selected Date:", selectedDate);
+        } else {
+            // Handle the case where no date is selected
+            console.log("Please select a date.");
+        }
+    };
+
+    const handleAddAppointment = () => {
+        // Handle the button press to add the appointment
+        console.log("Title:", title);
+        console.log("Department:", department);
+        console.log("Selected Date:", selectedDate);
+    };
+
     return (
-        <View style={styles.appointmentView}>
-            {/* Back button*/}
-            <Image
+        <View style={styles.container}>
+            {/* Back button */}
+            <Pressable
                 style={styles.backButton}
-                source={require('../assets/akariconschevronleft.png')}
-                contentFit="cover"
-            />
-            <Text style={styles.appointmentText}>Edit Appointment</Text>
-
-            <ScrollView
-                style={styles.form}
-                horizontal={false}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
+                onPress={() => {
+                    navigation.goBack(); // Navigate back when pressed
+                }}
             >
-                <View style={styles.scrollableContent}>
-                    <Text style={styles.titleText}>Your Title Here</Text>
-                    <TextInput
-                        style={styles.titleInput}
-                        placeholder="Enter Title"
-                        placeholderTextColor="#AAA6B9"
-                    />
+                <Text style={styles.backButtonText}>{"<"}</Text>
+            </Pressable>
 
-                    <Text style={styles.titleText}>Department</Text>
-                    <Picker style={styles.picker}>
-                        {/* Add department options here */}
-                        <Picker.Item label="Option 1" value="option1" />
-                        <Picker.Item label="Option 2" value="option2" />
-                        {/* Add more options as needed */}
-                    </Picker>
+            <Text style={styles.appointmentText}>Edit An Appointment</Text>
 
-                    <Text style={styles.titleText}>Date</Text>
-                    <Picker style={styles.picker}>
-                        {/* Add time slot options here */}
-                        <Picker.Item label="Morning" value="morning" />
-                        <Picker.Item label="Afternoon" value="afternoon" />
-                        {/* Add more options as needed */}
-                    </Picker>
+            <ScrollView style={styles.form} showsVerticalScrollIndicator={false}>
+                <Text style={styles.sectionTitle}>Title</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Enter Title"
+                    placeholderTextColor="#AAA6B9"
+                    value={title}
+                    onChangeText={(text) => setTitle(text)}
+                />
 
-                    <Text style={styles.titleText}>Time Slot</Text>
-                    <Picker style={styles.picker}>
-                        {/* Add time slot options here */}
-                        <Picker.Item label="Morning" value="morning" />
-                        <Picker.Item label="Afternoon" value="afternoon" />
-                        {/* Add more options as needed */}
-                    </Picker>
+                <Text style={styles.sectionTitle}>Department</Text>
+                <Picker
+                    style={styles.picker}
+                    selectedValue={department}
+                    onValueChange={(value) => setDepartment(value)}
+                >
+                    <Picker.Item label="Option 1" value="option1" />
+                    <Picker.Item label="Option 2" value="option2" />
+                </Picker>
 
-                    <Text style={styles.titleText}>Description</Text>
-                    <TextInput
-                        style={styles.titleInput}
-                        placeholder="Enter Description"
-                        placeholderTextColor="#AAA6B9"
-                        multiline={true}
-                        numberOfLines={4}
-                    />
+                <Text style={styles.sectionTitle}>Date</Text>
+                <Picker
+                    style={styles.picker}
+                    selectedValue={department}
+                    onValueChange={(value) => setDepartment(value)}
+                >
+                    <Picker.Item label="Option 1" value="option1" />
+                    <Picker.Item label="Option 2" value="option2" />
+                </Picker>
 
-                    <Pressable
-                        style={{
-                            width: 317,
-                            height: 60,
-                            borderRadius: 10,
-                            backgroundColor: '#130160',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            top: 10,
+                <Text style={styles.sectionTitle}>Time Slot</Text>
+                <Picker style={styles.picker}>
+                    {/* Add time slot options here */}
+                </Picker>
 
+                <Text style={styles.sectionTitle}>Description</Text>
+                <TextInput
+                    style={[styles.input, styles.descriptionInput]}
+                    placeholder="Enter Description"
+                    placeholderTextColor="#AAA6B9"
+                    multiline={true}
+                    numberOfLines={4}
+                />
 
-                        }}
-                        onPress={() => {
-                            // Handle button press here
-                        }}
-                    >
-                        <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>
-                            Edit Appointment
-                        </Text>
-                    </Pressable>
-                </View>
+                <Pressable
+                    style={styles.addButton}
+                    onPress={handleAddAppointment}
+                >
+                    <Text style={styles.buttonText}>Edit Appointment</Text>
+                </Pressable>
             </ScrollView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    appointmentView: {
-        alignItems: 'center', // Center align the content vertically
+    container: {
+        flex: 1,
+        backgroundColor: "#FAFAFD",
+        paddingHorizontal: 16,
+        paddingTop: 40,
     },
     backButton: {
-        height: 24,
-        width: 24,
-        marginBottom: 8,
-        height: 24,
-        width: 24,
         position: "absolute",
-        top: 60,
-        left: 18,
-        overflow: "hidden",// Spacing between the image and text
+        top: 40,
+        left: 16,
+    },
+    backButtonText: {
+        color: "#130160",
+        fontSize: 16,
     },
     appointmentText: {
-        color: '#150B3D',
+        color: "#150B3D",
         fontSize: 20,
-        fontWeight: '700',
-        top: "20%",
-        right: '10%'
-    },
-    titleInput: {
-        width: 295,
-        height: 71,
-        flexShrink: 0,
-        color: '#AAA6B9',
-        fontSize: 12,
-        fontStyle: 'normal',
-        fontWeight: '400',
-        borderWidth: 1, // Add a border
-        borderColor: '#AAA6B9', // Border color
-        borderRadius: 8, // Add some border radius for rounded corners
-        paddingLeft: 16, // Left padding for input text
+        fontWeight: "bold",
+        marginTop: 24,
+        textAlign: "center",
     },
     form: {
-        top: "30%",
-        backgroundColor: '#FAFAFD',
-        alignContent: 'center',
-        height: 500,
-
+        marginTop: 32,
+    },
+    sectionTitle: {
+        fontSize: 16,
+        color: "#150B3D",
+        marginBottom: 8,
+    },
+    input: {
+        width: "100%",
+        height: 40,
+        borderWidth: 1,
+        borderColor: "#AAA6B9",
+        borderRadius: 8,
+        paddingLeft: 16,
+        marginBottom: 16,
+        color: "#130160",
+    },
+    descriptionInput: {
+        height: 80,
     },
     picker: {
-        width: '100%',
+        width: "100%",
         height: 40,
         borderWidth: 1,
-        borderColor: '#AAA6B9',
+        borderColor: "#AAA6B9",
         borderRadius: 8,
         marginBottom: 16,
     },
-    datePicker: {
-        width: '100%',
-        height: 40,
-        borderWidth: 1,
-        borderColor: '#AAA6B9',
-        borderRadius: 8,
-        marginBottom: 16,
+    addButton: {
+        width: "100%",
+        height: 60,
+        borderRadius: 10,
+        backgroundColor: "#130160",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 10,
+        marginBottom: 60,
     },
-    titleText: {
-        fontSize: 20,
-        color: '#150B3D',
+    buttonText: {
+        color: "#FFF",
+        fontSize: 16,
+        fontWeight: "bold",
     },
-    scrollableContent: {
-        paddingBottom: 50
-    }
-
-
 });
 
 export default EditAppoinment;
