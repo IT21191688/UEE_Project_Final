@@ -1,15 +1,15 @@
 import * as React from "react";
 import { Text, StyleSheet, View, Pressable, TextInput, DatePickerIOS, ScrollView, DatePickerIOSBase } from "react-native";
 import { Image } from "expo-image";
+import SeniorManagementAppointmentCon2 from "../components/SeniorManagementAppointmentCon2";
+import { Color, FontFamily, FontSize, Padding, Border } from "../GlobalStyles";
+import Property1Primary from "../components/Property1Primary";
 import { Picker } from '@react-native-picker/picker';
 import DatePicker from 'react-native-datepicker';
-import { useNavigation } from "@react-navigation/native";
 
 
 //hello
-const AddAppointments = () => {
-
-    const navigation = useNavigation();
+const EditAppoinment = () => {
 
     const date = 0;
     return (
@@ -20,13 +20,15 @@ const AddAppointments = () => {
                 source={require('../assets/akariconschevronleft.png')}
                 contentFit="cover"
             />
-            <Text style={styles.appointmentText}>
-                Create An Appoinment
-            </Text>
+            <Text style={styles.appointmentText}>Edit Appointment</Text>
 
-
-            <ScrollView style={styles.form}>
-                <View>
+            <ScrollView
+                style={styles.form}
+                horizontal={false}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+            >
+                <View style={styles.scrollableContent}>
                     <Text style={styles.titleText}>Your Title Here</Text>
                     <TextInput
                         style={styles.titleInput}
@@ -41,21 +43,6 @@ const AddAppointments = () => {
                         <Picker.Item label="Option 2" value="option2" />
                         {/* Add more options as needed */}
                     </Picker>
-
-                    <View style={[styles.fullName, styles.emailPosition]}>
-                        <Image
-                            style={[styles.fullNameChild, styles.childPosition]}
-                            contentFit="cover"
-                            source={require("../assets/rectangle-59.png")}
-                        />
-                        <TextInput
-                            style={[styles.brandoneLouis, styles.passwordTypo]}
-                            placeholder="Enter your full name"
-                            placeholderTextColor="rgba(13, 1, 64, 0.6)"
-                            onChangeText={text => setFullName(text)}
-                        />
-                        <Text style={[styles.email1, styles.email1Position]}>Full name</Text>
-                    </View>
 
                     <Text style={styles.titleText}>Date</Text>
                     <Picker style={styles.picker}>
@@ -99,7 +86,7 @@ const AddAppointments = () => {
                         }}
                     >
                         <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold' }}>
-                            Add Appointment
+                            Edit Appointment
                         </Text>
                     </Pressable>
                 </View>
@@ -147,7 +134,8 @@ const styles = StyleSheet.create({
         top: "30%",
         backgroundColor: '#FAFAFD',
         alignContent: 'center',
-        height: 500
+        height: 500,
+
     },
     picker: {
         width: '100%',
@@ -168,9 +156,12 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: 20,
         color: '#150B3D',
+    },
+    scrollableContent: {
+        paddingBottom: 50
     }
 
 
 });
 
-export default AddAppointments;
+export default EditAppoinment;
