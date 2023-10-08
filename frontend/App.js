@@ -14,18 +14,23 @@ import MyNews from "./screens/MyNews";
 import AdminNews from "./screens/AdminNews";
 import CreateNews from "./screens/CreateNews";
 import Sample from "./screens/sample";
+
+
 import Appointments from "./screens/Appointments";
 import EditAppoinment from "./screens/EditAppoinment";
 import AddAppointment from "./screens/AddAppoinment";
 import AppoinmentUpdateSuccess from "./screens/AppoinmentUpdateSuccess";
 import AppoinmentDeleteSuccess from "./screens/AppoinmentDeleteSuccess";
+import AppoinmentAdminHome from "./screens/AppoinmentAdminHome";
+import AppointmentView from "./screens/AppointmentView";
+import AddAppointments from "./screens/AddAppoinment";
+import AppoinmentSuccess from "./screens/AppoinmentSuccess";
+import AppoinmentAdminView from "./screens/AppoinmentAdminView";
 
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
-import AppointmentView from "./screens/AppointmentView";
-import AddAppointments from "./screens/AddAppoinment";
-import AppoinmentSuccess from "./screens/AppoinmentSuccess";
+
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
@@ -44,7 +49,7 @@ const App = () => {
     <>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={"Login"} // Adjust this based on your logic
+          initialRouteName={"AppoinmentAdminView"} // Adjust this based on your logic
         >
           <Stack.Screen
             name="SignUp"
@@ -54,12 +59,6 @@ const App = () => {
           <Stack.Screen
             name="Login"
             component={Login}
-            options={{ headerShown: false }}
-          />
-
-          <Stack.Screen
-            name="AppoinmentDeleteSuccess"
-            component={AppoinmentDeleteSuccess}
             options={{ headerShown: false }}
           />
 
@@ -81,6 +80,57 @@ const App = () => {
             component={AppointmentView}
             options={{ headerShown: false }}
           />
+
+          <Stack.Screen
+            name="NewsView"
+            component={NewsView}
+            options={{ headerShown: false }}
+          />
+
+
+          <Stack.Screen
+            name="MyNews"
+            component={MyNews}
+            options={{ headerShown: false }}
+          />
+
+
+          <Stack.Screen
+            name="AppoinmentDeleteSuccess"
+            component={AppoinmentDeleteSuccess}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="AppoinmentUpdateSuccess"
+            component={AppoinmentUpdateSuccess}
+            options={{ headerShown: false }}
+          />
+
+
+
+          <Stack.Screen
+            name="AppoinmentSuccess"
+            component={AppoinmentSuccess}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="EditAppoinment"
+            component={EditAppoinment}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="AppoinmentAdminHome"
+            component={AppoinmentAdminHome}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="AppoinmentAdminView"
+            component={AppoinmentAdminView}
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
       { /*
@@ -92,30 +142,6 @@ const App = () => {
           >
 
 
-            <Stack.Screen
-              name="AppoinmentDeleteSuccess"
-              component={AppoinmentDeleteSuccess}
-              options={{ headerShown: false }}
-            />
-
-            <Stack.Screen
-              name="AppoinmentUpdateSuccess"
-              component={AppoinmentUpdateSuccess}
-              options={{ headerShown: false }}
-            />
-
-
-
-            <Stack.Screen
-              name="AppoinmentSuccess"
-              component={AppoinmentSuccess}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="EditAppoinment"
-              component={EditAppoinment}
-              options={{ headerShown: false }}
-            />
 
 
             <Stack.Screen
@@ -150,17 +176,7 @@ const App = () => {
               options={{ headerShown: false }}
             />
 
-            <Stack.Screen
-              name="NewsView"
-              component={NewsView}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="MyNews"
-              component={MyNews}
-              options={{ headerShown: false }}
-            />
-
+       
 
             <Stack.Screen
               name="SignUp"
