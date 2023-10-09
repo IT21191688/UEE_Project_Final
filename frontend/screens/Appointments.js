@@ -12,7 +12,12 @@ const Appointments = () => {
 
   const navigation = useNavigation();
 
-  //https://uee-12.onrender.com
+  const handleAppoinmentView = () => {
+
+    navigation.navigate("AppointmentView")
+  }
+
+
 
 
   const handleAddNewAppointment = () => {
@@ -101,7 +106,7 @@ const Appointments = () => {
         keyExtractor={(item, index) => index.toString()}
       />
 
-      <View style={styles.componentContainer}>
+      <TouchableOpacity style={styles.componentContainer} onPress={handleAppoinmentView}>
         {/* Your component content goes here */}
         <Image
           //source={{ uri: item.imageUri }} // Replace with your image source
@@ -120,7 +125,7 @@ const Appointments = () => {
           </Text>
         </View>
 
-      </View>
+      </TouchableOpacity>
 
 
 

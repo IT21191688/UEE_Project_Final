@@ -49,7 +49,7 @@ const App = () => {
     <>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={"AppoinmentAdminView"} // Adjust this based on your logic
+          initialRouteName={"Login"} // Adjust this based on your logic
         >
           <Stack.Screen
             name="SignUp"

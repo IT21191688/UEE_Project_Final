@@ -9,6 +9,7 @@ const AppointmentView = () => {
   return (
     <View style={styles.appointmentView}>
       <Text style={styles.description}>Description</Text>
+
       <Image
         style={[styles.akarIconschevronLeft, styles.editIconLayout]}
         contentFit="cover"

@@ -18,6 +18,8 @@ const RegisterUser = async (req: Request, res: Response) => {
   const body: any = req.body;
   const user: any = new User(body.user);
 
+  console.log(user.email)
+
   //check if user already exists
   const existingUser = await userService.findByEmail(user.email);
 
