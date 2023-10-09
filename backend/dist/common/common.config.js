@@ -16,16 +16,16 @@ exports.connectDB = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const url = process.env.MONGODB_URI || "mongodb+srv://sadeepa:sadeepa123@studentmanagement.in6etp1.mongodb.net/uee_database?retryWrites=true&w=majority";
+const url = process.env.MONGODB_URI || "";
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     mongoose_1.default.set("strictQuery", true);
     yield mongoose_1.default
         .connect(url)
         .then(() => {
-            console.log(`DATABASE CONNECTED..!!`);
-        })
+        console.log(`DATABASE CONNECTED..!!`);
+    })
         .catch((err) => {
-            throw new Error(err);
-        });
+        throw new Error(err);
+    });
 });
 exports.connectDB = connectDB;

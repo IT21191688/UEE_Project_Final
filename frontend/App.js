@@ -7,6 +7,7 @@ import Login from "./screens/Login";
 import SplashScreenAppointments from "./screens/SplashScreenAppointments";
 import SplashScreenCertificates from "./screens/SplashScreenCertificates";
 import SplashScreenJobs from "./screens/SplashScreenJobs";
+import SplashScreenNews from "./screens/SplashScreenNews";
 import Property1Unselected from "./components/Property1Unselected";
 import NewsView from "./screens/NewsView";
 import MyNews from "./screens/MyNews";
@@ -50,6 +51,12 @@ const App = () => {
             // initialRouteName="SplashScreenJobs"
             screenOptions={{ headerShown: false }}
           >
+
+            <Stack.Screen
+              name="SplashScreenNews"
+              component={SplashScreenNews}
+              options={{ headerShown: false }}
+            />
 
             <Stack.Screen
               name="AddAppointments"
