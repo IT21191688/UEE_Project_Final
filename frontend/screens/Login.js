@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Pressable, Text, TextInput, View, TouchableOpacity } from "react-native";
+import axios from 'axios';
+import { StyleSheet, Pressable, Text, TextInput, View, TouchableOpacity, Alert } from "react-native";
 import { CheckBox } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+
 
 const Login = () => {
 
@@ -19,42 +21,44 @@ const Login = () => {
     navigation.navigate("SignUp");
   };
 
-  const handleLoginPress = () => {
-    navigation.navigate("Appointments");
-  };
 
-  const handleLogin = async () => {
+
+  const handleLoginPress = async () => {
     try {
-      const response = await axios.post(`https://192.168.43.93:5000/login`, {
+
+      const response = await axios.post('https://uee123.onrender.com/api/v1/auth/login', {
         email,
         password,
-
       });
 
       if (response.status === 200) {
-
         const { token, role } = response.data;
 
-        AsyncStorage.setItem('token', token);
-        AsyncStorage.setItem('role', role);
+        // Store the token and role in AsyncStorage or a similar storage mechanism
+        //await AsyncStorage.setItem('token', token);
+        //await AsyncStorage.setItem('role', role);
 
+        // Navigate to the appropriate screen based on the user's role
         if (role === 'admin') {
-          navigation.navigate('AdminHome');
+          navigation.navigate('Appointments');
         } else {
-          navigation.navigate('UserHome');
+          navigation.navigate('Appointments');
         }
+
+        // Display a success alert
         Alert.alert('Success', 'Login successful');
       } else {
-        Alert.alert('UnSuccess', 'Login Unsuccessful');
+        // Display an error alert and log the error
+        Alert.alert('Unsuccessful', 'Login Unsuccessful');
         console.error('Login failed:', response.statusText);
-
       }
     } catch (error) {
-      Alert.alert('UnSuccess', 'Login Unsuccessful');
+      // Display an error alert and log the error
+      Alert.alert('Unsuccessful', 'Login Unsuccessful');
       console.error('Login error:', error);
-
     }
   };
+
 
 
 

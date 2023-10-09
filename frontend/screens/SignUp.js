@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import { Image } from "expo-image";
-import { StyleSheet, Text, TextInput, View, Pressable, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TextInput, View, Pressable, TouchableOpacity, Alert } from "react-native";
 import { CheckBox } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { Border, FontFamily, FontSize, Color } from "../GlobalStyles";
@@ -14,6 +14,10 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const role = 'user';
+  // const email = "nimna12345@gmail.com"
+  //const password = "12345"
+  //const fullName = "Nimna Thiraanjayaaa"
   const [rememberMe, setRememberMe] = useState(false);
 
   const navigation = useNavigation();
@@ -22,47 +26,47 @@ const SignUp = () => {
     navigation.navigate("Login");
   };
 
-  const registerUser = async (userData) => {
-    try {
-      const response = await axios.post('https://192.168.43.93:5000/user/register', {
-        user: userData,
-      });
-
-      // Check if the response indicates success (you may need to adjust this based on your backend's response format)
-      if (response.status === 201) {
-        console.log('User registered successfully:', response.data);
-        return response.data; // You can return data or handle it as needed
-      }
-    } catch (error) {
-      // Handle network error
-      if (error.message === 'Network Error') {
-        console.error('Network error. Please check your internet connection.');
-        throw error;
-      } else {
-        console.error('Registration error:', error);
-        throw error;
-      }
-    }
-  };
-
-
-
   const handleSignup = async () => {
-    const userData = {
+    const user = {
+      fullName,
       email,
       password,
-      fullName,
+      role
     };
+    //alert(user.fullName + user.email + user.password + user.role)
 
+    //http://192.168.43.93
     try {
-      const response = await registerUser(userData);
 
-      // Handle success, e.g., show a success message or navigate to another screen
+      const response = await axios.post('https://uee123.onrender.com/api/v1/user/register', {
+        user: user,
+      });
+
+      if (response.status === 201) {
+        console.log('User registered successfully:', response.data);
+        Alert.alert('Success', 'User Created');
+        // You can add navigation or other actions for successful registration here
+      } else {
+        console.error('Registration failed with status code:', response.status);
+
+        // Parse and display server error response (if available)
+        if (response.data && response.data.error) {
+          Alert.alert('Registration Error', response.data.error);
+        } else {
+          Alert.alert('Unsuccessful Registration', 'User Not Created');
+        }
+      }
     } catch (error) {
-      // Handle errors, e.g., display an error message to the user
+      if (error.message === 'Network Error') {
+        console.error('Network error. Please check your internet connection.');
+        Alert.alert('Network Error', 'User Not Created');
+      } else {
+        console.error('Registration error:', error);
+        Alert.alert('Unsuccessful Registration', 'User Not Created');
+      }
     }
-  };
 
+  };
 
 
   return (
@@ -131,10 +135,10 @@ const SignUp = () => {
       </View>
 
       {/* Signup Button */}
-      <Pressable style={[styles.save, styles.savePosition]} onPress={handleSignup}>
+      <TouchableOpacity style={[styles.save, styles.savePosition]} onPress={handleSignup}>
         <View style={[styles.saveChild, styles.savePosition]} />
         <Text style={[styles.signUp1]}>Sign up</Text>
-      </Pressable>
+      </TouchableOpacity>
 
       {/* "Forgot Password" text */}
       <Text style={[styles.forgotPassword, styles.email1Position]}>
