@@ -45,6 +45,7 @@ const SignUp = () => {
       if (response.status === 201) {
         console.log('User registered successfully:', response.data);
         Alert.alert('Success', 'User Created');
+        navigation.navigate("Login");
         // You can add navigation or other actions for successful registration here
       } else {
         console.error('Registration failed with status code:', response.status);
