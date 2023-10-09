@@ -1,5 +1,6 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios';
 import {
     Text,
     StyleSheet,
@@ -8,36 +9,153 @@ import {
     TextInput,
     ScrollView,
     Button,
+    Alert,
+    TouchableOpacity,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 import ModernDatePicker from "react-native-modern-datepicker";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddAppointments = () => {
     const navigation = useNavigation();
-    const [title, setTitle] = useState(""); // State to store title
-    const [department, setDepartment] = useState("option1"); // State to store department
+    const [title, setTitle] = useState("");
+    const [department, setDepartment] = useState("64f0ac2b958ea9baa678eca0");
     const [selectedDate, setSelectedDate] = useState(null);
+    const [organizations, setOrganizations] = useState([]);
+    const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+    const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+    const [description, setDescription] = useState("");
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-    };
-    const handleSave = () => {
-        if (selectedDate) {
-            // Handle the selected date here
-            console.log("Selected Date:", selectedDate);
-        } else {
-            // Handle the case where no date is selected
-            console.log("Please select a date.");
-        }
-    };
 
-    const handleAddAppointment = () => {
-        // Handle the button press to add the appointment
+    useEffect(() => {
+        const fetchOrganizations = async () => {
+            try {
+                const token = await AsyncStorage.getItem('token');
+                if (!token) {
+                    console.error('Token is missing in AsyncStorage');
+                    return;
+                }
+                const headers = {
+                    'Authorization': `Bearer ${token}`,
+                };
+                const response = await axios.get('https://uee123.onrender.com/api/v1/organization/getAll', { headers });
+
+                if (response.data.isSuccessful) {
+                    const organizationsData = response.data.data;
+                    const organizationInfo = organizationsData.map(org => ({
+                        id: org._id,
+                        name: org.orgName,
+                    }));
+                    setOrganizations(organizationInfo);
+                } else {
+                    console.error('Failed to fetch organizations:', response.data.message);
+                }
+            } catch (error) {
+                console.error('Error fetching organizations:', error);
+            }
+        };
+
+        fetchOrganizations();
+    }, []);
+
+    const handleAddAppointment = async () => {
         console.log("Title:", title);
         console.log("Department:", department);
         console.log("Selected Date:", selectedDate);
+        console.log("Selected Time Slot:", selectedTimeSlot);
+
+        try {
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                console.error('Token is missing in AsyncStorage');
+                return;
+            }
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+            };
+
+            // Create a request body object with the appointment details
+            const requestBody = {
+                title: title,
+                description: description, // Replace with your description
+                appointmentDate: selectedDate,
+                appointmentTime: selectedTimeSlot, // Make sure selectedTimeSlot is set to a valid value
+                organization: department, // Assuming department is the organization ID
+            };
+
+            const response = await axios.post(
+                'https://uee123.onrender.com/api/v1/appointment/create',
+                requestBody,
+                { headers }
+            );
+
+            if (response.data.isSuccessful) {
+                Alert.alert("Successfully Created Appointment");
+                navigation.navigate("Appointments")
+            } else {
+                Alert.alert("Failed Try Again: " + response.data.message);
+                navigation.navigate("Appointments")
+            }
+        } catch (error) {
+            console.error('Error creating appointment:', error);
+            Alert.alert("Failed to Create Appointment: " + error.message);
+        }
     };
+
+
+    useEffect(() => {
+        if (selectedDate && department) {
+            fetchAvailableTimeSlots(selectedDate, department);
+        }
+    }, [selectedDate, department]);
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+        //fetchAvailableTimeSlots(selectedDate, department); // Use department directly
+    };
+
+    const handleDepartmentChange = (value) => {
+        setDepartment(value);
+        //fetchAvailableTimeSlots(selectedDate, value); // Use selectedDate directly
+    };
+
+
+
+    const fetchAvailableTimeSlots = async (selectedDate, department) => {
+        try {
+            const response = await axios.get(
+                `https://uee123.onrender.com/api/v1/appointment/getAvailableSlots?date=${selectedDate}&organization=${department}`
+            );
+
+            if (response.data.isSuccessful) {
+                const timeSlots = response.data.data;
+                setAvailableTimeSlots(timeSlots);
+            } else {
+                console.error('Failed to fetch time slots:', response.data.message);
+            }
+        } catch (error) {
+            console.error('Error fetching time slots:', error);
+        }
+    };
+
+    // Example usage:
+    const startDate = new Date("2023-08-16");
+    const endDate = new Date("2023-08-20");
+
+    const dateList = generateDateList(startDate, endDate);
+
+    function generateDateList(startDate, endDate) {
+        const dateList = [];
+        const currentDate = new Date(startDate);
+
+        while (currentDate <= endDate) {
+            dateList.push(currentDate.toISOString().slice(0, 10));
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        return dateList;
+    }
 
     return (
         <View style={styles.container}>
@@ -45,7 +163,7 @@ const AddAppointments = () => {
             <Pressable
                 style={styles.backButton}
                 onPress={() => {
-                    navigation.goBack(); // Navigate back when pressed
+                    navigation.goBack();
                 }}
             >
                 <Text style={styles.backButtonText}>{"<"}</Text>
@@ -67,25 +185,37 @@ const AddAppointments = () => {
                 <Picker
                     style={styles.picker}
                     selectedValue={department}
-                    onValueChange={(value) => setDepartment(value)}
+                    onValueChange={(value) => handleDepartmentChange(value)}
                 >
-                    <Picker.Item label="Option 1" value="option1" />
-                    <Picker.Item label="Option 2" value="option2" />
+                    {organizations.map((org, index) => (
+                        <Picker.Item key={org.id} label={org.name} value={org.id} />
+                    ))}
                 </Picker>
 
                 <Text style={styles.sectionTitle}>Date</Text>
                 <Picker
                     style={styles.picker}
-                    selectedValue={department}
-                    onValueChange={(value) => setDepartment(value)}
+                    selectedValue={selectedDate}
+                    onValueChange={(value) => handleDateChange(value)}
                 >
-                    <Picker.Item label="Option 1" value="option1" />
-                    <Picker.Item label="Option 2" value="option2" />
+                    {dateList.map((date) => (
+                        <Picker.Item key={date} label={date} value={date} />
+                    ))}
                 </Picker>
 
                 <Text style={styles.sectionTitle}>Time Slot</Text>
-                <Picker style={styles.picker}>
-                    {/* Add time slot options here */}
+                <Picker
+                    style={styles.picker}
+                    selectedValue={selectedTimeSlot}
+                    onValueChange={(value) => setSelectedTimeSlot(value)}
+                >
+                    {availableTimeSlots.map((timeSlot) => (
+                        <Picker.Item
+                            key={timeSlot.id}
+                            label={timeSlot.timeSlot}
+                            value={timeSlot.id}
+                        />
+                    ))}
                 </Picker>
 
                 <Text style={styles.sectionTitle}>Description</Text>
@@ -95,14 +225,15 @@ const AddAppointments = () => {
                     placeholderTextColor="#AAA6B9"
                     multiline={true}
                     numberOfLines={4}
+                    value={description}
+                    onChangeText={(text) => setDescription(text)}
                 />
-
-                <Pressable
+                <TouchableOpacity
                     style={styles.addButton}
                     onPress={handleAddAppointment}
                 >
                     <Text style={styles.buttonText}>Add Appointment</Text>
-                </Pressable>
+                </TouchableOpacity>
             </ScrollView>
         </View>
     );
@@ -178,3 +309,21 @@ const styles = StyleSheet.create({
 });
 
 export default AddAppointments;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

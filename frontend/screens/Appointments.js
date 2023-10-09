@@ -2,28 +2,130 @@ import * as React from "react";
 import { ScrollView, StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Pressable, FlatList } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
+import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const { width } = Dimensions.get('window');
 
 const isSmallScreen = width < 360;
 
+
+
 const Appointments = () => {
 
   const navigation = useNavigation();
 
-  const handleAppoinmentView = () => {
-
-    navigation.navigate("AppointmentView")
-  }
+  const [appointments, setAppointments] = useState([]);
 
 
 
+  const timeSlots = [
+    {
+      id: 1,
+      timeSlot: "9:00 AM - 09:30 AM",
+    },
+    {
+      id: 2,
+      timeSlot: "09:30 AM - 10:00 AM",
+    },
+    {
+      id: 3,
+      timeSlot: "10:00 AM - 10:30 AM",
+    },
+    {
+      id: 4,
+      timeSlot: "10:30 AM - 11:00 AM",
+    },
+    {
+      id: 5,
+      timeSlot: "11:00 AM - 11:30 AM",
+    },
+    {
+      id: 6,
+      timeSlot: "11:30 AM - 12:00 PM",
+    },
+    {
+      id: 7,
+      timeSlot: "12:00 PM - 12:30 PM",
+    },
+    {
+      id: 8,
+      timeSlot: "12:30 PM - 1:00 PM",
+    },
+    {
+      id: 9,
+      timeSlot: "01:00 PM - 1:30 PM",
+    },
+    {
+      id: 10,
+      timeSlot: "01:30 PM - 2:00 PM",
+    },
+    {
+      id: 11,
+      timeSlot: "03:00 PM - 3:30 PM",
+    },
+    {
+      id: 12,
+      timeSlot: "03:30 PM - 4:00 PM",
+    },
+    {
+      id: 13,
+      timeSlot: "04:00 PM - 4:30 PM",
+    },
+    {
+      id: 14,
+      timeSlot: "04:30 PM - 5:00 PM",
+    },
+  ];
+
+
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
+
+  const fetchAppointments = async () => {
+    try {
+
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        console.error('Token is missing in AsyncStorage');
+        return;
+      }
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+      };
+
+      // Make an API GET request to fetch appointments
+      const response = await axios.get(
+        "https://uee123.onrender.com/api/v1/appointment/getAppointments", { headers }
+      );
+
+      if (response.data.isSuccessful) {
+        const fetchedAppointments = response.data.data;
+        setAppointments(fetchedAppointments);
+        console.log(appointments.length);
+      } else {
+        console.error("Failed to fetch appointments:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+    }
+  };
+
+  const handleAppointmentView = () => {
+    navigation.navigate("AppointmentView");
+  };
 
   const handleAddNewAppointment = () => {
     // Use navigation.navigate to navigate to the desired screen
     navigation.navigate("AddAppointment"); // Replace "AddAppointment" with the name of the screen you want to navigate to
   };
+
+  function findTimeSlotById(id) {
+    return timeSlots.find(slot => slot.id === id);
+  }
 
   return (
     <View style={styles.myNews}>
@@ -98,34 +200,41 @@ const Appointments = () => {
         </Pressable>
       </View>
 
-      <FlatList
-        //data={data}
-        renderItem={({ item }) => (
-          <Text></Text>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-      />
 
-      <TouchableOpacity style={styles.componentContainer} onPress={handleAppoinmentView}>
-        {/* Your component content goes here */}
-        <Image
-          //source={{ uri: item.imageUri }} // Replace with your image source
-          source={require("../assets/ellipse.png")}
-          style={styles.circularImage}
+
+      <ScrollView style={styles.scroller} >
+
+        <FlatList
+          data={appointments}
+          renderItem={({ item }) => {
+            const foundTimeSlot = findTimeSlotById(item.appointmentTime); // Call the function and store the result in a variable
+
+            return (
+              <TouchableOpacity
+                style={styles.appointmentItem}
+                onPress={handleAppointmentView}
+              >
+                <Image
+                  source={require("../assets/ellipse.png")}
+                  style={styles.circularImage}
+                />
+                <View style={styles.appointmentDetails}>
+                  <Text style={styles.appointmentTitle}>{item.title}</Text>
+                  <Text style={styles.appointmentDate}>
+                    {new Date(item.appointmentDate).toLocaleDateString("en-US")}
+                  </Text>
+                  <Text style={styles.appointmentTimeSlot}>
+                    Time slot: {item.appointmentTime + foundTimeSlot ? foundTimeSlot.timeSlot : "Not Found"}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+          keyExtractor={(item, index) => index.toString()}
         />
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>
-            Senior management appointment
-          </Text>
-          <Text style={styles.dateText}>
-            13/05/22
-          </Text>
-          <Text style={styles.timeSlotText}>
-            Time slot: 8.00AM - 8.30AM
-          </Text>
-        </View>
 
-      </TouchableOpacity>
+
+      </ScrollView>
 
 
 
@@ -437,6 +546,50 @@ const styles = StyleSheet.create({
     lineHeight: 19.2,
     letterSpacing: -0.12,
   },
+
+
+
+
+  appointmentItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFF",
+    borderRadius: 8,
+    marginBottom: 10,
+    marginLeft: 20,
+    marginRight: 20,
+    padding: 20,
+    shadowColor: "#999",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+  circularImage: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+  },
+  appointmentDetails: {
+    flex: 1,
+    marginLeft: 20,
+  },
+  appointmentTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  appointmentDate: {
+    fontSize: 16,
+    color: "#95969D",
+  },
+  appointmentTimeSlot: {
+    fontSize: 16,
+    color: "#95969D",
+  },
+  scroller: {
+    top: 270
+  }
+
 });
 
 

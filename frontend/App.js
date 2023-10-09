@@ -44,6 +44,24 @@ const App = () => {
     }, 2000);
   }, []);
 
+  const [token, setToken] = useState(null); // Initialize the token state
+
+  // Check if the token is already stored in AsyncStorage when the app starts
+  useEffect(() => {
+    const getTokenFromStorage = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('token');
+        if (storedToken) {
+          setToken(storedToken);
+        }
+      } catch (error) {
+        console.error('Error retrieving token from AsyncStorage:', error);
+      }
+    };
+
+    getTokenFromStorage();
+  }, []);
+
 
   return (
     <>
