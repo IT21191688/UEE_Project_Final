@@ -18,6 +18,8 @@ const Appointments = () => {
   const navigation = useNavigation();
 
   const [appointments, setAppointments] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState("All"); // Initialize with "All"
+  const [filteredAppointments, setFilteredAppointments] = useState(appointments);
 
 
 
@@ -127,6 +129,30 @@ const Appointments = () => {
     return timeSlots.find(slot => slot.id === id);
   }
 
+  const handlePendingClick = () => {
+    setSelectedStatus(2); // Use numeric value
+    filterAppointments(2); // Use numeric value
+  };
+
+  const handleApprovedClick = () => {
+    setSelectedStatus(3); // Use numeric value
+    filterAppointments(3); // Use numeric value
+  };
+
+  const handleDeclinedClick = () => {
+    setSelectedStatus(4); // Use numeric value
+    filterAppointments(4); // Use numeric value
+  };
+
+  const handleAllClick = () => {
+    setSelectedStatus("All");
+    setFilteredAppointments(appointments); // Show all appointments
+  };
+
+  const filterAppointments = (status) => {
+    const filtered = appointments.filter((appointment) => appointment.status === status);
+    setFilteredAppointments(filtered);
+  };
   return (
     <View style={styles.myNews}>
       {/* Rectangle */}
@@ -143,9 +169,12 @@ const Appointments = () => {
           source={require("../assets/ellipse.png")}
         />
         <View style={styles.headlineParent}>
-          <Text style={[styles.headline1, styles.headlineFlexBox]}>
-            Appointments
-          </Text>
+          <TouchableOpacity onPress={handleAllClick}>
+            <Text style={[styles.headline1, styles.headlineFlexBox]} >
+              Appointments
+            </Text>
+          </TouchableOpacity>
+
         </View>
       </View>
 
@@ -189,66 +218,89 @@ const Appointments = () => {
         <Text style={styles.buttonTextAdd}>Add new Appointment</Text>
       </TouchableOpacity>
       <View style={styles.btnsetcontainer}>
-        <Pressable style={styles.button} onPress={() => console.log('Button 1 clicked!')}>
-          <Text style={styles.buttonText}>Pending</Text>
+        <Pressable
+          style={[
+            styles.button,
+            selectedStatus === 2 && styles.selectedButton,
+          ]}
+          onPress={handlePendingClick}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              selectedStatus === 2 && styles.selectedButtonText,
+            ]}
+          >
+            Pending
+          </Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={() => console.log('Button 2 clicked!')}>
-          <Text style={styles.buttonText}>Approved</Text>
+        <Pressable
+          style={[
+            styles.button,
+            selectedStatus === 3 && styles.selectedButton,
+          ]}
+          onPress={handleApprovedClick}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              selectedStatus === 3 && styles.selectedButtonText,
+            ]}
+          >
+            Approved
+          </Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={() => console.log('Button 3 clicked!')}>
-          <Text style={styles.buttonText}>Declined</Text>
+        <Pressable
+          style={[
+            styles.button,
+            selectedStatus === 4 && styles.selectedButton,
+          ]}
+          onPress={handleDeclinedClick}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              selectedStatus === 4 && styles.selectedButtonText,
+            ]}
+          >
+            Declined
+          </Text>
         </Pressable>
       </View>
 
 
 
-      <ScrollView style={styles.scroller} >
+      <ScrollView style={styles.scroller}>
+        {filteredAppointments.map((item, index) => {
+          const foundTimeSlot = findTimeSlotById(item.appointmentTime);
 
-        <FlatList
-          data={appointments}
-          renderItem={({ item }) => {
-            const foundTimeSlot = findTimeSlotById(item.appointmentTime); // Call the function and store the result in a variable
-
-            return (
-              <TouchableOpacity
-                style={styles.appointmentItem}
-                onPress={handleAppointmentView}
-              >
-                <Image
-                  source={require("../assets/ellipse.png")}
-                  style={styles.circularImage}
-                />
-                <View style={styles.appointmentDetails}>
-                  <Text style={styles.appointmentTitle}>{item.title}</Text>
-                  <Text style={styles.appointmentDate}>
-                    {new Date(item.appointmentDate).toLocaleDateString("en-US")}
-                  </Text>
-                  <Text style={styles.appointmentTimeSlot}>
-                    Time slot: {item.appointmentTime + foundTimeSlot ? foundTimeSlot.timeSlot : "Not Found"}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-          keyExtractor={(item, index) => index.toString()}
-        />
-
-
+          return (
+            <TouchableOpacity
+              key={index}
+              style={styles.appointmentItem}
+              onPress={handleAppointmentView}
+            >
+              <Image
+                source={require("../assets/ellipse.png")}
+                style={styles.circularImage}
+              />
+              <View style={styles.appointmentDetails}>
+                <Text style={styles.appointmentTitle}>{item.title}</Text>
+                <Text style={styles.appointmentDate}>
+                  {new Date(item.appointmentDate).toLocaleDateString("en-US")}
+                </Text>
+                <Text style={styles.appointmentTimeSlot}>
+                  Time slot: {item.appointmentTime}{" "}
+                  {foundTimeSlot ? foundTimeSlot.timeSlot : "Not Found"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
 
 
 
-
-      {/* Content */}
-
-      {/* Content */}
-
-      {/* Bottom Tabs */}
-      {/* <Image
-        style={styles.menuBarIcon}
-        contentFit="cover"
-        source={require("../assets/menu-bar3.png")}
-      /> */}
     </View>
   );
 };
@@ -588,6 +640,12 @@ const styles = StyleSheet.create({
   },
   scroller: {
     top: 270
+  },
+  selectedButton: {
+    backgroundColor: 'white', // Background color when selected
+  },
+  selectedButtonText: {
+    color: 'black', // Text color when selected
   }
 
 });

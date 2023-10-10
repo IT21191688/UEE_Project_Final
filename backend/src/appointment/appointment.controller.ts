@@ -280,6 +280,36 @@ const DeleteAppointment = async (req: Request, res: Response) => {
   }
 };
 
+const GetAppointmentDetails = async (req: Request, res: Response) => {
+  try {
+    const appointmentID: any = req.params.appointmentId;
+    const auth: any = req.auth;
+
+    // Use your appointmentService to find the appointment by ID
+    const appointment: any = await appointmentService.findById(appointmentID);
+
+    if (!appointment) {
+      throw new NotFoundError("Appointment not found!");
+    }
+
+    if (appointment.addedBy.toString() !== auth._id) {
+      throw new ForbiddenError("You are not authorized to view this appointment!");
+    }
+
+    // Handle your response here, returning the appointment details
+    CustomResponse(
+      res,
+      true,
+      StatusCodes.OK,
+      "Appointment details retrieved successfully!",
+      appointment
+    );
+  } catch (e) {
+    // Handle any errors that may occur during the process
+    throw e;
+  }
+};
+
 export {
   CreateAppointment,
   GetAvailableSlots,
@@ -287,4 +317,5 @@ export {
   ApproveOrRejectAppointment,
   UpdateAppointment,
   DeleteAppointment,
+  GetAppointmentDetails
 };

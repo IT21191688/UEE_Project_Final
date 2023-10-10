@@ -60,10 +60,6 @@ const AddAppointments = () => {
     }, []);
 
     const handleAddAppointment = async () => {
-        console.log("Title:", title);
-        console.log("Department:", department);
-        console.log("Selected Date:", selectedDate);
-        console.log("Selected Time Slot:", selectedTimeSlot);
 
         try {
             const token = await AsyncStorage.getItem('token');
@@ -140,8 +136,8 @@ const AddAppointments = () => {
     };
 
     // Example usage:
-    const startDate = new Date("2023-08-16");
-    const endDate = new Date("2023-08-20");
+    const startDate = new Date("2023-10-12");
+    const endDate = new Date("2023-10-20");
 
     const dateList = generateDateList(startDate, endDate);
 

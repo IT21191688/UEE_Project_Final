@@ -35,18 +35,23 @@ const CertificateSchema = new mongoose.Schema({
     required: [true, "Contact number is required!"],
   },
 
-  certificateName: {
-    type: String,
-    required: [true, "Certificate name is required!"],
+  certificate: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
   },
 
-  certificateType: {
-    type: String,
-    required: [true, "Certificate type is required!"],
+  serviceType: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
   },
 
   additionalDocuments: {
-    type: Object,
+    type: [String],
+  },
+
+  addedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
 
   status: {
