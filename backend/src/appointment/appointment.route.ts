@@ -10,7 +10,8 @@ import {
   UpdateAppointment,
   DeleteAppointment,
   GetAppointmentDetails,
-  GetAllAppointmentsAdmin
+  GetAllAppointmentsAdmin,
+  GetAppointmentDetailsAdmin
 } from "./appointment.controller";
 
 const AppointmentRouter = Router();
@@ -51,6 +52,12 @@ AppointmentRouter.get(
   "/getAppoinmentDetails/:appointmentId",
   authMiddleware.authorize([constants.USER.ROLES.USER]),
   GetAppointmentDetails
+);
+
+AppointmentRouter.get(
+  "/getAppointmentDetailsAdmin/:appointmentId", // Change the route path as needed
+  authMiddleware.authorize([constants.USER.ROLES.ADMIN]),
+  GetAppointmentDetailsAdmin
 );
 
 

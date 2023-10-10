@@ -319,9 +319,11 @@ const GetAppointmentDetails = async (req: Request, res: Response) => {
       throw new NotFoundError("Appointment not found!");
     }
 
+
     if (appointment.addedBy.toString() !== auth._id) {
       throw new ForbiddenError("You are not authorized to view this appointment!");
     }
+  
 
     // Handle your response here, returning the appointment details
     CustomResponse(
@@ -337,6 +339,32 @@ const GetAppointmentDetails = async (req: Request, res: Response) => {
   }
 };
 
+const GetAppointmentDetailsAdmin = async (req: Request, res: Response) => {
+  try {
+     const appointmentID: any = req.params.appointmentId;
+    const auth: any = req.auth;
+
+    // Use your appointmentService to find the appointment by ID
+    const appointment: any = await appointmentService.findById(appointmentID);
+
+    if (!appointment) {
+      throw new NotFoundError("Appointment not found!");
+    }
+
+    if (!appointment) {
+      throw new NotFoundError("Appointment not found!");
+    }
+
+    CustomResponse(res, true, StatusCodes.OK, "Appointment details fetched successfully", appointment);
+  } catch (error) {
+    // Handle errors here and send an appropriate response
+    console.error(error);
+    // Return an error response, for example:
+    CustomResponse(res, false, StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch appointment details", null);
+  }
+};
+
+
 export {
   CreateAppointment,
   GetAvailableSlots,
@@ -345,5 +373,6 @@ export {
   UpdateAppointment,
   DeleteAppointment,
   GetAppointmentDetails,
-  GetAllAppointmentsAdmin
+  GetAllAppointmentsAdmin,
+  GetAppointmentDetailsAdmin
 };

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetAllAppointmentsAdmin = exports.GetAppointmentDetails = exports.DeleteAppointment = exports.UpdateAppointment = exports.ApproveOrRejectAppointment = exports.GetAllAppointments = exports.GetAvailableSlots = exports.CreateAppointment = void 0;
+exports.GetAppointmentDetailsAdmin = exports.GetAllAppointmentsAdmin = exports.GetAppointmentDetails = exports.DeleteAppointment = exports.UpdateAppointment = exports.ApproveOrRejectAppointment = exports.GetAllAppointments = exports.GetAvailableSlots = exports.CreateAppointment = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const appointment_util_1 = require("./appointment.util");
 const appointment_service_1 = __importDefault(require("./appointment.service"));
@@ -223,3 +223,25 @@ const GetAppointmentDetails = (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.GetAppointmentDetails = GetAppointmentDetails;
+const GetAppointmentDetailsAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const appointmentID = req.params.appointmentId;
+        const auth = req.auth;
+        // Use your appointmentService to find the appointment by ID
+        const appointment = yield appointment_service_1.default.findById(appointmentID);
+        if (!appointment) {
+            throw new NotFoundError_1.default("Appointment not found!");
+        }
+        if (!appointment) {
+            throw new NotFoundError_1.default("Appointment not found!");
+        }
+        (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "Appointment details fetched successfully", appointment);
+    }
+    catch (error) {
+        // Handle errors here and send an appropriate response
+        console.error(error);
+        // Return an error response, for example:
+        (0, response_1.default)(res, false, http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch appointment details", null);
+    }
+});
+exports.GetAppointmentDetailsAdmin = GetAppointmentDetailsAdmin;
