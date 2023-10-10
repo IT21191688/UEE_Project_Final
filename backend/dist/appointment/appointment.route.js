@@ -17,5 +17,5 @@ AppointmentRouter.get("/getAppointments", auth_middleware_1.default.authorize([
 AppointmentRouter.put("/approveReject/:appointmentId", auth_middleware_1.default.authorize([constant_1.default.USER.ROLES.ADMIN]), appointment_controller_1.ApproveOrRejectAppointment);
 AppointmentRouter.get("/getAppoinmentDetails/:appointmentId", auth_middleware_1.default.authorize([constant_1.default.USER.ROLES.USER]), appointment_controller_1.GetAppointmentDetails);
 AppointmentRouter.patch("/update/:appointmentId", auth_middleware_1.default.authorize([constant_1.default.USER.ROLES.USER]), appointment_controller_1.UpdateAppointment);
-AppointmentRouter.put("/delete/:appointmentId", auth_middleware_1.default.authorize([constant_1.default.USER.ROLES.USER]), appointment_controller_1.DeleteAppointment);
+AppointmentRouter.patch("/delete/:appointmentId", auth_middleware_1.default.authorize([constant_1.default.USER.ROLES.USER]), appointment_controller_1.DeleteAppointment);
 exports.default = AppointmentRouter;

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, StyleSheet, View, Pressable, TouchableOpacity } from "react-native";
+import { Text, StyleSheet, View, Pressable, TouchableOpacity, Alert } from "react-native";
 import { Image } from "expo-image";
 import SeniorManagementAppointmentCon2 from "../components/SeniorManagementAppointmentCon2";
 import { Color, FontFamily, FontSize, Padding, Border } from "../GlobalStyles";
@@ -112,6 +112,7 @@ const AppointmentView = () => {
   useEffect(() => {
     const { appointmentId } = route.params;
 
+
     const getAppoinmentDetails = async (appointmentId) => {
       try {
         const token = await AsyncStorage.getItem('token');
@@ -119,7 +120,6 @@ const AppointmentView = () => {
           console.error('Token is missing in AsyncStorage');
           return;
         }
-
         const headers = {
           'Authorization': `Bearer ${token}`,
         };
@@ -146,34 +146,31 @@ const AppointmentView = () => {
   }, [route.params]);
 
   const deleteAppointment = async (appointmentId) => {
+
     try {
+
       const token = await AsyncStorage.getItem('token');
       if (!token) {
         console.error('Token is missing in AsyncStorage');
         return;
       }
 
-      console.log(appointmentId)
       const headers = {
         'Authorization': `Bearer ${token}`,
       };
-
-      console.log(headers)
-      // Send a DELETE request to your API endpoint with the appointment ID (id)
-      const response = await axios.put(
+      const response = await axios.patch(
         `https://uee123.onrender.com/api/v1/appointment/delete/${appointmentId}`, { headers }
       );
 
       if (response.data.isSuccessful) {
         Alert.alert("Successfully Deleted Appointment");
-        // You can navigate to a different screen or update the UI as needed.
-        // For example, navigate back to the appointments list:
         navigation.navigate('Appointments');
       } else {
         Alert.alert("Failed to Delete Appointment: " + response.data.message);
       }
     } catch (error) {
-      console.error('Error deleting appointment:', error);
+      console.error('Error deleting appointment:', error.message); // Change "massage" to "message"
+
       Alert.alert("Failed to Delete Appointment: " + error.message);
     }
   };
