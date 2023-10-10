@@ -17,7 +17,7 @@ const CategorySchema = new mongoose_1.default.Schema({
         type: String,
         required: [true, "Category type is required"],
         enum: {
-            values: [constant_1.default.CATEGORYTYPES.NEWS, constant_1.default.CATEGORYTYPES.JOB],
+            values: [constant_1.default.CATEGORYTYPES.NEWS, constant_1.default.CATEGORYTYPES.JOB, constant_1.default.CATEGORYTYPES.CERTIFICATE, constant_1.default.CATEGORYTYPES.SERVICETYPE],
             message: "Valid category type required",
         },
     },
