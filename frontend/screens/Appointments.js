@@ -116,8 +116,9 @@ const Appointments = () => {
     }
   };
 
-  const handleAppointmentView = () => {
-    navigation.navigate("AppointmentView");
+  const handleAppointmentView = (id) => {
+    console.log(id)
+    navigation.navigate('AppointmentView', { appointmentId: id })
   };
 
   const handleAddNewAppointment = () => {
@@ -278,7 +279,7 @@ const Appointments = () => {
             <TouchableOpacity
               key={index}
               style={styles.appointmentItem}
-              onPress={handleAppointmentView}
+              onPress={handleAppointmentView(item._id)}
             >
               <Image
                 source={require("../assets/ellipse.png")}

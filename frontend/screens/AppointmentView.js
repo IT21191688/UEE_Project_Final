@@ -4,31 +4,152 @@ import { Image } from "expo-image";
 import SeniorManagementAppointmentCon2 from "../components/SeniorManagementAppointmentCon2";
 import { Color, FontFamily, FontSize, Padding, Border } from "../GlobalStyles";
 import Property1Primary from "../components/Property1Primary";
+import { useRoute } from '@react-navigation/native';
+import axios from 'axios';
+import { useState, useEffect } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AppointmentView = () => {
+  const route = useRoute();
+  const [appointmentDetails, setAppointmentDetails] = useState(null);
 
 
+  // Your time slots data
+  const timeSlots = [
+    {
+      id: 1,
+      timeSlot: "9:00 AM - 09:30 AM",
+    },
+    {
+      id: 2,
+      timeSlot: "09:30 AM - 10:00 AM",
+    },
+    {
+      id: 3,
+      timeSlot: "10:00 AM - 10:30 AM",
+    },
+    {
+      id: 4,
+      timeSlot: "10:30 AM - 11:00 AM",
+    },
+    {
+      id: 5,
+      timeSlot: "11:00 AM - 11:30 AM",
+    },
+    {
+      id: 6,
+      timeSlot: "11:30 AM - 12:00 PM",
+    },
+    {
+      id: 7,
+      timeSlot: "12:00 PM - 12:30 PM",
+    },
+    {
+      id: 8,
+      timeSlot: "12:30 PM - 1:00 PM",
+    },
+    {
+      id: 9,
+      timeSlot: "01:00 PM - 1:30 PM",
+    },
+    {
+      id: 10,
+      timeSlot: "01:30 PM - 2:00 PM",
+    },
+    {
+      id: 11,
+      timeSlot: "03:00 PM - 3:30 PM",
+    },
+    {
+      id: 12,
+      timeSlot: "03:30 PM - 4:00 PM",
+    },
+    {
+      id: 13,
+      timeSlot: "04:00 PM - 4:30 PM",
+    },
+    {
+      id: 14,
+      timeSlot: "04:30 PM - 5:00 PM",
+    },
+  ];
+  const ststus = [
+    {
+      id: 2,
+      status: "Pending"
 
+    },
+    {
+      id: 3,
+      status: "Approve"
 
+    },
+    {
+      id: 4,
+      status: "Reject"
+
+    }
+  ]
+
+  function findTimeSlotById(id) {
+    const slot = timeSlots.find(slot => slot.id === id);
+    return slot ? slot.timeSlot : 'Not Found';
+  }
+
+  function findStatus(id) {
+    const slot = ststus.find(slot => slot.id === id);
+    return slot ? slot.status : 'Not Found';
+  }
+
+  useEffect(() => {
+    const { appointmentId } = route.params;
+
+    const getAppoinmentDetails = async (appointmentId) => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          console.error('Token is missing in AsyncStorage');
+          return;
+        }
+
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+        };
+
+        // Make a GET request to fetch appointment details by ID
+        const response = await axios.get(
+          `https://uee123.onrender.com/api/v1/appointment/getAppoinmentDetails/${appointmentId}`,
+          { headers }
+        );
+
+        if (response.data.isSuccessful) {
+          const fetchedAppointment = response.data.data;
+          setAppointmentDetails(fetchedAppointment);
+          console.log('Fetched Appointment:', fetchedAppointment);
+        } else {
+          console.error("Failed to fetch appointment:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching appointment:", error);
+      }
+    };
+
+    getAppoinmentDetails(appointmentId);
+  }, [route.params]);
 
   return (
     <View style={styles.appointmentView}>
       <Text style={styles.description}>Description</Text>
-
       <Image
         style={[styles.akarIconschevronLeft, styles.editIconLayout]}
         contentFit="cover"
         source={require("../assets/akariconschevronleft.png")}
       />
-      <Text style={[styles.sedUtPerspiciatis, styles.timeSlotPosition]}>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab
-        illo inventore veritatis et quasi architecto beatae vitae dicta sunt
-        explicabo. Sed ut perspiciatis unde omnis iste natus error sit
-        voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque
-        ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
-        dicta sunt explicabo.
-      </Text>
+      {appointmentDetails && (
+        <Text style={[styles.sedUtPerspiciatis, styles.timeSlotPosition]}>
+          {appointmentDetails.description}
+        </Text>
+      )}
       <View style={[styles.frameParent, styles.frameParentLayout]}>
         <View style={[styles.xnixlinetrash2Wrapper, styles.frameParentLayout]}>
           <Image
@@ -44,29 +165,31 @@ const AppointmentView = () => {
         />
       </View>
       <SeniorManagementAppointmentCon2 />
-      <Text style={[styles.negotiable, styles.timeSlotTypo]}>13/05/22</Text>
+      {appointmentDetails && (
+        <Text style={[styles.negotiable, styles.timeSlotTypo]}>
+          {appointmentDetails.date}
+        </Text>
+      )}
       <View style={[styles.vectorParent, styles.timeSlotPosition]}>
         <Image
           style={[styles.groupChild, styles.groupChildLayout]}
           contentFit="cover"
           source={require("../assets/rectangle-61.png")}
         />
-        <Text style={[styles.timeSlot, styles.timeSlotTypo]}>
-          Time slot : 8.00AM - 8.30AM
-        </Text>
+        {appointmentDetails && (
+          <Text style={[styles.timeSlot, styles.timeSlotTypo]}>
+            Time slot : {findTimeSlotById(appointmentDetails.appointmentTime)}
+          </Text>
+        )}
       </View>
-      <Pressable style={styles.button} >
-        <Text style={styles.buttonText}>Pending</Text>
+      <Pressable style={styles.button}>
+        <Text style={styles.buttonText}>
+          {appointmentDetails ? appointmentDetails.status : 'Loading...'}
+        </Text>
       </Pressable>
-      {/* <Image
-        style={styles.menuBarIcon}
-        contentFit="cover"
-        source={require("../assets/menu-bar3.png")}
-      /> */}
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   editIconLayout: {
     height: 24,
