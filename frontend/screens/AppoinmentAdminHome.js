@@ -101,7 +101,7 @@ const AppointmentAdminHome = () => {
 
             // Make an API GET request to fetch appointments
             const response = await axios.get(
-                "https://uee123.onrender.com/api/v1/appointment/getAppointments", { headers }
+                "https://uee123.onrender.com/api/v1/appointment/getAllAppointments", { headers }
             );
 
             if (response.data.isSuccessful) {
@@ -212,12 +212,6 @@ const AppointmentAdminHome = () => {
             </View>
             {/* Header */}
 
-            <TouchableOpacity
-                style={styles.newAppointment}
-                onPress={handleAddNewAppointment}
-            >
-                <Text style={styles.buttonTextAdd}>Add new Appointment</Text>
-            </TouchableOpacity>
             <View style={styles.btnsetcontainer}>
                 <Pressable
                     style={[
@@ -522,7 +516,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 16,
-        top: 250
+        top: 200
     },
     button: {
         flex: 1,
@@ -640,7 +634,7 @@ const styles = StyleSheet.create({
         color: "#95969D",
     },
     scroller: {
-        top: 270
+        top: 220
     },
     selectedButton: {
         backgroundColor: 'white', // Background color when selected
