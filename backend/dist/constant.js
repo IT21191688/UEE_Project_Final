@@ -24,6 +24,8 @@ const constants = {
     CATEGORYTYPES: {
         NEWS: "news",
         JOB: "job",
+        CERTIFICATE: "certificate",
+        SERVICETYPE: "serviceType",
     },
 };
 exports.default = constants;
