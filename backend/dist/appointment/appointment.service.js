@@ -35,6 +35,19 @@ const findAllByOrgAndDateAndTimeSlot = (organizationId, date, timeSlot) => __awa
         },
     });
 });
+const findAllAppointments = () => {
+    return appointment_model_1.default.find({
+        status: {
+            $in: [
+                constant_1.default.WELLKNOWNSTATUS.PENDING,
+                constant_1.default.WELLKNOWNSTATUS.APPROVE,
+                constant_1.default.WELLKNOWNSTATUS.DISABLED,
+            ],
+        },
+    })
+        .populate("addedBy", "-createdAt -updatedAt -status")
+        .populate("organization", "-createdAt -updatedAt -status");
+};
 const findAllByOrgAndDate = (organization, date) => {
     return appointment_model_1.default.find({
         organization,
@@ -107,4 +120,5 @@ exports.default = {
     findById,
     findByDateAndApproved,
     findExpiredAppointments,
+    findAllAppointments
 };

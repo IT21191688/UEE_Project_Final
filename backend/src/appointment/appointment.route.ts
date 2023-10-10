@@ -9,7 +9,8 @@ import {
   ApproveOrRejectAppointment,
   UpdateAppointment,
   DeleteAppointment,
-  GetAppointmentDetails
+  GetAppointmentDetails,
+  GetAllAppointmentsAdmin
 } from "./appointment.controller";
 
 const AppointmentRouter = Router();
@@ -29,6 +30,15 @@ AppointmentRouter.get(
     constants.USER.ROLES.ADMIN,
   ]),
   GetAllAppointments
+);
+
+AppointmentRouter.get(
+  "/getAllAppointments",
+  authMiddleware.authorize([
+    constants.USER.ROLES.USER,
+    constants.USER.ROLES.ADMIN,
+  ]),
+  GetAllAppointmentsAdmin
 );
 
 AppointmentRouter.put(

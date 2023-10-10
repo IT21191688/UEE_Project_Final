@@ -117,6 +117,33 @@ const GetAllAppointments = async (req: Request, res: Response) => {
   if (auth.role == constants.USER.ROLES.ADMIN) {
     const user: any = await userService.findById(auth._id);
     appointments = await appointmentService.findAllByOrg(user.organization);
+    //appointments=await appointmentService.findAllAppointments();
+
+    
+  } else {
+    appointments = await appointmentService.findAllByAddedBy(auth._id);
+  }
+
+  CustomResponse(
+    res,
+    true,
+    StatusCodes.OK,
+    "Appointments fetched successfully!",
+    appointments
+  );
+};
+
+const GetAllAppointmentsAdmin = async (req: Request, res: Response) => {
+  const auth: any = req.auth;
+
+  await disableExpiredAppointments();
+
+  let appointments: any = null;
+  if (auth.role == constants.USER.ROLES.ADMIN) {
+   
+    appointments=await appointmentService.findAllAppointments();
+
+    
   } else {
     appointments = await appointmentService.findAllByAddedBy(auth._id);
   }
@@ -317,5 +344,6 @@ export {
   ApproveOrRejectAppointment,
   UpdateAppointment,
   DeleteAppointment,
-  GetAppointmentDetails
+  GetAppointmentDetails,
+  GetAllAppointmentsAdmin
 };

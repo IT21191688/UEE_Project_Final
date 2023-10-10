@@ -27,6 +27,20 @@ const findAllByOrgAndDateAndTimeSlot = async (
   });
 };
 
+const findAllAppointments = () => {
+  return Appointment.find({
+    status: {
+      $in: [
+        constants.WELLKNOWNSTATUS.PENDING,
+        constants.WELLKNOWNSTATUS.APPROVE,
+        constants.WELLKNOWNSTATUS.DISABLED,
+      ],
+    },
+  })
+    .populate("addedBy", "-createdAt -updatedAt -status")
+    .populate("organization", "-createdAt -updatedAt -status");
+};
+
 const findAllByOrgAndDate = (organization: any, date: any) => {
   return Appointment.find({
     organization,
@@ -106,4 +120,5 @@ export default {
   findById,
   findByDateAndApproved,
   findExpiredAppointments,
+  findAllAppointments
 };
