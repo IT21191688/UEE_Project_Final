@@ -50,7 +50,7 @@ AppointmentRouter.patch(
   UpdateAppointment
 );
 
-AppointmentRouter.put(
+AppointmentRouter.patch(
   "/delete/:appointmentId",
   authMiddleware.authorize([constants.USER.ROLES.USER]),
   DeleteAppointment
