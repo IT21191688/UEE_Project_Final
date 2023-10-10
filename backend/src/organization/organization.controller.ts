@@ -16,7 +16,7 @@ const GetAllOrganizations = async (req: Request, res: Response) => {
     organizations
   );
 };
-
+//
 const GetOrganizationById = async (req: Request, res: Response) => {
   const id = req.params.id;
 
