@@ -5,6 +5,8 @@ import { StyleSheet, Pressable, Text, TextInput, View, TouchableOpacity, Alert }
 import { CheckBox } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 const Login = () => {
@@ -25,24 +27,33 @@ const Login = () => {
 
   const handleLoginPress = async () => {
     try {
-
       const response = await axios.post('https://uee123.onrender.com/api/v1/auth/login', {
         email,
         password,
       });
 
       if (response.status === 200) {
-        const { token, role } = response.data;
+        const { data } = response.data;
 
-        // Store the token and role in AsyncStorage or a similar storage mechanism
-        //await AsyncStorage.setItem('token', token);
-        //await AsyncStorage.setItem('role', role);
-
-        // Navigate to the appropriate screen based on the user's role
-        if (role === 'admin') {
-          navigation.navigate('Appointments');
+        if (data.token) {
+          // Store the token and role in AsyncStorage or a similar storage mechanism
+          await AsyncStorage.setItem('token', data.token);
         } else {
-          navigation.navigate('Appointments');
+          // Handle the case where the token is missing or undefined
+          console.error('Token is missing or undefined');
+        }
+
+        if (data.user && data.user.role) {
+          await AsyncStorage.setItem('role', data.user.role);
+          // Navigate to the appropriate screen based on the user's role
+          if (data.user.role === 'admin') {
+            navigation.navigate('AppoinmentAdminHome');
+          } else {
+            navigation.navigate('Appointments');
+          }
+        } else {
+          // Handle the case where the user role is missing or undefined
+          console.error('User role is missing or undefined');
         }
 
         // Display a success alert
@@ -58,6 +69,7 @@ const Login = () => {
       console.error('Login error:', error);
     }
   };
+
 
 
 
@@ -115,10 +127,10 @@ const Login = () => {
       </View>
 
       {/* Login Button */}
-      <Pressable style={[styles.save, styles.savePosition]} onPress={handleLoginPress}>
+      <TouchableOpacity style={[styles.save, styles.savePosition]} onPress={handleLoginPress}>
         <View style={[styles.saveChild, styles.savePosition]} />
         <Text style={[styles.login1, styles.login1Position]}>Login</Text>
-      </Pressable>
+      </TouchableOpacity>
 
       {/* Forgot Password */}
       <Text style={[styles.forgotPassword, styles.passwordTypo]}>
@@ -180,11 +192,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   passwordTypo: {
-    fontFamily: FontFamily.dMSansRegular,
-    fontSize: FontSize.size_xs,
   },
   email1Typo: {
-    fontFamily: FontFamily.dMSansBold,
     fontWeight: "700",
   },
   childShadowBox: {
@@ -227,9 +236,7 @@ const styles = StyleSheet.create({
   },
   password1: {
     fontWeight: "600",
-    fontFamily: FontFamily.openSansSemiBold,
     textAlign: "left",
-    fontSize: FontSize.size_xs,
     left: 3,
     top: 0,
     color: Color.colorMidnightblue_200,
@@ -238,7 +245,6 @@ const styles = StyleSheet.create({
     top: 38,
     width: 240,
     left: 15,
-    fontFamily: FontFamily.dMSansRegular,
     position: "absolute",
   },
   password: {
@@ -248,7 +254,6 @@ const styles = StyleSheet.create({
     top: 38,
     left: 15,
     width: 285,
-    fontFamily: FontFamily.dMSansRegular,
     position: "absolute",
   },
   email1: {
@@ -269,7 +274,6 @@ const styles = StyleSheet.create({
   rememberMe1: {
     left: 39,
     color: Color.colorDarkgray_100,
-    fontFamily: FontFamily.dMSansRegular,
     fontSize: FontSize.size_xs,
   },
   rememberMe: {

@@ -6,6 +6,11 @@ import { Color, FontFamily, FontSize, Padding, Border } from "../GlobalStyles";
 import Property1Primary from "../components/Property1Primary";
 
 const AppointmentView = () => {
+
+
+
+
+
   return (
     <View style={styles.appointmentView}>
       <Text style={styles.description}>Description</Text>
