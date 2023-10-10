@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, StyleSheet, View, Pressable } from "react-native";
+import { Text, StyleSheet, View, Pressable, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import SeniorManagementAppointmentCon2 from "../components/SeniorManagementAppointmentCon2";
 import { Color, FontFamily, FontSize, Padding, Border } from "../GlobalStyles";
@@ -7,12 +7,14 @@ import Property1Primary from "../components/Property1Primary";
 import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const AppointmentView = () => {
   const route = useRoute();
+  const navigation = useNavigation();
   const [appointmentDetails, setAppointmentDetails] = useState(null);
-
 
   // Your time slots data
   const timeSlots = [
@@ -91,6 +93,12 @@ const AppointmentView = () => {
     }
   ]
 
+
+  const handleEditAppointment = (appointmentId) => {
+    navigation.navigate('EditAppoinment', { appointmentId });
+  };
+
+
   function findTimeSlotById(id) {
     const slot = timeSlots.find(slot => slot.id === id);
     return slot ? slot.timeSlot : 'Not Found';
@@ -137,39 +145,103 @@ const AppointmentView = () => {
     getAppoinmentDetails(appointmentId);
   }, [route.params]);
 
+  const deleteAppointment = async (appointmentId) => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        console.error('Token is missing in AsyncStorage');
+        return;
+      }
+
+      console.log(appointmentId)
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+      };
+
+      console.log(headers)
+      // Send a DELETE request to your API endpoint with the appointment ID (id)
+      const response = await axios.put(
+        `https://uee123.onrender.com/api/v1/appointment/delete/${appointmentId}`, { headers }
+      );
+
+      if (response.data.isSuccessful) {
+        Alert.alert("Successfully Deleted Appointment");
+        // You can navigate to a different screen or update the UI as needed.
+        // For example, navigate back to the appointments list:
+        navigation.navigate('Appointments');
+      } else {
+        Alert.alert("Failed to Delete Appointment: " + response.data.message);
+      }
+    } catch (error) {
+      console.error('Error deleting appointment:', error);
+      Alert.alert("Failed to Delete Appointment: " + error.message);
+    }
+  };
+
   return (
     <View style={styles.appointmentView}>
       <Text style={styles.description}>Description</Text>
-      <Image
-        style={[styles.akarIconschevronLeft, styles.editIconLayout]}
-        contentFit="cover"
-        source={require("../assets/akariconschevronleft.png")}
-      />
+      <TouchableOpacity
+
+      >
+        <Image
+          style={[styles.akarIconschevronLeft, styles.editIconLayout]}
+          contentFit="cover"
+          source={require("../assets/akariconschevronleft.png")}
+        />
+      </TouchableOpacity>
       {appointmentDetails && (
         <Text style={[styles.sedUtPerspiciatis, styles.timeSlotPosition]}>
           {appointmentDetails.description}
         </Text>
       )}
       <View style={[styles.frameParent, styles.frameParentLayout]}>
-        <View style={[styles.xnixlinetrash2Wrapper, styles.frameParentLayout]}>
+
+
+        <TouchableOpacity style={[styles.xnixlinetrash2Wrapper, styles.frameParentLayout]} onPress={() => deleteAppointment(appointmentDetails._id)}>
           <Image
             style={styles.xnixlinetrash2Icon}
             contentFit="cover"
             source={require("../assets/xnixlinetrash-21.png")}
           />
-        </View>
-        <Image
-          style={[styles.editIcon, styles.editIconLayout]}
-          contentFit="cover"
-          source={require("../assets/edit.png")}
-        />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => handleEditAppointment(appointmentDetails._id)}>
+          <Image
+            style={[styles.editIcon, styles.editIconLayout]}
+            contentFit="cover"
+            source={require("../assets/edit.png")}
+          />
+        </TouchableOpacity>
       </View>
-      <SeniorManagementAppointmentCon2 />
-      {appointmentDetails && (
-        <Text style={[styles.negotiable, styles.timeSlotTypo]}>
-          {appointmentDetails.date}
-        </Text>
-      )}
+      <View style={styles.groupParent}>
+        <View style={styles.spotigyWrapper}>
+          <Image
+            style={styles.spotigyWrapper}
+            contentFit="cover"
+            source={require("../assets/spotigy1.png")}
+          />
+        </View>
+        <View
+          style={[styles.seniorManagementAppointmentParent, styles.seniorLayout]}
+        >
+          {appointmentDetails && (
+            <Text
+              style={[styles.seniorManagementAppointment, styles.spotifyPosition]}
+            >
+              {appointmentDetails.title}
+            </Text>
+          )}
+          <Text style={[styles.spotify, styles.spotifyPosition]}>Spotify</Text>
+        </View>
+      </View>
+      {
+        appointmentDetails && (
+          <Text style={[styles.negotiable, styles.timeSlotTypo]}>
+            {new Date(appointmentDetails.appointmentDate).toLocaleDateString("en-US")}
+          </Text>
+        )
+      }
       <View style={[styles.vectorParent, styles.timeSlotPosition]}>
         <Image
           style={[styles.groupChild, styles.groupChildLayout]}
@@ -184,12 +256,19 @@ const AppointmentView = () => {
       </View>
       <Pressable style={styles.button}>
         <Text style={styles.buttonText}>
-          {appointmentDetails ? appointmentDetails.status : 'Loading...'}
+          {appointmentDetails ? findStatus(appointmentDetails.status) : 'Loading...'}
         </Text>
       </Pressable>
     </View>
   );
 };
+
+
+
+
+
+
+
 const styles = StyleSheet.create({
   editIconLayout: {
     height: 24,
@@ -281,7 +360,7 @@ const styles = StyleSheet.create({
   },
   frameParent: {
     top: 57,
-    left: 320,
+    left: 280,
     width: 65,
   },
   negotiable: {
@@ -342,6 +421,60 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 12,
     color: 'white',
+  },
+
+
+
+  seniorLayout: {
+    width: 259,
+    top: 0,
+  },
+  spotifyPosition: {
+    textAlign: "left",
+    left: 0,
+    position: "absolute",
+  },
+  spotigyWrapper: {
+    width: 64,
+    left: 0,
+    top: 0,
+    height: 64,
+    position: "absolute",
+  },
+  seniorManagementAppointment: {
+    fontSize: FontSize.medium14_size,
+    letterSpacing: -0.1,
+    lineHeight: 18,
+    fontWeight: "600",
+    fontFamily: FontFamily.semibold14,
+    color: Color.colorBlack,
+    display: "flex",
+    alignItems: "center",
+    height: 38,
+    width: 259,
+    top: 12,
+  },
+  spotify: {
+    top: 31,
+    fontSize: FontSize.medium13_size,
+    fontWeight: "700",
+    fontFamily: FontFamily.dMSansBold,
+    color: Color.colorDarkgray_200,
+    width: 153,
+    height: 16,
+  },
+  seniorManagementAppointmentParent: {
+    left: 73,
+    height: 47,
+    position: "absolute",
+    width: 259,
+  },
+  groupParent: {
+    top: 104,
+    left: 21,
+    width: 332,
+    height: 64,
+    position: "absolute",
   },
 });
 

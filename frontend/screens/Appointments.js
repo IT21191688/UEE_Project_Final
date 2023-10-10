@@ -279,7 +279,7 @@ const Appointments = () => {
             <TouchableOpacity
               key={index}
               style={styles.appointmentItem}
-              onPress={handleAppointmentView(item._id)}
+              onPress={() => handleAppointmentView(item._id)}
             >
               <Image
                 source={require("../assets/ellipse.png")}
@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginVertical: 8,
     position: "absolute",
-    bottom: 450, // Adjust the bottom position as needed
+    bottom: 420, // Adjust the bottom position as needed
     alignSelf: "center", // Center it horizontally
     zIndex: 1, // Ensure it's above other elements
   },
