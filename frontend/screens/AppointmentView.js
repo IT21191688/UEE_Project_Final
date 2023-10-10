@@ -147,20 +147,21 @@ const AppointmentView = () => {
 
   const deleteAppointment = async (appointmentId) => {
 
+    const token = await AsyncStorage.getItem('token');
+
+    const headers = {
+      'Authorization': `Bearer ${token}`,
+    };
+
+
     try {
 
-      const token = await AsyncStorage.getItem('token');
-      if (!token) {
-        console.error('Token is missing in AsyncStorage');
-        return;
-      }
 
-      const headers = {
-        'Authorization': `Bearer ${token}`,
-      };
+
       const response = await axios.patch(
         `https://uee123.onrender.com/api/v1/appointment/delete/${appointmentId}`, { headers }
       );
+      console.log(response)
 
       if (response.data.isSuccessful) {
         Alert.alert("Successfully Deleted Appointment");

@@ -117,6 +117,33 @@ const GetAllAppointments = async (req: Request, res: Response) => {
   if (auth.role == constants.USER.ROLES.ADMIN) {
     const user: any = await userService.findById(auth._id);
     appointments = await appointmentService.findAllByOrg(user.organization);
+    //appointments=await appointmentService.findAllAppointments();
+
+    
+  } else {
+    appointments = await appointmentService.findAllByAddedBy(auth._id);
+  }
+
+  CustomResponse(
+    res,
+    true,
+    StatusCodes.OK,
+    "Appointments fetched successfully!",
+    appointments
+  );
+};
+
+const GetAllAppointmentsAdmin = async (req: Request, res: Response) => {
+  const auth: any = req.auth;
+
+  await disableExpiredAppointments();
+
+  let appointments: any = null;
+  if (auth.role == constants.USER.ROLES.ADMIN) {
+   
+    appointments=await appointmentService.findAllAppointments();
+
+    
   } else {
     appointments = await appointmentService.findAllByAddedBy(auth._id);
   }
@@ -292,9 +319,11 @@ const GetAppointmentDetails = async (req: Request, res: Response) => {
       throw new NotFoundError("Appointment not found!");
     }
 
+
     if (appointment.addedBy.toString() !== auth._id) {
       throw new ForbiddenError("You are not authorized to view this appointment!");
     }
+  
 
     // Handle your response here, returning the appointment details
     CustomResponse(
@@ -310,6 +339,32 @@ const GetAppointmentDetails = async (req: Request, res: Response) => {
   }
 };
 
+const GetAppointmentDetailsAdmin = async (req: Request, res: Response) => {
+  try {
+     const appointmentID: any = req.params.appointmentId;
+    const auth: any = req.auth;
+
+    // Use your appointmentService to find the appointment by ID
+    const appointment: any = await appointmentService.findById(appointmentID);
+
+    if (!appointment) {
+      throw new NotFoundError("Appointment not found!");
+    }
+
+    if (!appointment) {
+      throw new NotFoundError("Appointment not found!");
+    }
+
+    CustomResponse(res, true, StatusCodes.OK, "Appointment details fetched successfully", appointment);
+  } catch (error) {
+    // Handle errors here and send an appropriate response
+    console.error(error);
+    // Return an error response, for example:
+    CustomResponse(res, false, StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch appointment details", null);
+  }
+};
+
+
 export {
   CreateAppointment,
   GetAvailableSlots,
@@ -317,5 +372,7 @@ export {
   ApproveOrRejectAppointment,
   UpdateAppointment,
   DeleteAppointment,
-  GetAppointmentDetails
+  GetAppointmentDetails,
+  GetAllAppointmentsAdmin,
+  GetAppointmentDetailsAdmin
 };

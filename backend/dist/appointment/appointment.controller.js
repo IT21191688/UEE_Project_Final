@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetAppointmentDetails = exports.DeleteAppointment = exports.UpdateAppointment = exports.ApproveOrRejectAppointment = exports.GetAllAppointments = exports.GetAvailableSlots = exports.CreateAppointment = void 0;
+exports.GetAppointmentDetailsAdmin = exports.GetAllAppointmentsAdmin = exports.GetAppointmentDetails = exports.DeleteAppointment = exports.UpdateAppointment = exports.ApproveOrRejectAppointment = exports.GetAllAppointments = exports.GetAvailableSlots = exports.CreateAppointment = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const appointment_util_1 = require("./appointment.util");
 const appointment_service_1 = __importDefault(require("./appointment.service"));
@@ -87,6 +87,7 @@ const GetAllAppointments = (req, res) => __awaiter(void 0, void 0, void 0, funct
     if (auth.role == constant_1.default.USER.ROLES.ADMIN) {
         const user = yield user_service_1.default.findById(auth._id);
         appointments = yield appointment_service_1.default.findAllByOrg(user.organization);
+        //appointments=await appointmentService.findAllAppointments();
     }
     else {
         appointments = yield appointment_service_1.default.findAllByAddedBy(auth._id);
@@ -94,6 +95,19 @@ const GetAllAppointments = (req, res) => __awaiter(void 0, void 0, void 0, funct
     (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "Appointments fetched successfully!", appointments);
 });
 exports.GetAllAppointments = GetAllAppointments;
+const GetAllAppointmentsAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const auth = req.auth;
+    yield (0, appointment_util_1.disableExpiredAppointments)();
+    let appointments = null;
+    if (auth.role == constant_1.default.USER.ROLES.ADMIN) {
+        appointments = yield appointment_service_1.default.findAllAppointments();
+    }
+    else {
+        appointments = yield appointment_service_1.default.findAllByAddedBy(auth._id);
+    }
+    (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "Appointments fetched successfully!", appointments);
+});
+exports.GetAllAppointmentsAdmin = GetAllAppointmentsAdmin;
 const ApproveOrRejectAppointment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
     const appointmentId = req.params.appointmentId;
@@ -209,3 +223,25 @@ const GetAppointmentDetails = (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.GetAppointmentDetails = GetAppointmentDetails;
+const GetAppointmentDetailsAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const appointmentID = req.params.appointmentId;
+        const auth = req.auth;
+        // Use your appointmentService to find the appointment by ID
+        const appointment = yield appointment_service_1.default.findById(appointmentID);
+        if (!appointment) {
+            throw new NotFoundError_1.default("Appointment not found!");
+        }
+        if (!appointment) {
+            throw new NotFoundError_1.default("Appointment not found!");
+        }
+        (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "Appointment details fetched successfully", appointment);
+    }
+    catch (error) {
+        // Handle errors here and send an appropriate response
+        console.error(error);
+        // Return an error response, for example:
+        (0, response_1.default)(res, false, http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch appointment details", null);
+    }
+});
+exports.GetAppointmentDetailsAdmin = GetAppointmentDetailsAdmin;
