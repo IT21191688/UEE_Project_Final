@@ -123,12 +123,17 @@ const AppoinmentAdminView = () => {
                 const headers = {
                     'Authorization': `Bearer ${token}`,
                 };
+                console.log(headers);
+                console.log(token)
 
                 // Make a GET request to fetch appointment details by ID
+
                 const response = await axios.get(
-                    `https://uee123.onrender.com/api/v1/appointment/getAppoinmentDetails/${appointmentId}`,
+                    `https://uee123.onrender.com/api/v1/appointment/getAppointmentDetailsAdmin/${appointmentId}`,
                     { headers }
                 );
+
+
 
                 if (response.data.isSuccessful) {
                     const fetchedAppointment = response.data.data;
@@ -144,6 +149,68 @@ const AppoinmentAdminView = () => {
 
         getAppoinmentDetails(appointmentId);
     }, [route.params]);
+
+
+
+    const handleApprove = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                console.error('Token is missing in AsyncStorage');
+                return;
+            }
+
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+            };
+
+            const response = await axios.put(
+                `https://uee123.onrender.com/api/v1/appointment/approveReject/${appointmentDetails._id}?status=3`,
+                null, // You can pass an empty body for this action
+                { headers }
+            );
+
+            if (response.data.isSuccessful) {
+                Alert.alert("Appointment Approved");
+                // You may want to refresh the appointment details or navigate to another screen.
+            } else {
+                Alert.alert("Failed to Approve Appointment: " + response.data.message);
+            }
+        } catch (error) {
+            console.error('Error approving appointment:', error);
+            Alert.alert("Failed to Approve Appointment: " + error.message);
+        }
+    };
+
+    const handleReject = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                console.error('Token is missing in AsyncStorage');
+                return;
+            }
+
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+            };
+
+            const response = await axios.put(
+                `https://uee123.onrender.com/api/v1/appointment/approveReject/${appointmentDetails._id}`,
+                null, // You can pass an empty body for this action
+                { headers }
+            );
+
+            if (response.data.isSuccessful) {
+                Alert.alert("Appointment Rejected");
+                // You may want to refresh the appointment details or navigate to another screen.
+            } else {
+                Alert.alert("Failed to Reject Appointment: " + response.data.message);
+            }
+        } catch (error) {
+            console.error('Error rejecting appointment:', error);
+            Alert.alert("Failed to Reject Appointment: " + error.message);
+        }
+    };
 
     return (
         <View style={styles.appointmentView}>
@@ -226,6 +293,15 @@ const AppoinmentAdminView = () => {
                     {appointmentDetails ? findStatus(appointmentDetails.status) : 'Loading...'}
                 </Text>
             </Pressable>
+
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.approveButton} onPress={handleApprove}>
+                    <Text style={styles.buttonText}>Approve</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.rejectButton} onPress={handleReject}>
+                    <Text style={styles.buttonText}>Reject</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -442,6 +518,35 @@ const styles = StyleSheet.create({
         width: 332,
         height: 64,
         position: "absolute",
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginHorizontal: 10,
+        top: 600
+    },
+    approveButton: {
+        flex: 1,
+        height: 40,
+        backgroundColor: '#130160',
+        borderRadius: 6,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    rejectButton: {
+        flex: 1,
+        height: 40,
+        backgroundColor: 'transparent',
+        borderColor: '#130160',
+        borderWidth: 1,
+        borderRadius: 6,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fc3a3a'
+    },
+    buttonText: {
+        color: '', // Text color for both buttons
+        fontWeight: 'bold',
     },
 });
 

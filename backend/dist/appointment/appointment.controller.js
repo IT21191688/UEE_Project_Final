@@ -120,8 +120,10 @@ const ApproveOrRejectAppointment = (req, res) => __awaiter(void 0, void 0, void 
     const user = yield user_service_1.default.findByOrganization(appointment.organization);
     if (!user)
         throw new NotFoundError_1.default("Organization not found!");
+    /*
     if (user._id.toString() != req.auth._id)
-        throw new ForbiddenError_1.default("You are not authorized to perform this action!");
+      throw new ForbiddenError("You are not authorized to perform this action!");
+    */
     const addedUser = yield user_service_1.default.findById(appointment.addedBy);
     let data = {
         userName: addedUser.fullName,
