@@ -146,32 +146,27 @@ const AppointmentView = () => {
   }, [route.params]);
 
   const deleteAppointment = async (appointmentId) => {
-
     const token = await AsyncStorage.getItem('token');
-
     const headers = {
       'Authorization': `Bearer ${token}`,
     };
 
-
     try {
-
-
-
-      const response = await axios.patch(
-        `https://uee123.onrender.com/api/v1/appointment/delete/${appointmentId}`, { headers }
+      const response = await axios.patch( // Use PATCH method to match the server route
+        `http://uee123.onrender.com/api/v1/appointment/delete/${appointmentId}`,
+        null, // Remove the request body
+        { headers }
       );
-      console.log(response)
+      console.log(response);
 
       if (response.data.isSuccessful) {
         Alert.alert("Successfully Deleted Appointment");
         navigation.navigate('Appointments');
       } else {
-        Alert.alert("Failed to Delete Appointment: " + response.data.message);
+        Alert.alert("Error" + response.data.message);
       }
     } catch (error) {
-      console.error('Error deleting appointment:', error.message); // Change "massage" to "message"
-
+      console.error('Error deleting appointment:', error.message);
       Alert.alert("Failed to Delete Appointment: " + error.message);
     }
   };

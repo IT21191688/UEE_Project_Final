@@ -199,9 +199,10 @@ const UpdateAppointment = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 exports.UpdateAppointment = UpdateAppointment;
 const DeleteAppointment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const appointmentID = req.params.appointmentId;
+    const appointmentID = req.params.appointmentId.toString();
     const auth = req.auth;
     const appointment = yield appointment_service_1.default.findById(appointmentID);
+    console.log(appointmentID);
     if (!appointment)
         throw new NotFoundError_1.default("Appointment not found!");
     if (appointment.addedBy.toString() != auth._id)

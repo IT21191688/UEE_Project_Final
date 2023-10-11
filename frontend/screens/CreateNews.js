@@ -1,334 +1,132 @@
-import React, { useState, useEffect } from "react";
-import axios from 'axios';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  StyleSheet,
-  Alert,
-} from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import axios from 'axios'; // Import the Axios library
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, Alert, Image } from 'react-native';
+import * as DocumentPicker from 'expo-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Input } from "@rneui/base";
 
 const CreateNews = () => {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("652021f9908ee6af777828aa");
-  const [content, setContent] = useState("");
-  const [newsList, setNewsList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('64eaf5224b77b2ddf24cfabc');
+  const [content, setContent] = useState('');
+  const [newsImage, setNewsImage] = useState(null);
 
+  const selectFile = async () => {
+    const result = await DocumentPicker.getDocumentAsync({ type: 'image/*' });
 
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        // Make an API request to fetch news data
-        const response = await axios.get('https://uee123.onrender.com/api/v1/news/getAllActiveNews');
+    if (result.type === 'success') {
+      setFile(result);
+    } else {
+      Alert.alert('File selection canceled');
+    }
+  };
 
-        if (response.data.isSuccessful) {
-          // Set the fetched news data in state
-          setNewsList(response.data.data);
-          setIsLoading(false);
+  const uploadNews = async () => {
+    if (!file) {
+      Alert.alert('Please select a file first');
+      return;
+    }
+
+    const token = await AsyncStorage.getItem('token');
+
+    if (!token) {
+      console.error('Token is missing in AsyncStorage');
+      return;
+    }
+    console.log(token)
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('category', category);
+    formData.append('content', content);
+    formData.append('file', {
+      name: file.name,
+      type: file.type,
+      uri: file.uri,
+    });
+
+    try {
+      const response = await axios.post('http://192.168.43.93:8090/api/v1/news/create', formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 201) {
+        const data = response.data;
+        if (data.success) {
+          Alert.alert('News uploaded successfully');
         } else {
-          setIsLoading(false);
-          setIsError(true);
+          Alert.alert('News upload failed');
         }
-      } catch (error) {
-        setIsLoading(false);
-        setIsError(true);
-      }
-    };
-
-    fetchNews();
-  }, []);
-
-  //const additionalDocuments = "C:/Users/user/Desktop/finalAsiaCup.PNG";
-/*
-  const handleSubmit = async () => {
-    try {
-      const requestBody = {
-        title: title,
-        category: category,
-        content: content,
-        newsImage: [additionalDocuments],
-      };
-
-      console.log('Request Body:', requestBody);
-
-      // Replace 'YOUR_API_TOKEN' with your actual token
-      const token = await AsyncStorage.getItem('token');
-      if (!token) {
-          console.error('Token is missing in AsyncStorage');
-          return;
-      }
-
-      const headers = {
-        'Authorization': `Bearer ${token}`,
-        //'Content-Type': 'application/json', // Specify the content type
-      };
-
-      const response = await axios.post(
-        'https://uee123.onrender.com/api/v1/news/create',
-        requestBody,
-        { headers }
-      );
-
-      console.log('Response:', response);
-
-      if (response.data.isSuccessful) {
-        // Handle a successful response (e.g., show a success message)
-        console.log('News saved successfully');
-        // You may want to fetch the updated news list here
       } else {
-        // Handle an unsuccessful response (e.g., show an error message)
-        console.error('Failed to save news:', response.data.message);
+        Alert.alert('Server Error', 'Failed to upload news: ' + response.data.message);
       }
     } catch (error) {
-      // Handle any errors that occur during the request
-      console.error('Error saving news:', error);
-    }
-  };
-*/
-
-  const handleSubmit = async () => {
-    try {
-      const requestBody = {
-        title: title,
-        category: category,
-        content: content,
-        newsImage: 'C:/Users/user/Desktop/finalAsiaCup.PNG', // Replace with a default image URL
-      };
-
-      console.log('Request Body:', requestBody);
-
-      // Replace 'YOUR_API_TOKEN' with your actual token
-      const token = await AsyncStorage.getItem('token');
-      if (!token) {
-          console.error('Token is missing in AsyncStorage');
-          return;
-      }
-      const headers = {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      };
-
-      const response = await axios.post(
-        'https://uee123.onrender.com/api/v1/news/create',
-        requestBody,
-        { headers }
-      );
-
-      console.log('Response:', response);
-
-      if (response.data.isSuccessful) {
-        // Handle a successful response (e.g., show a success message)
-        console.log('News saved successfully');
-        // You may want to fetch the updated news list here
-      } else {
-        // Handle an unsuccessful response (e.g., show an error message)
-        console.error('Failed to save news:', response.data.message);
-      }
-    } catch (error) {
-      // Handle any errors that occur during the request
-      console.error('Error saving news:', error);
+      Alert.alert('Error', 'Failed to upload news: ' + error.message);
     }
   };
 
-  /*
-  const handleSubmit = async () => {
+  const handleAddAppointment = async () => {
+
+
+
     try {
-
-
-      // Define the data to be sent to the server
-      const requestBody = {
-        title:title,
-        category:category,
-        content:content,
-        newsImage:additionalDocuments
-        
-        // Add more fields as needed
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        console.error('Token is missing in AsyncStorage');
+        return;
+      }
+      const headers = {
+        'Authorization': `Bearer ${token}`,
       };
+
+      // Create a request body object with the appointment details
+      const requestBody = {
+        title: title,
+        category: category, // Replace with your description
+        content: content,
+        newsImage: newsImage, // Make sure selectedTimeSlot is set to a valid value
+
+      };
+
       console.log(requestBody)
+      const response = await axios.post(
+        'http://uee123.onrender.com/api/v1/news/create',
+        requestBody,
+        { headers }
+      );
 
-      const token = await AsyncStorage.getItem('token');
-                if (!token) {
-                    console.error('Token is missing in AsyncStorage');
-                    return;
-                }
-                const headers = {
-                    'Authorization': `Bearer ${token}`,
-                };
-
-      // Make a POST request to save news data
-      console.log(headers)
-      const response = await axios.post('https://uee123.onrender.com/api/v1/news/create', requestBody,{headers});
-       
-      console.log(response)
       if (response.data.isSuccessful) {
-        // Handle a successful response (e.g., show a success message)
-        console.log('News saved successfully');
-        // You may want to fetch the updated news list here
+        Alert.alert("Successfully Created");
+        //navigation.navigate("AppoinmentSuccess")
       } else {
-        // Handle an unsuccessful response (e.g., show an error message)
-        console.error('Failed to save news:', response.data.message);
+        Alert.alert("Failed Try Again: " + response.data.message);
+        //navigation.navigate("Appointments")
       }
     } catch (error) {
-      // Handle any errors that occur during the request
-      console.error('Error saving news:', error);
+      //console.error('Error creating', error);
+      Alert.alert("Failed to Create" + error.message);
     }
   };
-*/
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <Image
-          source={require("../assets/akariconschevronleft.png")}
-          style={styles.backIcon}
-        />
-        <Text style={styles.title}>Publish a News</Text>
-      </View>
+    <View style={{ top: 100 }}>
+      <Text>Title:</Text>
+      <TextInput value={title} onChangeText={setTitle} />
 
-      <View style={styles.footer}>
-        <Image
-          source={require("../assets/ellipse-1.png")}
-          style={styles.footerIcon}
-        />
-        <Text style={styles.footerText}>DIV-LINK News</Text>
-      </View>
+      <Text>Category:</Text>
+      <TextInput value={category} onChangeText={setCategory} />
 
-      <View style={styles.formContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Title</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Write the title of the news here"
-            placeholderTextColor="#aaa6b9"
-            value={title}
-            onChangeText={(text) => setTitle(text)}
-          />
-        </View>
+      <Text>Content:</Text>
+      <TextInput value={content} onChangeText={setContent} />
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Category</Text>
-          <Picker
-            style={styles.formContainer}
-            selectedValue={category}
-            onValueChange={(itemValue) => setCategory(itemValue)}
-          >
-            <Picker.Item label="Select a category" value="" />
-            <Picker.Item label="Local News" value="category1" />
-            <Picker.Item label="Category 2" value="category2" />
-            {/* Add more categories as needed */}
-          </Picker>
-        </View>
+      <Text>News Image</Text>
+      <TextInput value={newsImage} onChangeText={setNewsImage} />
 
-{/*
-        <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => handleImageUpload(e.target.files[0])}
-      />
-     */}   
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Content</Text>
-          <TextInput
-            style={[styles.input, styles.contentInput]}
-            placeholder="Content"
-            placeholderTextColor="#aaa6b9"
-            value={content}
-            onChangeText={(text) => setContent(text)}
-            multiline
-          />
-        </View>
-
-        <TouchableOpacity style={styles.publishButton} onPress={handleSubmit}>
-          <Text style={styles.publishText}>Publish News</Text>
-        </TouchableOpacity>
-
-       
-       
-      </View>
-    </ScrollView>
+      <Button title="Upload News" onPress={handleAddAppointment} />
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#f5f5f5",
-    paddingVertical: 20,
-    paddingHorizontal: 16,
-    flex: 1,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingTop: 16,
-  },
-  backIcon: {
-    paddingEnd:10,
-    width: 24,
-    height: 24,
-  },
-  title: {
-    paddingTop:38,
-    fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: -20,
-  },
-  formContainer: {
-    backgroundColor: "white",
-    padding: 16,
-    borderRadius: 8,
-    marginTop: 16,
-    elevation: 4,
-  },
-  inputContainer: {
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 4,
-    padding: 8,
-  },
-  contentInput: {
-    height: 120,
-    textAlignVertical: "top",
-  },
-  publishButton: {
-    backgroundColor: "#007bff",
-    borderRadius: 20,
-    padding: 18,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 12,
-  },
-  publishText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  footer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 16,
-  },
-  footerIcon: {
-    width: 24,
-    height: 24,
-  },
-  footerText: {
-    fontSize: 16,
-    marginLeft: 8,
-  },
-});
 
 export default CreateNews;

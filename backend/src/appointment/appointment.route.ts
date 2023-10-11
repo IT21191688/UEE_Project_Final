@@ -72,4 +72,5 @@ AppointmentRouter.patch(
   authMiddleware.authorize([constants.USER.ROLES.USER]),
   DeleteAppointment
 );
+
 export default AppointmentRouter;
