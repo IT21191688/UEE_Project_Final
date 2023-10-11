@@ -14,7 +14,7 @@ const NewsRouter = Router();
 NewsRouter.post(
   "/create",
   authMiddleware.authorize([constants.USER.ROLES.ADMIN]),
-  commonMiddleware.multerUploader.single("newsImage"),
+ // commonMiddleware.multerUploader.single("newsImage"),
   CreateNews
 );
 

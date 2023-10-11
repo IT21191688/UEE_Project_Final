@@ -9,7 +9,9 @@ const auth_middleware_1 = __importDefault(require("../auth/auth.middleware"));
 const common_middleware_1 = __importDefault(require("../common/common.middleware"));
 const constant_1 = __importDefault(require("../constant"));
 const NewsRouter = (0, express_1.Router)();
-NewsRouter.post("/create", auth_middleware_1.default.authorize([constant_1.default.USER.ROLES.ADMIN]), common_middleware_1.default.multerUploader.single("newsImage"), news_controller_1.CreateNews);
+NewsRouter.post("/create", auth_middleware_1.default.authorize([constant_1.default.USER.ROLES.ADMIN]), 
+// commonMiddleware.multerUploader.single("newsImage"),
+news_controller_1.CreateNews);
 NewsRouter.get("/getAllActiveNews", auth_middleware_1.default.authorize([
     constant_1.default.USER.ROLES.ADMIN,
     constant_1.default.USER.ROLES.USER,

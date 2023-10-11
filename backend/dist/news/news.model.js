@@ -20,8 +20,7 @@ const NewsSchema = new mongoose_1.default.Schema({
         required: [true, "Content is required"],
     },
     newsImage: {
-        type: Object,
-        required: [true, "Image is required"],
+        type: String,
     },
     addedBy: {
         type: mongoose_1.default.Schema.Types.ObjectId,

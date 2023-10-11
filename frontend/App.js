@@ -137,6 +137,12 @@ const App = () => {
             component={EditAppoinment}
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="CreateNews"
+            component={CreateNews}
+            options={{ headerShown: false }}
+          />
+
 
           <Stack.Screen
             name="AppoinmentAdminHome"

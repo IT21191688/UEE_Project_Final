@@ -20,8 +20,7 @@ const NewsSchema = new mongoose.Schema(
     },
 
     newsImage: {
-      type: Object,
-      required: [true, "Image is required"],
+      type: String,
     },
 
     addedBy: {

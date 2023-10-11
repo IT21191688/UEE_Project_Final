@@ -16,28 +16,33 @@ import constants from "../constant";
 //create News for admin
 const CreateNews = async (req: Request, res: Response) => {
   let body: any = req.body;
-  let file: any = req.file;
+ // let file: any = req.file;
   let auth: any = req.auth;
-
+/*
   if (!file) {
     throw new BadRequestError("News image is required!");
   }
+*/
+ // console.log(body)
+  //const category: any = await categoryService.findById(body.category);
 
-  const category: any = await categoryService.findById(body.category);
-
+  /*
   if (category.name == constants.CATEGORYTYPES.NEWS)
     throw new BadRequestError("Category type is not news!");
-
+*/
   //construct news object
   const newNews: any = new News(body);
   newNews.addedBy = auth._id;
 
-  const session = await startSession(); //start mongoose session
+  //console.log(newNews)
+
+  //const session = await startSession(); //start mongoose session
 
   let createdNews = null;
   try {
-    session.startTransaction(); //start transaction in session
+   // session.startTransaction(); //start transaction in session
 
+    /*
     //upload image to cloudinary
     let uploadedObj: any = null;
     if (file) {
@@ -50,15 +55,18 @@ const CreateNews = async (req: Request, res: Response) => {
     if (uploadedObj != null) {
       newNews.newsImage = uploadedObj;
     }
+    */
 
-    createdNews = await newsService.save(newNews, session); //save news
+    createdNews = await newsService.save(newNews,null); //save news
 
-    await session.commitTransaction();
+    //console.log(createdNews)
+
+    //await session.commitTransaction();
   } catch (e) {
-    await session.abortTransaction();
+    //await session.abortTransaction();
     throw e;
   } finally {
-    session.endSession();
+    //session.endSession();
   }
 
   CustomResponse(

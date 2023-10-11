@@ -302,10 +302,11 @@ const UpdateAppointment = async (req: Request, res: Response) => {
 };
 
 const DeleteAppointment = async (req: Request, res: Response) => {
-  const appointmentID: any = req.params.appointmentId;
+  const appointmentID: any = req.params.appointmentId.toString();
   const auth: any = req.auth;
 
   const appointment: any = await appointmentService.findById(appointmentID);
+console.log(appointmentID)
 
   if (!appointment) throw new NotFoundError("Appointment not found!");
 

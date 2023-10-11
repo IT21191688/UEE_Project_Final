@@ -27,38 +27,51 @@ const constant_1 = __importDefault(require("../constant"));
 //create News for admin
 const CreateNews = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let body = req.body;
-    let file = req.file;
+    // let file: any = req.file;
     let auth = req.auth;
-    if (!file) {
-        throw new BadRequestError_1.default("News image is required!");
-    }
-    const category = yield category_service_1.default.findById(body.category);
-    if (category.name == constant_1.default.CATEGORYTYPES.NEWS)
-        throw new BadRequestError_1.default("Category type is not news!");
+    /*
+      if (!file) {
+        throw new BadRequestError("News image is required!");
+      }
+    */
+    // console.log(body)
+    //const category: any = await categoryService.findById(body.category);
+    /*
+    if (category.name == constants.CATEGORYTYPES.NEWS)
+      throw new BadRequestError("Category type is not news!");
+  */
     //construct news object
     const newNews = new news_model_1.default(body);
     newNews.addedBy = auth._id;
-    const session = yield (0, mongoose_1.startSession)(); //start mongoose session
+    //console.log(newNews)
+    //const session = await startSession(); //start mongoose session
     let createdNews = null;
     try {
-        session.startTransaction(); //start transaction in session
+        // session.startTransaction(); //start transaction in session
+        /*
         //upload image to cloudinary
-        let uploadedObj = null;
+        let uploadedObj: any = null;
         if (file) {
-            uploadedObj = yield common_service_1.default.uploadImageAndGetUri(file, constant_1.default.CLOUDINARY.FILE_NAME + "/news");
+          uploadedObj = await commonService.uploadImageAndGetUri(
+            file,
+            constants.CLOUDINARY.FILE_NAME + "/news"
+          );
         }
+    
         if (uploadedObj != null) {
-            newNews.newsImage = uploadedObj;
+          newNews.newsImage = uploadedObj;
         }
-        createdNews = yield news_service_1.default.save(newNews, session); //save news
-        yield session.commitTransaction();
+        */
+        createdNews = yield news_service_1.default.save(newNews, null); //save news
+        //console.log(createdNews)
+        //await session.commitTransaction();
     }
     catch (e) {
-        yield session.abortTransaction();
+        //await session.abortTransaction();
         throw e;
     }
     finally {
-        session.endSession();
+        //session.endSession();
     }
     (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.CREATED, "News created successfully!", createdNews);
 });
