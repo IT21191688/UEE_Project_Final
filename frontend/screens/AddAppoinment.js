@@ -88,7 +88,7 @@ const AddAppointments = () => {
 
             if (response.data.isSuccessful) {
                 Alert.alert("Successfully Created Appointment");
-                navigation.navigate("Appointments")
+                navigation.navigate("AppoinmentSuccess")
             } else {
                 Alert.alert("Failed Try Again: " + response.data.message);
                 navigation.navigate("Appointments")

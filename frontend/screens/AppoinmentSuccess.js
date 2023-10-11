@@ -1,9 +1,12 @@
 import * as React from "react";
 import { Text, StyleSheet, View, Pressable, TextInput, DatePickerIOS, ScrollView, DatePickerIOSBase, Image } from "react-native";
-
+import { useNavigation } from "@react-navigation/native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 //hello
 const AppoinmentSuccess = () => {
+
+    const navigation = useNavigation();
 
     const date = 0;
     return (
@@ -17,12 +20,12 @@ const AppoinmentSuccess = () => {
             <Text style={styles.successText}>Success</Text>
 
             <Text style={styles.contentText}>
-                You’ve successfully made an appointment. Please check your emails for updates.
+                You’ve successfully make an appointment. Please check your emails for updates.
             </Text>
 
-            <View style={styles.okButton}>
+            <TouchableOpacity style={styles.okButton} onPress={() => navigation.navigate('Appointments')}>
                 <Text>OK</Text>
-            </View>
+            </TouchableOpacity>
 
         </View>
     );

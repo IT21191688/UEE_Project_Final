@@ -24,14 +24,19 @@ const CreateAppointment = async (req: Request, res: Response) => {
     body.organization
   ); //validate organization
 
+  const user = await userService.findById(auth._id);
+  const userEmail = user?.email ?? ''; // Use a default value when email is undefined
+  console.log(userEmail)
+
+  if (!user) throw new NotFoundError("User not found!");
+
   if (!organization) throw new NotFoundError("Organization not found!");
 
-  const validateAppointments =
-    await appointmentService.findAllByOrgAndDateAndTimeSlot(
-      body.organization,
-      new Date(body.appointmentDate),
-      body.appointmentTime
-    );
+  const validateAppointments = await appointmentService.findAllByOrgAndDateAndTimeSlot(
+    body.organization,
+    new Date(body.appointmentDate),
+    body.appointmentTime
+  );
 
   if (validateAppointments.length > 0)
     throw new BadRequestError("Time slot is already booked!");
@@ -51,17 +56,31 @@ const CreateAppointment = async (req: Request, res: Response) => {
 
     //send email to organization
     let data = {
+      orgName: body.title,
+      appointmentDate: body.appointmentDate,
+      appointmentTime: body.appointmentTime,
+    };
+    let htmlBody = emailTemplates.NewAppointmentAlertTemplate(data);
+
+    let data1 = {
       orgName: organization.orgName,
       appointmentDate: newAppointment.appointmentDate,
       appointmentTime: timeSlots.find((time) => {
         return time.id === newAppointment.appointmentTime;
       })?.timeSlot,
     };
-    let htmlBody = emailTemplates.NewAppointmentAlertTemplate(data);
+    let htmlBody1 = emailTemplates.NewAppointmentAlertTemplate(data1);
 
     await sendEmail(
       organization.orgEmail,
       "New Appointment Alert",
+      htmlBody1,
+      null
+    );
+
+    await sendEmail(
+      userEmail,
+      "Appointment Create Successfully",
       htmlBody,
       null
     );

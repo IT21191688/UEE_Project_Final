@@ -27,10 +27,15 @@ const emailServer_1 = require("../util/emailServer");
 const BadRequestError_1 = __importDefault(require("../error/error.classes/BadRequestError"));
 const ForbiddenError_1 = __importDefault(require("../error/error.classes/ForbiddenError"));
 const CreateAppointment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b;
     const body = req.body;
     const auth = req.auth;
     const organization = yield organization_service_1.default.findById(body.organization); //validate organization
+    const user = yield user_service_1.default.findById(auth._id);
+    const userEmail = (_a = user === null || user === void 0 ? void 0 : user.email) !== null && _a !== void 0 ? _a : ''; // Use a default value when email is undefined
+    console.log(userEmail);
+    if (!user)
+        throw new NotFoundError_1.default("User not found!");
     if (!organization)
         throw new NotFoundError_1.default("Organization not found!");
     const validateAppointments = yield appointment_service_1.default.findAllByOrgAndDateAndTimeSlot(body.organization, new Date(body.appointmentDate), body.appointmentTime);
@@ -49,14 +54,21 @@ const CreateAppointment = (req, res) => __awaiter(void 0, void 0, void 0, functi
         createdAppointment = yield appointment_service_1.default.save(newAppointment, null);
         //send email to organization
         let data = {
-            orgName: organization.orgName,
-            appointmentDate: newAppointment.appointmentDate,
-            appointmentTime: (_a = appointment_util_1.timeSlots.find((time) => {
-                return time.id === newAppointment.appointmentTime;
-            })) === null || _a === void 0 ? void 0 : _a.timeSlot,
+            orgName: body.title,
+            appointmentDate: body.appointmentDate,
+            appointmentTime: body.appointmentTime,
         };
         let htmlBody = email_templates_1.default.NewAppointmentAlertTemplate(data);
-        yield (0, emailServer_1.sendEmail)(organization.orgEmail, "New Appointment Alert", htmlBody, null);
+        let data1 = {
+            orgName: organization.orgName,
+            appointmentDate: newAppointment.appointmentDate,
+            appointmentTime: (_b = appointment_util_1.timeSlots.find((time) => {
+                return time.id === newAppointment.appointmentTime;
+            })) === null || _b === void 0 ? void 0 : _b.timeSlot,
+        };
+        let htmlBody1 = email_templates_1.default.NewAppointmentAlertTemplate(data1);
+        yield (0, emailServer_1.sendEmail)(organization.orgEmail, "New Appointment Alert", htmlBody1, null);
+        yield (0, emailServer_1.sendEmail)(userEmail, "Appointment Create Successfully", htmlBody, null);
     }
     catch (e) {
         throw e;
@@ -109,7 +121,7 @@ const GetAllAppointmentsAdmin = (req, res) => __awaiter(void 0, void 0, void 0, 
 });
 exports.GetAllAppointmentsAdmin = GetAllAppointmentsAdmin;
 const ApproveOrRejectAppointment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
+    var _c;
     const appointmentId = req.params.appointmentId;
     const status = req.query.status;
     const appointment = yield appointment_service_1.default.findById(appointmentId);
@@ -128,9 +140,9 @@ const ApproveOrRejectAppointment = (req, res) => __awaiter(void 0, void 0, void 
     let data = {
         userName: addedUser.fullName,
         appointmentDate: appointment.appointmentDate,
-        appointmentTime: (_b = appointment_util_1.timeSlots.find((time) => {
+        appointmentTime: (_c = appointment_util_1.timeSlots.find((time) => {
             return time.id === appointment.appointmentTime;
-        })) === null || _b === void 0 ? void 0 : _b.timeSlot,
+        })) === null || _c === void 0 ? void 0 : _c.timeSlot,
     };
     let htmlBody = null;
     try {
