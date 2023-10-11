@@ -195,7 +195,7 @@ const AppoinmentAdminView = () => {
             };
 
             const response = await axios.put(
-                `https://uee123.onrender.com/api/v1/appointment/approveReject/${appointmentDetails._id}`,
+                `https://uee123.onrender.com/api/v1/appointment/approveReject/${appointmentDetails._id}?status=4`,
                 null, // You can pass an empty body for this action
                 { headers }
             );
