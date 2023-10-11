@@ -133,11 +133,13 @@ const styles = StyleSheet.create({
   scrollableSectionScrollViewContent: {
     flexDirection: "column",
     paddingBottom: 552,
+    paddingTop: 80,
     alignItems: "center",
     justifyContent: "flex-start",
   },
   frameScrollViewContent: {
     flexDirection: "row",
+    paddingTop: 50,
     alignItems: "center",
     justifyContent: "flex-start",
   },
