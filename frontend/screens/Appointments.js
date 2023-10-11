@@ -21,6 +21,8 @@ const Appointments = () => {
   const [selectedStatus, setSelectedStatus] = useState("All"); // Initialize with "All"
   const [filteredAppointments, setFilteredAppointments] = useState(appointments);
 
+  const [isLoading, setIsLoading] = useState(true);
+
 
 
   const timeSlots = [
@@ -84,6 +86,8 @@ const Appointments = () => {
 
 
   useEffect(() => {
+    setIsLoading(true); // Set loading to true
+    console.log("Hello");
     fetchAppointments();
   }, []);
 
@@ -107,14 +111,22 @@ const Appointments = () => {
       if (response.data.isSuccessful) {
         const fetchedAppointments = response.data.data;
         setAppointments(fetchedAppointments);
-        console.log(appointments.length);
+
+
+        console.log(fetchedAppointments);
+        setIsLoading(false);
       } else {
         console.error("Failed to fetch appointments:", response.data.message);
       }
     } catch (error) {
       console.error("Error fetching appointments:", error);
+    } finally {
+      // Set loading state to false when data is fetched
+      setIsLoading(false);
+      handleAllClick();
     }
   };
+
 
   const handleAppointmentView = (id) => {
     console.log(id)
@@ -146,7 +158,8 @@ const Appointments = () => {
   };
 
   const handleAllClick = () => {
-    setSelectedStatus("All");
+    //setSelectedStatus("All");
+
     setFilteredAppointments(appointments); // Show all appointments
   };
 
@@ -154,6 +167,20 @@ const Appointments = () => {
     const filtered = appointments.filter((appointment) => appointment.status === status);
     setFilteredAppointments(filtered);
   };
+
+  const [searchQuery, setSearchQuery] = useState(''); // State to capture the search query
+
+  const handleSearch = (query) => {
+    setSearchQuery(query); // Update the search query state
+
+    const filtered = appointments.filter((appointment) => {
+      const appointmentTitle = appointment.title.toLowerCase();
+      return appointmentTitle.includes(query.toLowerCase());
+    });
+
+    setFilteredAppointments(filtered);
+  };
+
   return (
     <View style={styles.myNews}>
       {/* Rectangle */}
@@ -204,6 +231,8 @@ const Appointments = () => {
             source={require("../assets/icon-search.png")}
           />
           <TextInput
+            onChangeText={handleSearch} // Handle search on text input change
+            value={searchQuery}
             style={[styles.search1]}
             placeholder="Search"
             placeholderTextColor="rgba(13, 1, 64, 0.6)"
@@ -271,35 +300,42 @@ const Appointments = () => {
 
 
 
-      <ScrollView style={styles.scroller}>
-        {filteredAppointments.map((item, index) => {
-          const foundTimeSlot = findTimeSlotById(item.appointmentTime);
+      <ScrollView style={styles.scroller} >
 
-          return (
-            <TouchableOpacity
-              key={index}
-              style={styles.appointmentItem}
-              onPress={() => handleAppointmentView(item._id)}
-            >
-              <Image
-                source={require("../assets/ellipse.png")}
-                style={styles.circularImage}
-              />
-              <View style={styles.appointmentDetails}>
-                <Text style={styles.appointmentTitle}>{item.title}</Text>
-                <Text style={styles.appointmentDate}>
-                  {new Date(item.appointmentDate).toLocaleDateString("en-US")}
-                </Text>
-                <Text style={styles.appointmentTimeSlot}>
-                  Time slot: {item.appointmentTime}{" "}
-                  {foundTimeSlot ? foundTimeSlot.timeSlot : "Not Found"}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+        <FlatList
+
+          data={isLoading ? [] : filteredAppointments}
+          keyExtractor={(item) => item._id}
+          ListEmptyComponent={() => (
+            <Text>No appointments available</Text>
+          )}
+          renderItem={({ item, index }) => {
+            const foundTimeSlot = findTimeSlotById(item.appointmentTime);
+            return (
+              <TouchableOpacity
+                key={index}
+                style={styles.appointmentItem}
+                onPress={() => handleAppointmentView(item._id)}
+              >
+                <Image
+                  source={require("../assets/ellipse.png")}
+                  style={styles.circularImage}
+                />
+                <View style={styles.appointmentDetails}>
+                  <Text style={styles.appointmentTitle}>{item.title}</Text>
+                  <Text style={styles.appointmentDate}>
+                    {new Date(item.appointmentDate).toLocaleDateString("en-US")}
+                  </Text>
+                  <Text style={styles.appointmentTimeSlot}>
+                    Time slot: {item.appointmentTime}{" "}
+                    {foundTimeSlot ? foundTimeSlot.timeSlot : "Not Found"}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+        />
       </ScrollView>
-
 
 
     </View>
@@ -428,11 +464,10 @@ const styles = StyleSheet.create({
   search1: {
     top: 15,
     left: 20,
-    fontSize: FontSize.size_xs,
-    fontFamily: FontFamily.dMSansRegular,
-    color: Color.colorDarkgray_100,
     textAlign: "left",
     position: "absolute",
+    height: 30,
+    width: 200
   },
   search: {
     width: "90%", // Updated width for responsiveness
@@ -640,7 +675,9 @@ const styles = StyleSheet.create({
     color: "#95969D",
   },
   scroller: {
-    top: 270
+    marginTop: 260
+
+    // Ensure it takes up all available vertical space
   },
   selectedButton: {
     backgroundColor: 'white', // Background color when selected

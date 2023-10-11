@@ -1,12 +1,20 @@
 import * as React from "react";
-import { Text, StyleSheet, View, Pressable, TextInput, DatePickerIOS, ScrollView, DatePickerIOSBase, Image } from "react-native";
+import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+//import { TouchableOpacity } from "react-native-gesture-handler";
 
 //hello
 const AppoinmentSuccess = () => {
 
+
+
     const navigation = useNavigation();
+
+    const handleNavigate = () => {
+
+        navigation.navigate("Appointments")
+
+    }
 
     const date = 0;
     return (
@@ -23,8 +31,9 @@ const AppoinmentSuccess = () => {
                 You’ve successfully make an appointment. Please check your emails for updates.
             </Text>
 
-            <TouchableOpacity style={styles.okButton} onPress={() => navigation.navigate('Appointments')}>
-                <Text>OK</Text>
+            <TouchableOpacity style={styles.okButton} onPress={handleNavigate}>
+                <View style={[styles.saveChild, styles.savePosition]} />
+                <Text style={[styles.signUp1]}>Sign up</Text>
             </TouchableOpacity>
 
         </View>
@@ -60,7 +69,8 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         lineHeight: 24, // Line height in React Native is a number, not a percentage
         letterSpacing: -0.16,
-        top: 200
+        top: 200,
+        padding: 10
     },
 
     okButton: {
@@ -75,7 +85,7 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         borderWidth: 1,
         borderColor: '#356899',
-        top: 240
+        marginTop: 250
     },
 
 });

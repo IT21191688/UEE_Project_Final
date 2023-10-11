@@ -634,7 +634,7 @@ const styles = StyleSheet.create({
         color: "#95969D",
     },
     scroller: {
-        top: 220
+        marginTop: 220
     },
     selectedButton: {
         backgroundColor: 'white', // Background color when selected
