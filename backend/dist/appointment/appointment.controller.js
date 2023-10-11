@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetAppointmentDetails = exports.DeleteAppointment = exports.UpdateAppointment = exports.ApproveOrRejectAppointment = exports.GetAllAppointments = exports.GetAvailableSlots = exports.CreateAppointment = void 0;
+exports.GetAppointmentDetailsAdmin = exports.GetAllAppointmentsAdmin = exports.GetAppointmentDetails = exports.DeleteAppointment = exports.UpdateAppointment = exports.ApproveOrRejectAppointment = exports.GetAllAppointments = exports.GetAvailableSlots = exports.CreateAppointment = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const appointment_util_1 = require("./appointment.util");
 const appointment_service_1 = __importDefault(require("./appointment.service"));
@@ -27,10 +27,15 @@ const emailServer_1 = require("../util/emailServer");
 const BadRequestError_1 = __importDefault(require("../error/error.classes/BadRequestError"));
 const ForbiddenError_1 = __importDefault(require("../error/error.classes/ForbiddenError"));
 const CreateAppointment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b;
     const body = req.body;
     const auth = req.auth;
     const organization = yield organization_service_1.default.findById(body.organization); //validate organization
+    const user = yield user_service_1.default.findById(auth._id);
+    const userEmail = (_a = user === null || user === void 0 ? void 0 : user.email) !== null && _a !== void 0 ? _a : ''; // Use a default value when email is undefined
+    console.log(userEmail);
+    if (!user)
+        throw new NotFoundError_1.default("User not found!");
     if (!organization)
         throw new NotFoundError_1.default("Organization not found!");
     const validateAppointments = yield appointment_service_1.default.findAllByOrgAndDateAndTimeSlot(body.organization, new Date(body.appointmentDate), body.appointmentTime);
@@ -49,14 +54,21 @@ const CreateAppointment = (req, res) => __awaiter(void 0, void 0, void 0, functi
         createdAppointment = yield appointment_service_1.default.save(newAppointment, null);
         //send email to organization
         let data = {
-            orgName: organization.orgName,
-            appointmentDate: newAppointment.appointmentDate,
-            appointmentTime: (_a = appointment_util_1.timeSlots.find((time) => {
-                return time.id === newAppointment.appointmentTime;
-            })) === null || _a === void 0 ? void 0 : _a.timeSlot,
+            orgName: body.title,
+            appointmentDate: body.appointmentDate,
+            appointmentTime: body.appointmentTime,
         };
         let htmlBody = email_templates_1.default.NewAppointmentAlertTemplate(data);
-        yield (0, emailServer_1.sendEmail)(organization.orgEmail, "New Appointment Alert", htmlBody, null);
+        let data1 = {
+            orgName: organization.orgName,
+            appointmentDate: newAppointment.appointmentDate,
+            appointmentTime: (_b = appointment_util_1.timeSlots.find((time) => {
+                return time.id === newAppointment.appointmentTime;
+            })) === null || _b === void 0 ? void 0 : _b.timeSlot,
+        };
+        let htmlBody1 = email_templates_1.default.NewAppointmentAlertTemplate(data1);
+        yield (0, emailServer_1.sendEmail)(organization.orgEmail, "New Appointment Alert", htmlBody1, null);
+        yield (0, emailServer_1.sendEmail)(userEmail, "Appointment Create Successfully", htmlBody, null);
     }
     catch (e) {
         throw e;
@@ -87,6 +99,7 @@ const GetAllAppointments = (req, res) => __awaiter(void 0, void 0, void 0, funct
     if (auth.role == constant_1.default.USER.ROLES.ADMIN) {
         const user = yield user_service_1.default.findById(auth._id);
         appointments = yield appointment_service_1.default.findAllByOrg(user.organization);
+        //appointments=await appointmentService.findAllAppointments();
     }
     else {
         appointments = yield appointment_service_1.default.findAllByAddedBy(auth._id);
@@ -94,8 +107,21 @@ const GetAllAppointments = (req, res) => __awaiter(void 0, void 0, void 0, funct
     (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "Appointments fetched successfully!", appointments);
 });
 exports.GetAllAppointments = GetAllAppointments;
+const GetAllAppointmentsAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const auth = req.auth;
+    yield (0, appointment_util_1.disableExpiredAppointments)();
+    let appointments = null;
+    if (auth.role == constant_1.default.USER.ROLES.ADMIN) {
+        appointments = yield appointment_service_1.default.findAllAppointments();
+    }
+    else {
+        appointments = yield appointment_service_1.default.findAllByAddedBy(auth._id);
+    }
+    (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "Appointments fetched successfully!", appointments);
+});
+exports.GetAllAppointmentsAdmin = GetAllAppointmentsAdmin;
 const ApproveOrRejectAppointment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
+    var _c;
     const appointmentId = req.params.appointmentId;
     const status = req.query.status;
     const appointment = yield appointment_service_1.default.findById(appointmentId);
@@ -106,15 +132,17 @@ const ApproveOrRejectAppointment = (req, res) => __awaiter(void 0, void 0, void 
     const user = yield user_service_1.default.findByOrganization(appointment.organization);
     if (!user)
         throw new NotFoundError_1.default("Organization not found!");
+    /*
     if (user._id.toString() != req.auth._id)
-        throw new ForbiddenError_1.default("You are not authorized to perform this action!");
+      throw new ForbiddenError("You are not authorized to perform this action!");
+    */
     const addedUser = yield user_service_1.default.findById(appointment.addedBy);
     let data = {
         userName: addedUser.fullName,
         appointmentDate: appointment.appointmentDate,
-        appointmentTime: (_b = appointment_util_1.timeSlots.find((time) => {
+        appointmentTime: (_c = appointment_util_1.timeSlots.find((time) => {
             return time.id === appointment.appointmentTime;
-        })) === null || _b === void 0 ? void 0 : _b.timeSlot,
+        })) === null || _c === void 0 ? void 0 : _c.timeSlot,
     };
     let htmlBody = null;
     try {
@@ -209,3 +237,25 @@ const GetAppointmentDetails = (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.GetAppointmentDetails = GetAppointmentDetails;
+const GetAppointmentDetailsAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const appointmentID = req.params.appointmentId;
+        const auth = req.auth;
+        // Use your appointmentService to find the appointment by ID
+        const appointment = yield appointment_service_1.default.findById(appointmentID);
+        if (!appointment) {
+            throw new NotFoundError_1.default("Appointment not found!");
+        }
+        if (!appointment) {
+            throw new NotFoundError_1.default("Appointment not found!");
+        }
+        (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "Appointment details fetched successfully", appointment);
+    }
+    catch (error) {
+        // Handle errors here and send an appropriate response
+        console.error(error);
+        // Return an error response, for example:
+        (0, response_1.default)(res, false, http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch appointment details", null);
+    }
+});
+exports.GetAppointmentDetailsAdmin = GetAppointmentDetailsAdmin;
