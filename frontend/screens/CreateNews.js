@@ -12,14 +12,16 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Input } from "@rneui/base";
 
 const CreateNews = () => {
   const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("652021f9908ee6af777828aa");
   const [content, setContent] = useState("");
-  const [category, setCategory] = useState("");
   const [newsList, setNewsList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -44,18 +46,38 @@ const CreateNews = () => {
     fetchNews();
   }, []);
 
+  //const additionalDocuments = "C:/Users/user/Desktop/finalAsiaCup.PNG";
+/*
   const handleSubmit = async () => {
     try {
-      // Define the data to be sent to the server
-      const postData = {
-        title,
-        content,
-        category,
-        // Add more fields as needed
+      const requestBody = {
+        title: title,
+        category: category,
+        content: content,
+        newsImage: [additionalDocuments],
       };
 
-      // Make a POST request to save news data
-      const response = await axios.post('https://uee123.onrender.com/api/v1/news/create', postData);
+      console.log('Request Body:', requestBody);
+
+      // Replace 'YOUR_API_TOKEN' with your actual token
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+          console.error('Token is missing in AsyncStorage');
+          return;
+      }
+
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        //'Content-Type': 'application/json', // Specify the content type
+      };
+
+      const response = await axios.post(
+        'https://uee123.onrender.com/api/v1/news/create',
+        requestBody,
+        { headers }
+      );
+
+      console.log('Response:', response);
 
       if (response.data.isSuccessful) {
         // Handle a successful response (e.g., show a success message)
@@ -70,6 +92,96 @@ const CreateNews = () => {
       console.error('Error saving news:', error);
     }
   };
+*/
+
+  const handleSubmit = async () => {
+    try {
+      const requestBody = {
+        title: title,
+        category: category,
+        content: content,
+        newsImage: 'C:/Users/user/Desktop/finalAsiaCup.PNG', // Replace with a default image URL
+      };
+
+      console.log('Request Body:', requestBody);
+
+      // Replace 'YOUR_API_TOKEN' with your actual token
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+          console.error('Token is missing in AsyncStorage');
+          return;
+      }
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      };
+
+      const response = await axios.post(
+        'https://uee123.onrender.com/api/v1/news/create',
+        requestBody,
+        { headers }
+      );
+
+      console.log('Response:', response);
+
+      if (response.data.isSuccessful) {
+        // Handle a successful response (e.g., show a success message)
+        console.log('News saved successfully');
+        // You may want to fetch the updated news list here
+      } else {
+        // Handle an unsuccessful response (e.g., show an error message)
+        console.error('Failed to save news:', response.data.message);
+      }
+    } catch (error) {
+      // Handle any errors that occur during the request
+      console.error('Error saving news:', error);
+    }
+  };
+
+  /*
+  const handleSubmit = async () => {
+    try {
+
+
+      // Define the data to be sent to the server
+      const requestBody = {
+        title:title,
+        category:category,
+        content:content,
+        newsImage:additionalDocuments
+        
+        // Add more fields as needed
+      };
+      console.log(requestBody)
+
+      const token = await AsyncStorage.getItem('token');
+                if (!token) {
+                    console.error('Token is missing in AsyncStorage');
+                    return;
+                }
+                const headers = {
+                    'Authorization': `Bearer ${token}`,
+                };
+
+      // Make a POST request to save news data
+      console.log(headers)
+      const response = await axios.post('https://uee123.onrender.com/api/v1/news/create', requestBody,{headers});
+       
+      console.log(response)
+      if (response.data.isSuccessful) {
+        // Handle a successful response (e.g., show a success message)
+        console.log('News saved successfully');
+        // You may want to fetch the updated news list here
+      } else {
+        // Handle an unsuccessful response (e.g., show an error message)
+        console.error('Failed to save news:', response.data.message);
+      }
+    } catch (error) {
+      // Handle any errors that occur during the request
+      console.error('Error saving news:', error);
+    }
+  };
+*/
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -109,12 +221,19 @@ const CreateNews = () => {
             onValueChange={(itemValue) => setCategory(itemValue)}
           >
             <Picker.Item label="Select a category" value="" />
-            <Picker.Item label="Category 1" value="category1" />
+            <Picker.Item label="Local News" value="category1" />
             <Picker.Item label="Category 2" value="category2" />
             {/* Add more categories as needed */}
           </Picker>
         </View>
-        
+
+{/*
+        <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => handleImageUpload(e.target.files[0])}
+      />
+     */}   
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Content</Text>
           <TextInput
