@@ -34,8 +34,9 @@ const CertificateList = () => {
     navigation.navigate("AddCertificates"); // Replace "OtherScreen" with the name of the screen you want to navigate to
   };
 
-  const handleNavigateUpdate = () => {
-    navigation.navigate("EditCertificate"); // Replace "OtherScreen" with the name of the screen you want to navigate to
+  const handleNavigateUpdate = (id) => {
+    console.log(id)
+    navigation.navigate("EditCertificate",{certificateId:id}); // Replace "OtherScreen" with the name of the screen you want to navigate to
   };
 
   const handleNavigateDelete = () => {
@@ -186,7 +187,9 @@ const CertificateList = () => {
                     size={25}
                     color="black"
                     style={styles.icon}
-                    onPress={handleNavigateUpdate}
+                   
+                    onPress={() => handleNavigateUpdate(item._id)}
+                    
                   />
                 </View>
                 {/* Delete Icon */}
