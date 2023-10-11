@@ -172,8 +172,10 @@ const ApproveOrRejectAppointment = async (req: Request, res: Response) => {
 
   if (!user) throw new NotFoundError("Organization not found!");
 
+  /*
   if (user._id.toString() != req.auth._id)
     throw new ForbiddenError("You are not authorized to perform this action!");
+  */
 
   const addedUser: any = await userService.findById(appointment.addedBy);
 

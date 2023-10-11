@@ -118,7 +118,7 @@ const AppointmentAdminHome = () => {
 
     const handleAppointmentView = (id) => {
         console.log(id)
-        navigation.navigate('AppointmentView', { appointmentId: id })
+        navigation.navigate('AppoinmentAdminView', { appointmentId: id })
     };
 
     const handleAddNewAppointment = () => {
