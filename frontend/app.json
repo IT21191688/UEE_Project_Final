@@ -6,6 +6,9 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "documentPicker": {
+      "types": ["pdf"]
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -14,9 +17,8 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
+
     "ios": {
       "supportsTablet": true
     },
@@ -26,6 +28,7 @@
         "backgroundColor": "#FFFFFF"
       }
     },
+
     "web": {
       "favicon": "./assets/favicon.png"
     }

@@ -22,7 +22,8 @@ import Dashboard from "./screens/Dashboard";
 //jobOpportunity import
 // User
 import HomeScreen from "./screens/jobOpportunity/User/HomeScreen";
-
+import SingleJobScreen from "./screens/jobOpportunity/User/SingleJobScreen";
+import ApplyForm from "./screens/jobOpportunity/User/ApplyForm";
 //Admin
 
 //bottomTabNavigation import
@@ -210,13 +211,11 @@ const App = () => {
               component={SignUp}
               options={{ headerShown: false }}
             />
-
             <Stack.Screen
               name="Login"
               component={Login}
               options={{ headerShown: false }}
             />
-
             <Stack.Screen
               name="SplashScreenAppointments"
               component={SplashScreenAppointments}
@@ -275,6 +274,20 @@ const App = () => {
               name="TabNavigator"
               component={TabNavigator}
               options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SingleJobScreen"
+              component={SingleJobScreen}
+              options={{
+                headerTitle: "", // Set headerTitle to an empty string to hide it
+              }}
+            />
+            <Stack.Screen
+              name="ApplyForm"
+              component={ApplyForm}
+              options={{
+                headerTitle: "", // Set headerTitle to an empty string to hide it
+              }}
             />
           </Stack.Navigator>
         ) : null}
