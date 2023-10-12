@@ -1,10 +1,22 @@
 import * as React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, Pressable, View } from "react-native";
+import { StyleSheet, Text, Pressable, View, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
 
 const SplashScreenCertificates = () => {
+
+
+  const navigation = useNavigation();
+
+  const handleSkip = () => {
+    // Navigate to the next screen
+    navigation.navigate('SplashScreenJobs');
+  };
+
+  const handleSkipSkip = () => {
+    navigation.navigate("Login")
+  }
 
   return (
     <View style={styles.splashScreenCertificates}>
@@ -25,26 +37,25 @@ const SplashScreenCertificates = () => {
         Explore all the most exciting job roles based on your interest and study
         major.
       </Text>
-      <Pressable
-        style={styles.skipPosition}
+      <TouchableOpacity
+        style={[styles.skip, styles.skipPosition]}
+        onPress={handleSkipSkip}
       >
         <Text style={styles.skip1}>Skip</Text>
-      </Pressable>
+      </TouchableOpacity>
       <Image
-        style={[
-          styles.certificationBro1Icon,
-          styles.certificationBro1IconPosition,
-        ]}
+        style={styles.calendarBro1Icon}
         contentFit="cover"
-        source={require("../assets/certificationbro-1.png")}
+        source={require("../assets/calendarbro-1.png")}
       />
-      <Pressable
+      <TouchableOpacity
         style={[styles.save, styles.saveLayout]}
         Next="next"
+        onPress={handleSkip}
       >
         <View style={[styles.saveChild, styles.saveLayout]} />
         <Text style={[styles.next, styles.nextTypo]}>Next</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -89,14 +100,12 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_21xl,
     lineHeight: 40,
     fontWeight: "700",
-    fontFamily: FontFamily.dMSansBold,
     textAlign: "left",
   },
   exploreAllTheContainer: {
     marginTop: 203,
     marginRight: 200,
     marginLeft: -169,
-    fontFamily: FontFamily.dMSansRegular,
     color: Color.colorDimgray,
     left: "50%",
     top: "50%",
@@ -139,14 +148,14 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
     textTransform: "capitalize",
     fontWeight: "600",
-    fontFamily: FontFamily.poppinsSemiBold,
     color: Color.colorWhite,
     textAlign: "center",
     width: 83,
   },
   save: {
-    top: 757,
-    right: 27,
+    marginLeft: 100,
+    top: 670,
+    right: 20,
   },
   splashScreenCertificates: {
     backgroundColor: Color.colorWhitesmoke,

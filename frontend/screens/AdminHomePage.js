@@ -16,9 +16,26 @@ const isSmallScreen = width < 360;
 const AdminHomePage = () => {
 
     const navigation = useNavigation();
+
+
     const handleNavigate = () => {
-        navigation.navigate("AdminApprovalUrgent"); // Replace "OtherScreen" with the name of the screen you want to navigate to
-      };
+        navigation.navigate("CertificateList"); // Replace "OtherScreen" with the name of the screen you want to navigate to
+    };
+
+    const handleAppoinmentView = () => {
+        navigation.navigate('AppoinmentAdminHome')
+    };
+
+    const handleJobSView = () => {
+        //navigation.navigate('Appointments')
+    };
+    const handleNewsView = () => {
+        //navigation.navigate('Appointments')
+    };
+    const handleCetificateView = () => {
+        //navigation.navigate('Appointments')
+    };
+
 
     return (
         <View style={styles.myNews}>
@@ -81,18 +98,17 @@ const AdminHomePage = () => {
             {/* Header */}
 
             <View style={styles.grid}>
-                <TouchableOpacity style={styles.gridItem}>
+                <TouchableOpacity style={styles.gridItem} onPress={handleJobSView}>
                     <Text style={styles.text}>Jobs</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gridItem} >
+                <TouchableOpacity style={styles.gridItem} onPress={handleNewsView}>
                     <Text style={styles.text}>News</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gridItem} >
+                <TouchableOpacity style={styles.gridItem} onPress={handleAppoinmentView}>
                     <Text style={styles.text}>Appoinments</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gridItem} onPress={handleNavigate}>
-                    <Text style={styles.text} >Cetificates</Text>
-                    
+                <TouchableOpacity style={styles.gridItem} onPress={handleCetificateView}>
+                    <Text style={styles.text}>Cetificates</Text>
                 </TouchableOpacity>
             </View>
 

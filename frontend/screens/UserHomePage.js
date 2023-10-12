@@ -15,11 +15,22 @@ const UserHomePage = () => {
     const navigation = useNavigation();
     const handleNavigate = () => {
         navigation.navigate("CertificateList"); // Replace "OtherScreen" with the name of the screen you want to navigate to
-      };
+    };
 
     const handleAppoinmentView = () => {
         navigation.navigate('Appointments')
     };
+
+    const handleJobSView = () => {
+        //navigation.navigate('Appointments')
+    };
+    const handleNewsView = () => {
+        //navigation.navigate('Appointments')
+    };
+    const handleCetificateView = () => {
+        //navigation.navigate('Appointments')
+    };
+
 
     return (
         <View style={styles.myNews}>
@@ -81,17 +92,17 @@ const UserHomePage = () => {
             </View>
             {/* Header */}
 
-              <View style={styles.grid}>
-                <TouchableOpacity style={styles.gridItem} onPress={navigation.navigate('')}>
+            <View style={styles.grid}>
+                <TouchableOpacity style={styles.gridItem} onPress={handleJobSView}>
                     <Text style={styles.text}>Jobs</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gridItem}>
+                <TouchableOpacity style={styles.gridItem} onPress={handleNewsView}>
                     <Text style={styles.text}>News</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.gridItem} onPress={handleAppoinmentView}>
                     <Text style={styles.text}>Appoinments</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gridItem}>
+                <TouchableOpacity style={styles.gridItem} onPress={handleCetificateView}>
                     <Text style={styles.text}>Cetificates</Text>
                 </TouchableOpacity>
             </View>
@@ -139,7 +150,6 @@ const styles = StyleSheet.create({
         position: "absolute",
     },
     type8Typo: {
-        fontFamily: FontFamily.medium14,
         fontWeight: "500",
         lineHeight: 21,
         letterSpacing: -0.1,
@@ -173,7 +183,6 @@ const styles = StyleSheet.create({
     },
     headline: {
         alignItems: "center",
-        fontFamily: FontFamily.medium14,
         fontWeight: "500",
         lineHeight: 21,
         letterSpacing: -0.1,
@@ -188,7 +197,6 @@ const styles = StyleSheet.create({
         letterSpacing: -0.3,
         lineHeight: 26,
         fontWeight: "700",
-        fontFamily: FontFamily.bold22,
         alignItems: "center",
     },
     headlineParent: {
