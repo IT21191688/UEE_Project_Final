@@ -24,18 +24,14 @@ const SplashScreenAppointments = () => {
         contentFit="cover"
         source={require("../assets/rectangle-225.png")}
       />
-      <Text style={styles.scheduleYourAppointmentsContainer}>
-        <Text style={styles.scheduleYour}>{`Schedule Your `}</Text>
-        <Text>
-          <Text style={styles.appointments}>Appointments</Text>
-          <Text style={styles.scheduleYour}>{` `}</Text>
+      <View style={styles.container}>
+        <Text style={styles.scheduleYourAppointmentsContainer}>
+          Schedule Your <Text style={styles.appointments}>Appointments</Text> Here!
         </Text>
-        <Text style={styles.scheduleYour}>Here!</Text>
-      </Text>
-      <Text style={[styles.exploreAllTheContainer, styles.nextTypo]}>
-        Explore all the most exciting job roles based on your interest and study
-        major.
-      </Text>
+        <Text style={[styles.exploreAllTheContainer, styles.nextTypo]}>
+          Explore all the most exciting job roles based on your interest and study major.
+        </Text>
+      </View>
       <TouchableOpacity
         style={[styles.skip, styles.skipPosition]}
         onPress={handleSkipSkip}
@@ -90,7 +86,7 @@ const styles = StyleSheet.create({
   },
   scheduleYourAppointmentsContainer: {
     marginTop: 67,
-    marginRight: 100,
+    marginRight: 10,
     left: 29,
     fontSize: FontSize.size_21xl,
     lineHeight: 38,
@@ -162,6 +158,10 @@ const styles = StyleSheet.create({
     height: 812,
     overflow: "hidden",
   },
+  container: {
+    top: 400,
+
+  }
 });
 
 export default SplashScreenAppointments;

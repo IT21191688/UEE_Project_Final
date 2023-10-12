@@ -235,22 +235,6 @@ const AppoinmentAdminView = () => {
             )}
             <View style={[styles.frameParent, styles.frameParentLayout]}>
 
-
-                <TouchableOpacity style={[styles.xnixlinetrash2Wrapper, styles.frameParentLayout]} onPress={() => deleteAppointment(appointmentDetails._id)}>
-                    <Image
-                        style={styles.xnixlinetrash2Icon}
-                        contentFit="cover"
-                        source={require("../assets/xnixlinetrash-21.png")}
-                    />
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => handleEditAppointment(appointmentDetails._id)}>
-                    <Image
-                        style={[styles.editIcon, styles.editIconLayout]}
-                        contentFit="cover"
-                        source={require("../assets/edit.png")}
-                    />
-                </TouchableOpacity>
             </View>
             <View style={styles.groupParent}>
                 <View style={styles.spotigyWrapper}>

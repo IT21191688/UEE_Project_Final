@@ -187,6 +187,13 @@ const Appointments = () => {
     setFilteredAppointments(filtered);
   };
 
+  const handleMainPage = () => {
+
+    console.log("Press")
+    navigation.navigate('UserHomePage')
+  }
+
+
   return (
     <View style={styles.myNews}>
       {/* Rectangle */}
@@ -203,7 +210,7 @@ const Appointments = () => {
           source={require("../assets/ellipse.png")}
         />
         <View style={styles.headlineParent}>
-          <TouchableOpacity onPress={handleAllClick}>
+          <TouchableOpacity onPress={handleMainPage}>
             <Text style={[styles.headline1, styles.headlineFlexBox]} >
               Appointments
             </Text>
@@ -218,13 +225,13 @@ const Appointments = () => {
 
       <View style={styles.header}>
 
-        <View >
+        <TouchableOpacity >
           <Image
             style={styles.filterIcon}
             contentFit="cover"
             source={require("../assets/filter.png")}
           />
-        </View>
+        </TouchableOpacity>
         <View style={[styles.search, styles.headerLayout]}>
           <Image
             style={styles.searchChild}
@@ -257,6 +264,22 @@ const Appointments = () => {
         <Pressable
           style={[
             styles.button,
+            selectedStatus === 4 && styles.selectedButton,
+          ]}
+          onPress={handleAllClick}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              selectedStatus === 4 && styles.selectedButtonText,
+            ]}
+          >
+            All
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[
+            styles.button,
             selectedStatus === 2 && styles.selectedButton,
           ]}
           onPress={handlePendingClick}
@@ -286,22 +309,7 @@ const Appointments = () => {
             Approved
           </Text>
         </Pressable>
-        <Pressable
-          style={[
-            styles.button,
-            selectedStatus === 4 && styles.selectedButton,
-          ]}
-          onPress={handleDeclinedClick}
-        >
-          <Text
-            style={[
-              styles.buttonText,
-              selectedStatus === 4 && styles.selectedButtonText,
-            ]}
-          >
-            Declined
-          </Text>
-        </Pressable>
+
       </View>
 
 

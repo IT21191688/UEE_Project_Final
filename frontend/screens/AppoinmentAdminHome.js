@@ -142,6 +142,7 @@ const AppointmentAdminHome = () => {
 
     const handleDeclinedClick = () => {
         setSelectedStatus(4); // Use numeric value
+        console.log(selectedStatus)
         filterAppointments(4); // Use numeric value
     };
 
@@ -152,8 +153,16 @@ const AppointmentAdminHome = () => {
 
     const filterAppointments = (status) => {
         const filtered = appointments.filter((appointment) => appointment.status === status);
+        //console.log(filtered.length)
+        //console.log(filtered)
         setFilteredAppointments(filtered);
     };
+
+    const handleMainPage = () => {
+
+        //console.log("Press")
+        navigation.navigate('AdminHomePage')
+    }
 
 
     const [searchQuery, setSearchQuery] = useState(''); // State to capture the search query
@@ -186,7 +195,7 @@ const AppointmentAdminHome = () => {
                     source={require("../assets/ellipse.png")}
                 />
                 <View style={styles.headlineParent}>
-                    <TouchableOpacity onPress={handleAllClick}>
+                    <TouchableOpacity onPress={handleMainPage}>
                         <Text style={[styles.headline1, styles.headlineFlexBox]} >
                             Appointments Admin
                         </Text>
@@ -201,13 +210,13 @@ const AppointmentAdminHome = () => {
 
             <View style={styles.header}>
 
-                <View >
+                <Pressable onPress={handleMainPage} >
                     <Image
                         style={styles.filterIcon}
                         contentFit="cover"
                         source={require("../assets/filter.png")}
                     />
-                </View>
+                </Pressable>
                 <View style={[styles.search, styles.headerLayout]}>
                     <Image
                         style={styles.searchChild}
@@ -231,6 +240,22 @@ const AppointmentAdminHome = () => {
             {/* Header */}
 
             <View style={styles.btnsetcontainer}>
+                <Pressable
+                    style={[
+                        styles.button,
+                        selectedStatus === 4 && styles.selectedButton,
+                    ]}
+                    onPress={handleAllClick}
+                >
+                    <Text
+                        style={[
+                            styles.buttonText,
+                            selectedStatus === 4 && styles.selectedButtonText,
+                        ]}
+                    >
+                        All
+                    </Text>
+                </Pressable>
                 <Pressable
                     style={[
                         styles.button,
@@ -263,22 +288,7 @@ const AppointmentAdminHome = () => {
                         Approved
                     </Text>
                 </Pressable>
-                <Pressable
-                    style={[
-                        styles.button,
-                        selectedStatus === 4 && styles.selectedButton,
-                    ]}
-                    onPress={handleDeclinedClick}
-                >
-                    <Text
-                        style={[
-                            styles.buttonText,
-                            selectedStatus === 4 && styles.selectedButtonText,
-                        ]}
-                    >
-                        Declined
-                    </Text>
-                </Pressable>
+
             </View>
 
 
