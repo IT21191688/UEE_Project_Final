@@ -30,6 +30,9 @@ import AppoinmentAdminView from "./screens/AppoinmentAdminView";
 import UserHomePage from "./screens/UserHomePage";
 import AdminHomePage from "./screens/AdminHomePage";
 
+import AddCertificates from "./screens/AddCertificates";
+import AdminApprovalGeneral from "./screens/AdminApprovalGeneral";
+import CertificateList from "./screens/CertificateList";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
@@ -212,6 +215,24 @@ const App = () => {
           <Stack.Screen
             name="AppoinmentAdminView"
             component={AppoinmentAdminView}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="AddCertificates"
+            component={AddCertificates}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="AdminApprovalGeneral"
+            component={AdminApprovalGeneral}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="CertificateList"
+            component={CertificateList}
             options={{ headerShown: false }}
           />
 
