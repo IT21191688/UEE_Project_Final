@@ -48,7 +48,7 @@ const Login = () => {
           // Navigate to the appropriate screen based on the user's role
           if (data.user.role === 'admin') {
             //navigation.navigate('AppoinmentAdminHome');
-            navigation.navigate('CreateNews')
+            navigation.navigate('UserHomePage')
           } else {
             navigation.navigate('UserHomePage');
           }
