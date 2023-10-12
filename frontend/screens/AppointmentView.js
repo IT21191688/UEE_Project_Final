@@ -163,7 +163,9 @@ const AppointmentView = () => {
         Alert.alert("Successfully Deleted Appointment");
         navigation.navigate('Appointments');
       } else {
-        Alert.alert("Error" + response.data.message);
+        Alert.alert("Delete Unsuccessfull");
+        console.log(response.data.message)
+        navigation.navigate("AppoinmentAdminHome")
       }
     } catch (error) {
       console.error('Error deleting appointment:', error.message);
