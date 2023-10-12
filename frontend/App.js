@@ -8,6 +8,7 @@ import Login from "./screens/Login";
 import SplashScreenAppointments from "./screens/SplashScreenAppointments";
 import SplashScreenCertificates from "./screens/SplashScreenCertificates";
 import SplashScreenJobs from "./screens/SplashScreenJobs";
+import SplashScreenNews from "./screens/SplashScreenNews";
 import Property1Unselected from "./components/Property1Unselected";
 import NewsView from "./screens/NewsView";
 import MyNews from "./screens/MyNews";
@@ -27,6 +28,7 @@ import AddAppointments from "./screens/AddAppoinment";
 import AppoinmentSuccess from "./screens/AppoinmentSuccess";
 import AppoinmentAdminView from "./screens/AppoinmentAdminView";
 import UserHomePage from "./screens/UserHomePage";
+import AdminHomePage from "./screens/AdminHomePage";
 
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -34,9 +36,30 @@ import { View, Text, Pressable, TouchableOpacity } from "react-native";
 
 
 const App = () => {
-  const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
+
+
 
   const [isLoaded, setIsLoaded] = useState(false);
+
+
+  const [showSplashScreens, setShowSplashScreens] = useState(true);
+
+  useEffect(() => {
+    async function checkAppOpened() {
+      try {
+        const hasAppOpenedBefore = await AsyncStorage.getItem('appOpenedBefore');
+        if (hasAppOpenedBefore) {
+          setShowSplashScreens(false);
+        } else {
+          await AsyncStorage.setItem('appOpenedBefore', 'true');
+        }
+      } catch (error) {
+        console.error('Error checking app open status:', error);
+      }
+    }
+
+    checkAppOpened();
+  }, []);
 
 
   useEffect(() => {
@@ -68,8 +91,32 @@ const App = () => {
     <>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={"Login"} // Adjust this based on your logic
+          initialRouteName={showSplashScreens ? 'SplashScreenAppointments' : 'Login'}
+          screenOptions={{ headerShown: false }}
         >
+
+          <Stack.Screen
+            name="SplashScreenAppointments"
+            component={SplashScreenAppointments}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SplashScreenCertificates"
+            component={SplashScreenCertificates}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SplashScreenJobs"
+            component={SplashScreenJobs}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="SplashScreenNews"
+            component={SplashScreenNews}
+            options={{ headerShown: false }}
+          />
+
           <Stack.Screen
             name="SignUp"
             component={SignUp}
@@ -84,6 +131,11 @@ const App = () => {
           <Stack.Screen
             name="UserHomePage"
             component={UserHomePage}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="AdminHomePage"
+            component={AdminHomePage}
             options={{ headerShown: false }}
           />
 

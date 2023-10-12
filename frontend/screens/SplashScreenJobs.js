@@ -1,10 +1,20 @@
 import * as React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, Pressable, View } from "react-native";
+import { StyleSheet, Text, Pressable, View, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
 
 const SplashScreenJobs = () => {
+
+  const navigation = useNavigation();
+
+  const handleSkip = () => {
+    // Navigate to the next screen
+    navigation.navigate('SplashScreenNews');
+  };
+  const handleSkipSkip = () => {
+    navigation.navigate("Login")
+  }
 
   return (
     <View style={styles.splashScreenJobs}>
@@ -25,22 +35,25 @@ const SplashScreenJobs = () => {
         Explore all the most exciting job roles based on your interest and study
         major.
       </Text>
-      <Pressable
-        style={[styles.skip, styles.containerPosition]}
+      <TouchableOpacity
+        style={[styles.skip, styles.skipPosition]}
+        onPress={handleSkipSkip}
       >
         <Text style={styles.skip1}>Skip</Text>
-      </Pressable>
+      </TouchableOpacity>
       <Image
-        style={styles.profileDataCuate1}
+        style={styles.calendarBro1Icon}
         contentFit="cover"
-        source={require("../assets/profile-datacuate-1.png")}
+        source={require("../assets/calendarbro-1.png")}
       />
-      <Pressable
+      <TouchableOpacity
         style={[styles.save, styles.saveLayout]}
+        Next="next"
+        onPress={handleSkip}
       >
         <View style={[styles.saveChild, styles.saveLayout]} />
         <Text style={[styles.next, styles.nextTypo]}>Next</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -80,7 +93,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.size_21xl,
     lineHeight: 38,
     fontWeight: "700",
-    fontFamily: FontFamily.dMSansBold,
     width: 213,
     textAlign: "left",
     position: "absolute",
@@ -88,7 +100,6 @@ const styles = StyleSheet.create({
   exploreAllTheContainer: {
     marginTop: 201,
     marginRight: 30,
-    fontFamily: FontFamily.dMSansRegular,
     color: Color.colorDimgray,
     textAlign: "left",
     left: 32,
@@ -100,7 +111,6 @@ const styles = StyleSheet.create({
     letterSpacing: -0.2,
     lineHeight: 24,
     fontWeight: "500",
-    fontFamily: FontFamily.poppinsMedium,
     color: Color.colorDarkgray_200,
     textAlign: "left",
   },
@@ -136,15 +146,14 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
     textTransform: "capitalize",
     fontWeight: "600",
-    fontFamily: FontFamily.poppinsSemiBold,
     color: Color.colorWhite,
     textAlign: "center",
     width: 80,
   },
   save: {
     marginLeft: 100,
-    top: 757,
-    right: 26,
+    top: 670,
+    right: 20,
   },
   splashScreenJobs: {
     backgroundColor: Color.colorWhitesmoke,

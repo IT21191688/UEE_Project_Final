@@ -47,9 +47,11 @@ const Login = () => {
           await AsyncStorage.setItem('role', data.user.role);
           // Navigate to the appropriate screen based on the user's role
           if (data.user.role === 'admin') {
-            //navigation.navigate('AppoinmentAdminHome');
-            navigation.navigate('AdminHomePage')
+            Alert.alert('Success', 'Login successful');
+            navigation.navigate('AdminHomePage');
+            //navigation.navigate('UserHomePage')
           } else {
+            Alert.alert('Success', 'Login successful');
             navigation.navigate('UserHomePage');
           }
         } else {
@@ -58,7 +60,7 @@ const Login = () => {
         }
 
         // Display a success alert
-        Alert.alert('Success', 'Login successful');
+
       } else {
         // Display an error alert and log the error
         Alert.alert('Unsuccessful', 'Login Unsuccessful');
