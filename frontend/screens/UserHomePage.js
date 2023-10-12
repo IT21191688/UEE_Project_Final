@@ -15,7 +15,7 @@ const isSmallScreen = width < 360;
 
 const UserHomePage = () => {
 
-
+    const navigation = useNavigation();
 
     return (
         <View style={styles.myNews}>
@@ -78,18 +78,18 @@ const UserHomePage = () => {
             {/* Header */}
 
             <View style={styles.grid}>
-                <View style={styles.gridItem}>
-                    <Text style={styles.text}>Component 1</Text>
-                </View>
-                <View style={styles.gridItem}>
-                    <Text style={styles.text}>Component 2</Text>
-                </View>
-                <View style={styles.gridItem}>
-                    <Text style={styles.text}>Component 3</Text>
-                </View>
-                <View style={styles.gridItem}>
-                    <Text style={styles.text}>Component 4</Text>
-                </View>
+                <TouchableOpacity style={styles.gridItem} onPress={navigation.navigate('')}>
+                    <Text style={styles.text}>Jobs</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.gridItem} onPress={navigation.navigate('CreateNews')}>
+                    <Text style={styles.text}>News</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.gridItem} onPress={navigation.navigate('Appointments')}>
+                    <Text style={styles.text}>Appoinments</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.gridItem} onPress={navigation.navigate('')}>
+                    <Text style={styles.text}>Cetificates</Text>
+                </TouchableOpacity>
             </View>
 
 
@@ -313,16 +313,20 @@ const styles = StyleSheet.create({
         flexShrink: 0,
         borderRadius: 25,
         backgroundColor: '#130160',
+
     },
     grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
+        marginTop: 200,
+        padding: 20
     },
     gridItem: {
         width: '48%', // Adjust as needed for spacing
+        height: 200,
         marginVertical: 10,
-        padding: 10,
+        padding: 20,
         backgroundColor: '#130160',
         borderRadius: 10,
     },
