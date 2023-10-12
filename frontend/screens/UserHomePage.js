@@ -9,9 +9,6 @@ import axios from 'axios';
 
 const { width } = Dimensions.get('window');
 
-const isSmallScreen = width < 360;
-
-
 
 const UserHomePage = () => {
 
@@ -19,6 +16,10 @@ const UserHomePage = () => {
     const handleNavigate = () => {
         navigation.navigate("CertificateList"); // Replace "OtherScreen" with the name of the screen you want to navigate to
       };
+
+    const handleAppoinmentView = () => {
+        navigation.navigate('Appointments')
+    };
 
     return (
         <View style={styles.myNews}>
@@ -38,7 +39,7 @@ const UserHomePage = () => {
                 <View style={styles.headlineParent}>
                     <TouchableOpacity>
                         <Text style={[styles.headline1, styles.headlineFlexBox]} >
-                            Appointments
+                            User Home
                         </Text>
                     </TouchableOpacity>
 
@@ -80,21 +81,22 @@ const UserHomePage = () => {
             </View>
             {/* Header */}
 
-            <View style={styles.grid}>
-                <TouchableOpacity style={styles.gridItem}>
+              <View style={styles.grid}>
+                <TouchableOpacity style={styles.gridItem} onPress={navigation.navigate('')}>
                     <Text style={styles.text}>Jobs</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gridItem} >
+                <TouchableOpacity style={styles.gridItem}>
                     <Text style={styles.text}>News</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gridItem} >
+                <TouchableOpacity style={styles.gridItem} onPress={handleAppoinmentView}>
                     <Text style={styles.text}>Appoinments</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gridItem} onPress={handleNavigate}>
-                    <Text style={styles.text} >Cetificates</Text>
-                    
+                <TouchableOpacity style={styles.gridItem}>
+                    <Text style={styles.text}>Cetificates</Text>
                 </TouchableOpacity>
             </View>
+
+
 
 
         </View>

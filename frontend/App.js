@@ -82,6 +82,12 @@ const App = () => {
           />
 
           <Stack.Screen
+            name="UserHomePage"
+            component={UserHomePage}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
             name="Appointments"
             component={Appointments}
             options={{ headerShown: false }}
@@ -157,11 +163,7 @@ const App = () => {
             options={{ headerShown: false }}
           />
 
-          <Stack.Screen
-            name="UserHomePage"
-            component={UserHomePage}
-            options={{ headerShown: false }}
-          />
+
         </Stack.Navigator>
       </NavigationContainer>
       { /*
