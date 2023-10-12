@@ -28,7 +28,7 @@ const UserHomePage = () => {
         //navigation.navigate('Appointments')
     };
     const handleCetificateView = () => {
-        //navigation.navigate('Appointments')
+        navigation.navigate('CertificateList')
     };
 
 
