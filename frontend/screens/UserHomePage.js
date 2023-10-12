@@ -9,13 +9,14 @@ import axios from 'axios';
 
 const { width } = Dimensions.get('window');
 
-const isSmallScreen = width < 360;
-
-
 
 const UserHomePage = () => {
 
     const navigation = useNavigation();
+
+    const handleAppoinmentView = () => {
+        navigation.navigate('Appointments')
+    };
 
     return (
         <View style={styles.myNews}>
@@ -35,7 +36,7 @@ const UserHomePage = () => {
                 <View style={styles.headlineParent}>
                     <TouchableOpacity>
                         <Text style={[styles.headline1, styles.headlineFlexBox]} >
-                            Appointments
+                            User Home
                         </Text>
                     </TouchableOpacity>
 
@@ -81,13 +82,13 @@ const UserHomePage = () => {
                 <TouchableOpacity style={styles.gridItem} onPress={navigation.navigate('')}>
                     <Text style={styles.text}>Jobs</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gridItem} onPress={navigation.navigate('CreateNews')}>
+                <TouchableOpacity style={styles.gridItem}>
                     <Text style={styles.text}>News</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gridItem} onPress={navigation.navigate('Appointments')}>
+                <TouchableOpacity style={styles.gridItem} onPress={handleAppoinmentView}>
                     <Text style={styles.text}>Appoinments</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.gridItem} onPress={navigation.navigate('')}>
+                <TouchableOpacity style={styles.gridItem}>
                     <Text style={styles.text}>Cetificates</Text>
                 </TouchableOpacity>
             </View>
