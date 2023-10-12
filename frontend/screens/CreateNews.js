@@ -92,7 +92,7 @@ const CreateNews = () => {
 
       console.log(requestBody)
       const response = await axios.post(
-        'http://uee123.onrender.com/api/v1/news/create',
+        'https://uee123.onrender.com/api/v1/news/create',
         requestBody,
         { headers }
       );

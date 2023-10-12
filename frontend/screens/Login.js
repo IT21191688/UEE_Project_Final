@@ -47,9 +47,10 @@ const Login = () => {
           await AsyncStorage.setItem('role', data.user.role);
           // Navigate to the appropriate screen based on the user's role
           if (data.user.role === 'admin') {
-            navigation.navigate('AppoinmentAdminHome');
+            //navigation.navigate('AppoinmentAdminHome');
+            navigation.navigate('CreateNews')
           } else {
-            navigation.navigate('Appointments');
+            navigation.navigate('UserHomePage');
           }
         } else {
           // Handle the case where the user role is missing or undefined

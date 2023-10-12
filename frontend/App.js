@@ -26,6 +26,7 @@ import AppointmentView from "./screens/AppointmentView";
 import AddAppointments from "./screens/AddAppoinment";
 import AppoinmentSuccess from "./screens/AppoinmentSuccess";
 import AppoinmentAdminView from "./screens/AppoinmentAdminView";
+import UserHomePage from "./screens/UserHomePage";
 
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -153,6 +154,12 @@ const App = () => {
           <Stack.Screen
             name="AppoinmentAdminView"
             component={AppoinmentAdminView}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="UserHomePage"
+            component={UserHomePage}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
