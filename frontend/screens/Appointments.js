@@ -85,11 +85,17 @@ const Appointments = () => {
   ];
 
 
+
   useEffect(() => {
     setIsLoading(true); // Set loading to true
     console.log("Hello");
+
     fetchAppointments();
   }, []);
+
+  function forceRerender() {
+    this.forceUpdate();
+  }
 
   const fetchAppointments = async () => {
     try {

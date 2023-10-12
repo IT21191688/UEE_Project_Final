@@ -172,9 +172,11 @@ const AppoinmentAdminView = () => {
 
             if (response.data.isSuccessful) {
                 Alert.alert("Appointment Approved");
+                navigation.navigate("AppoinmentAdminHome")
                 // You may want to refresh the appointment details or navigate to another screen.
             } else {
                 Alert.alert("Failed to Approve Appointment: " + response.data.message);
+                navigation.navigate("AppoinmentAdminHome")
             }
         } catch (error) {
             console.error('Error approving appointment:', error);
@@ -202,9 +204,11 @@ const AppoinmentAdminView = () => {
 
             if (response.data.isSuccessful) {
                 Alert.alert("Appointment Rejected");
+                navigation.navigate("AppoinmentAdminHome")
                 // You may want to refresh the appointment details or navigate to another screen.
             } else {
                 Alert.alert("Failed to Reject Appointment: " + response.data.message);
+                navigation.navigate("AppoinmentAdminHome")
             }
         } catch (error) {
             console.error('Error rejecting appointment:', error);

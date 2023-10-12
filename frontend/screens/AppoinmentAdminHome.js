@@ -154,6 +154,22 @@ const AppointmentAdminHome = () => {
         const filtered = appointments.filter((appointment) => appointment.status === status);
         setFilteredAppointments(filtered);
     };
+
+
+    const [searchQuery, setSearchQuery] = useState(''); // State to capture the search query
+
+    const handleSearch = (query) => {
+        setSearchQuery(query); // Update the search query state
+
+        const filtered = appointments.filter((appointment) => {
+            const appointmentTitle = appointment.title.toLowerCase();
+            return appointmentTitle.includes(query.toLowerCase());
+        });
+
+        setFilteredAppointments(filtered);
+    };
+
+
     return (
         <View style={styles.myNews}>
             {/* Rectangle */}
@@ -204,6 +220,8 @@ const AppointmentAdminHome = () => {
                         source={require("../assets/icon-search.png")}
                     />
                     <TextInput
+                        onChangeText={handleSearch} // Handle search on text input change
+                        value={searchQuery}
                         style={[styles.search1]}
                         placeholder="Search"
                         placeholderTextColor="rgba(13, 1, 64, 0.6)"
