@@ -149,7 +149,7 @@ const CreateNews = () => {
             onValueChange={(itemValue) => setCategory(itemValue)}
           >
             <Picker.Item label="Select a category" value="" />
-            <Picker.Item label="Local News" value="64eaf5224b77b2ddf24cfabc" />
+            <Picker.Item label="Local News" value="652021f9908ee6af777828aa" />
             <Picker.Item label="Events" value="Events" />
             {/* Add more categories as needed */}
           </Picker>
