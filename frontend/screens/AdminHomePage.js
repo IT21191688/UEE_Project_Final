@@ -13,11 +13,11 @@ const isSmallScreen = width < 360;
 
 
 
-const UserHomePage = () => {
+const AdminHomePage = () => {
 
     const navigation = useNavigation();
     const handleNavigate = () => {
-        navigation.navigate("CertificateList"); // Replace "OtherScreen" with the name of the screen you want to navigate to
+        navigation.navigate("AdminApprovalUrgent"); // Replace "OtherScreen" with the name of the screen you want to navigate to
       };
 
     return (
@@ -348,4 +348,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default UserHomePage;
+export default AdminHomePage;
