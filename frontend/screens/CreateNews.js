@@ -4,6 +4,7 @@ import { View, Text, TextInput, Button, Alert, Image,StyleSheet,ScrollView,Touch
 import * as DocumentPicker from 'expo-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from "@react-native-picker/picker";
+import { useNavigation } from '@react-navigation/native';
 
 const CreateNews = () => {
   const [title, setTitle] = useState('');
@@ -20,6 +21,8 @@ const CreateNews = () => {
       Alert.alert('File selection canceled');
     }
   };
+ 
+
 
   const uploadNews = async () => {
     if (!file) {
@@ -111,6 +114,15 @@ const CreateNews = () => {
     }
   };
 
+  const HomeScreen = () => {
+    const navigation = useNavigation();
+  
+    const handleAddAppointment = () => {
+      navigation.navigate('NewsView'); // Navigate to the NewsView screen
+    }
+
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
@@ -150,7 +162,7 @@ const CreateNews = () => {
           >
             <Picker.Item label="Select a category" value="" />
             <Picker.Item label="Local News" value="652021f9908ee6af777828aa" />
-            <Picker.Item label="Events" value="Events" />
+            <Picker.Item label="Events" value="65277a60cf373daf8cb153d8" />
             {/* Add more categories as needed */}
           </Picker>
         </View>
@@ -184,6 +196,13 @@ const CreateNews = () => {
         <TouchableOpacity style={styles.publishButton} onPress={handleAddAppointment}>
           <Text style={styles.publishText}>Upload News</Text>
         </TouchableOpacity>
+
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.viewNewsButton} onPress={handleAddAppointment}>
+        <Text style={styles.viewNewsButtonText}>View News</Text>
+      </TouchableOpacity>
+    </View>
+
     </View>
 
     </ScrollView>

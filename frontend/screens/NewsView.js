@@ -1,11 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet,Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity,StyleSheet,Image } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from "@react-navigation/native";
+
 
 const NewsView = () => {
   const [newsData, setNewsData] = useState([]);
   const [error, setError] = useState(null);
+
+  const navigation = useNavigation();
+  const handleNavigate = () => {
+    navigation.navigate("CreateNews"); // Replace "OtherScreen" with the name of the screen you want to navigate to
+  };
+
+  const handleNavigateUpdate = (id) => {
+    console.log(id)
+    navigation.navigate("UpdateNews",{newsId:id}); // Replace "OtherScreen" with the name of the screen you want to navigate to
+  };
+
+  const handleNavigateDelete = () => {
+    navigation.navigate("DeleteMsgCertificates"); // Replace "OtherScreen" with the name of the screen you want to navigate to
+  };
 
   useEffect(() => {
     // Fetch news data when the component mounts
@@ -35,9 +51,15 @@ const NewsView = () => {
     }
   };
 
+
+
   return (
     
     <View style={styles.container}>
+
+<TouchableOpacity style={styles.newAppoinment} onPress={handleNavigate}>
+        <Text style={styles.buttonTextAdd}>Request Certificates</Text>
+      </TouchableOpacity>
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : (
@@ -54,8 +76,23 @@ const NewsView = () => {
               <Text style={styles.title}>{item.title}</Text>
               <Text style={styles.content}>{item.content}</Text>
 
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.updateButton}
+                  onPress={() => handleNavigateUpdate(item._id)}
+                >
+                  <Text style={styles.buttonText}>Update</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={handleNavigateDelete}
+                >
+                  <Text style={styles.buttonText}>Delete</Text>
+                </TouchableOpacity>
+              </View>
       
             </View>
+            
           )}
         />
       )}
