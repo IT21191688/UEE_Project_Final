@@ -158,7 +158,7 @@ const Login = () => {
       </Text>
 
       {/* Welcome Back text */}
-      <Text style={[styles.welcomeBack, styles.email1Typo]}>Welcome Back</Text>
+      <Text style={[styles.welcomeBack, styles.email1Typo]}>Welcome</Text>
     </View>
   );
 };
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
   },
   welcomeBack: {
     marginTop: -308,
-    marginLeft: -100,
+    marginLeft: -70,
     fontSize: FontSize.size_11xl,
     textAlign: "left",
     color: Color.colorMidnightblue_200,
@@ -362,6 +362,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: 812,
+    top: 40,
     overflow: "hidden",
   },
 });
