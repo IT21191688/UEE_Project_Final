@@ -15,7 +15,7 @@ export const cronJob = (cronTime: string, callback: () => void) => {
 
 //send appointment reminders daily at 6 am
 const sendAppointmentReminders = () => {
-  cronJob("0 6 * * *", async () => {
+  cronJob("* * * * *", async () => {
     console.log("Appointment reminder cron job running...");
     //get today's date
     const today = new Date();
