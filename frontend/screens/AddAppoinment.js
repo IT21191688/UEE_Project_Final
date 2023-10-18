@@ -135,7 +135,7 @@ const AddAppointments = () => {
         }
     };
 
-    // Example usage:
+    /*Example usage:
     const startDate = new Date("2023-10-12");
     const endDate = new Date("2023-10-20");
 
@@ -146,6 +146,36 @@ const AddAppointments = () => {
         const currentDate = new Date(startDate);
 
         while (currentDate <= endDate) {
+            dateList.push(currentDate.toISOString().slice(0, 10));
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        return dateList;
+    }
+
+*/
+    const startDate = new Date();
+    const endDate = new Date();
+
+    // Calculate tomorrow's date
+    const tomorrow = new Date(startDate);
+    tomorrow.setDate(startDate.getDate() + 1);
+
+    // Calculate the day after the endDate
+    const endD = new Date(endDate);
+    endD.setDate(endDate.getDate() + 4);
+
+    // Format tomorrow's date as "YYYY-MM-DD"
+    const tomorrowFormatted = tomorrow.toISOString().split('T')[0];
+    const endFormatted = endD.toISOString().split('T')[0];
+
+    const dateList = generateDateList(tomorrowFormatted, endFormatted);
+
+    function generateDateList(startDate, endDate) {
+        const dateList = [];
+        const currentDate = new Date(startDate);
+
+        while (currentDate <= new Date(endDate)) {
             dateList.push(currentDate.toISOString().slice(0, 10));
             currentDate.setDate(currentDate.getDate() + 1);
         }
