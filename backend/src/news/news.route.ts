@@ -4,6 +4,7 @@ import {
   GetAllActiveNews,
   DeleteNews,
   UpdateNews,
+  GetNewsDetails
 } from "./news.controller";
 import authMiddleware from "../auth/auth.middleware";
 import commonMiddleware from "../common/common.middleware";
@@ -36,7 +37,14 @@ NewsRouter.put(
 NewsRouter.patch(
   "/updateNews/:id",
   authMiddleware.authorize([constants.USER.ROLES.ADMIN]),
-  commonMiddleware.multerUploader.single("newsImage"),
+  //commonMiddleware.multerUploader.single("newsImage"),
   UpdateNews
+);
+
+
+NewsRouter.get(
+  "/getOneNews/:newsId",
+  authMiddleware.authorize([constants.USER.ROLES.ADMIN]),
+  GetNewsDetails
 );
 export default NewsRouter;

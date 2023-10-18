@@ -111,12 +111,14 @@ const DeleteNews = async (req: Request, res: Response) => {
   }
 };
 
+
+/*
 //Update news by id for admin
 const UpdateNews = async (req: Request, res: Response) => {
   let newsId: string = req.params.id;
   let auth: any = req.auth;
   let body: any = req.body;
-  let file: any = req.file;
+ // let file: any = req.file;
 
   let news: any = await newsService.findById(newsId);
 
@@ -130,6 +132,7 @@ const UpdateNews = async (req: Request, res: Response) => {
       throw new BadRequestError("Category type is not news!");
   }
 
+  /*
   if (auth._id != news.addedBy._id.toString())
     throw new ForbiddenError("You are not allow to update this news!");
 
@@ -140,11 +143,14 @@ const UpdateNews = async (req: Request, res: Response) => {
     }
   }
 
+
   const session = await startSession(); //start mongoose session
 
   let updatedNews = null;
 
   try {
+
+    /*
     session.startTransaction(); //start transaction in session
 
     //upload image to cloudinary
@@ -165,7 +171,9 @@ const UpdateNews = async (req: Request, res: Response) => {
       }
     }
 
-    updatedNews = await newsService.save(news, session); //save news
+  
+
+    updatedNews = await newsService.save(news, null); //save news
 
     await session.commitTransaction();
   } catch (e) {
@@ -183,5 +191,85 @@ const UpdateNews = async (req: Request, res: Response) => {
     updatedNews
   );
 };
+*/
 
-export { CreateNews, GetAllActiveNews, DeleteNews, UpdateNews };
+const UpdateNews = async (req: Request, res: Response) => {
+  const newsId: any = req.params.id;
+  const auth: any = req.auth;
+  const body: any = req.body;
+
+  const news: any = await newsService.findById(newsId);
+
+  if (!news) throw new NotFoundError("Appointment not found!");
+
+  let today = new Date();
+/*
+  if (appointment.appointmentDate < today)
+    throw new BadRequestError("Appointment date is already passed!");
+
+  if (appointment.status != constants.WELLKNOWNSTATUS.PENDING)
+    throw new BadRequestError("Appointment is already approved or rejected!");
+
+
+  if (news.addedBy.toString() != auth._id)
+    throw new ForbiddenError("You are not authorized to perform this action!");
+
+  for (let key in body) {
+    if (key !== "addedBy") {
+      news[key] = body[key];
+    }
+  }
+
+  */
+
+  try {
+    await newsService.save(news, null);
+    CustomResponse(
+      res,
+      true,
+      StatusCodes.OK,
+      "Appointment updated successfully!",
+      news
+    );
+  } catch (e) {
+    throw e;
+  }
+};
+
+
+const GetNewsDetails = async (req: Request, res: Response) => {
+  try {
+    const newsId: any = req.params.newsId;
+    const auth: any = req.auth;
+
+    // Use your appointmentService to find the appointment by ID
+    const news: any = await newsService.findDetailsById(newsId);
+
+    //console.log(newsId)
+
+    if (!news) {
+      throw new NotFoundError("News not found!");
+    }
+/*
+
+    if (appointment.addedBy.toString() !== auth._id) {
+      throw new ForbiddenError("You are not authorized to view this appointment!");
+    }
+  
+*/
+    // Handle your response here, returning the appointment details
+    CustomResponse(
+      res,
+      true,
+      StatusCodes.OK,
+      "News details retrieved successfully!",
+      news
+    );
+  } catch (e) {
+    // Handle any errors that may occur during the process
+    throw e;
+  }
+};
+
+
+export { CreateNews, GetAllActiveNews, DeleteNews, UpdateNews ,GetNewsDetails};

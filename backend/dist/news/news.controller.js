@@ -12,16 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateNews = exports.DeleteNews = exports.GetAllActiveNews = exports.CreateNews = void 0;
-const mongoose_1 = require("mongoose");
+exports.GetNewsDetails = exports.UpdateNews = exports.DeleteNews = exports.GetAllActiveNews = exports.CreateNews = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const news_model_1 = __importDefault(require("./news.model"));
-const common_service_1 = __importDefault(require("../common/common.service"));
 const response_1 = __importDefault(require("../util/response"));
 const news_service_1 = __importDefault(require("./news.service"));
-const category_service_1 = __importDefault(require("../category/category.service"));
 const NotFoundError_1 = __importDefault(require("../error/error.classes/NotFoundError"));
-const BadRequestError_1 = __importDefault(require("../error/error.classes/BadRequestError"));
 const ForbiddenError_1 = __importDefault(require("../error/error.classes/ForbiddenError"));
 const constant_1 = __importDefault(require("../constant"));
 //create News for admin
@@ -106,55 +102,144 @@ const DeleteNews = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.DeleteNews = DeleteNews;
+/*
 //Update news by id for admin
+const UpdateNews = async (req: Request, res: Response) => {
+  let newsId: string = req.params.id;
+  let auth: any = req.auth;
+  let body: any = req.body;
+ // let file: any = req.file;
+
+  let news: any = await newsService.findById(newsId);
+
+  if (!news) throw new NotFoundError("News not found!");
+
+  //valudate category
+  if (body.category) {
+    const category: any = await categoryService.findById(body.category);
+
+    if (category.name == constants.CATEGORYTYPES.NEWS)
+      throw new BadRequestError("Category type is not news!");
+  }
+
+  /*
+  if (auth._id != news.addedBy._id.toString())
+    throw new ForbiddenError("You are not allow to update this news!");
+
+  //construct news update object expect image and addedBy
+  for (let key in body) {
+    if (key !== "newsImage" && key !== "addedBy") {
+      news[key] = body[key];
+    }
+  }
+
+
+  const session = await startSession(); //start mongoose session
+
+  let updatedNews = null;
+
+  try {
+
+    /*
+    session.startTransaction(); //start transaction in session
+
+    //upload image to cloudinary
+    let uploadedObj: any = null;
+    if (file) {
+      uploadedObj = await commonService.uploadImageAndGetUri(
+        file,
+        constants.CLOUDINARY.FILE_NAME + "/news"
+      );
+
+      //delete old image from cloudinary
+      if (news.newsImage.public_id) {
+        await commonService.deleteImageByUri(news.newsImage.public_id);
+      }
+
+      if (uploadedObj) {
+        news.newsImage = uploadedObj;
+      }
+    }
+
+  
+
+    updatedNews = await newsService.save(news, null); //save news
+
+    await session.commitTransaction();
+  } catch (e) {
+    session.abortTransaction();
+    throw e;
+  } finally {
+    session.endSession();
+  }
+
+  CustomResponse(
+    res,
+    true,
+    StatusCodes.OK,
+    "News updated successfully!",
+    updatedNews
+  );
+};
+*/
 const UpdateNews = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let newsId = req.params.id;
-    let auth = req.auth;
-    let body = req.body;
-    let file = req.file;
-    let news = yield news_service_1.default.findById(newsId);
+    const newsId = req.params.id;
+    const auth = req.auth;
+    const body = req.body;
+    const news = yield news_service_1.default.findById(newsId);
     if (!news)
-        throw new NotFoundError_1.default("News not found!");
-    //valudate category
-    if (body.category) {
-        const category = yield category_service_1.default.findById(body.category);
-        if (category.name == constant_1.default.CATEGORYTYPES.NEWS)
-            throw new BadRequestError_1.default("Category type is not news!");
-    }
-    if (auth._id != news.addedBy._id.toString())
-        throw new ForbiddenError_1.default("You are not allow to update this news!");
-    //construct news update object expect image and addedBy
-    for (let key in body) {
-        if (key !== "newsImage" && key !== "addedBy") {
-            news[key] = body[key];
+        throw new NotFoundError_1.default("Appointment not found!");
+    let today = new Date();
+    /*
+      if (appointment.appointmentDate < today)
+        throw new BadRequestError("Appointment date is already passed!");
+    
+      if (appointment.status != constants.WELLKNOWNSTATUS.PENDING)
+        throw new BadRequestError("Appointment is already approved or rejected!");
+    
+    
+      if (news.addedBy.toString() != auth._id)
+        throw new ForbiddenError("You are not authorized to perform this action!");
+    
+      for (let key in body) {
+        if (key !== "addedBy") {
+          news[key] = body[key];
         }
-    }
-    const session = yield (0, mongoose_1.startSession)(); //start mongoose session
-    let updatedNews = null;
+      }
+    
+      */
     try {
-        session.startTransaction(); //start transaction in session
-        //upload image to cloudinary
-        let uploadedObj = null;
-        if (file) {
-            uploadedObj = yield common_service_1.default.uploadImageAndGetUri(file, constant_1.default.CLOUDINARY.FILE_NAME + "/news");
-            //delete old image from cloudinary
-            if (news.newsImage.public_id) {
-                yield common_service_1.default.deleteImageByUri(news.newsImage.public_id);
-            }
-            if (uploadedObj) {
-                news.newsImage = uploadedObj;
-            }
-        }
-        updatedNews = yield news_service_1.default.save(news, session); //save news
-        yield session.commitTransaction();
+        yield news_service_1.default.save(news, null);
+        (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "Appointment updated successfully!", news);
     }
     catch (e) {
-        session.abortTransaction();
         throw e;
     }
-    finally {
-        session.endSession();
-    }
-    (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "News updated successfully!", updatedNews);
 });
 exports.UpdateNews = UpdateNews;
+const GetNewsDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const newsId = req.params.newsId;
+        const auth = req.auth;
+        // Use your appointmentService to find the appointment by ID
+        const news = yield news_service_1.default.findDetailsById(newsId);
+        //console.log(newsId)
+        if (!news) {
+            throw new NotFoundError_1.default("News not found!");
+        }
+        /*
+        
+            if (appointment.addedBy.toString() !== auth._id) {
+              throw new ForbiddenError("You are not authorized to view this appointment!");
+            }
+          
+        */
+        // Handle your response here, returning the appointment details
+        (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "News details retrieved successfully!", news);
+    }
+    catch (e) {
+        // Handle any errors that may occur during the process
+        throw e;
+    }
+});
+exports.GetNewsDetails = GetNewsDetails;
