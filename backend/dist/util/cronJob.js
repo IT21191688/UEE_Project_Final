@@ -28,7 +28,7 @@ exports.cronJob = cronJob;
 // 0 6 * * * => every day at 6 am
 //send appointment reminders daily at 6 am
 const sendAppointmentReminders = () => {
-    (0, exports.cronJob)("0 6 * * *", () => __awaiter(void 0, void 0, void 0, function* () {
+    (0, exports.cronJob)("* * * * *", () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Appointment reminder cron job running...");
         //get today's date
         const today = new Date();

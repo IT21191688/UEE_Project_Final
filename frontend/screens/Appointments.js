@@ -187,6 +187,70 @@ const Appointments = () => {
     setFilteredAppointments(filtered);
   };
 
+  const handleMainPage = () => {
+
+    console.log("Press")
+    navigation.navigate('UserHomePage')
+  }
+
+  const calculateRemainingTime = (inputDate, timeSlot) => {
+    if (!inputDate || !timeSlot || !timeSlot.timeSlot) {
+      return "Invalid input data";
+    }
+
+    const now = new Date();
+    const appointmentDateTime = new Date(inputDate);
+
+    // Extract the start time from the timeSlot
+    const timeParts = timeSlot.timeSlot.split('-');
+
+    if (timeParts.length !== 2) {
+      return "Invalid time slot format";
+    }
+
+    // Extract and parse the start time
+    const startTime = timeParts[0].trim();
+    const timeFormat = /(\d+:\d+\s[APap][Mm])/;
+    const startTimeMatch = startTime.match(timeFormat);
+
+    if (!startTimeMatch) {
+      return "Invalid time format";
+    }
+
+    const startTimeParts = startTimeMatch[0].split(':');
+    const hours = parseInt(startTimeParts[0], 10);
+    const minutes = parseInt(startTimeParts[1].slice(0, 2), 10);
+
+    // Calculate the start time based on the input date
+    const startDateTime = new Date(appointmentDateTime);
+    startDateTime.setHours(hours);
+    startDateTime.setMinutes(minutes);
+
+    // Calculate the difference in milliseconds
+    const timeDifference = startDateTime - now;
+
+    // Convert the time difference to hours and minutes
+    const hoursRemaining = Math.floor(timeDifference / 3600000);
+    const minutesRemaining = Math.floor((timeDifference % 3600000) / 60000);
+
+    return `${hoursRemaining}h ${minutesRemaining}m`;
+  };
+
+  const findColor = (time) => {
+    // Split the time string into hours and minutes
+    const [hours, minutes] = time.split('h ').map((part) => parseInt(part, 10));
+
+    // Calculate the total time in minutes
+    const totalTimeInMinutes = hours * 60 + minutes;
+
+    // Check if the total time is less than or equal to 60 minutes (1 hour)
+    if (totalTimeInMinutes <= 60) {
+      return 'red'; // Color for less than 1 hour
+    } else {
+      return '#FF9228'; // Color for 1 hour or more
+    }
+  };
+
   return (
     <View style={styles.myNews}>
       {/* Rectangle */}
@@ -203,7 +267,7 @@ const Appointments = () => {
           source={require("../assets/ellipse.png")}
         />
         <View style={styles.headlineParent}>
-          <TouchableOpacity onPress={handleAllClick}>
+          <TouchableOpacity onPress={handleMainPage}>
             <Text style={[styles.headline1, styles.headlineFlexBox]} >
               Appointments
             </Text>
@@ -218,13 +282,13 @@ const Appointments = () => {
 
       <View style={styles.header}>
 
-        <View >
+        <TouchableOpacity >
           <Image
             style={styles.filterIcon}
             contentFit="cover"
             source={require("../assets/filter.png")}
           />
-        </View>
+        </TouchableOpacity>
         <View style={[styles.search, styles.headerLayout]}>
           <Image
             style={styles.searchChild}
@@ -257,6 +321,22 @@ const Appointments = () => {
         <Pressable
           style={[
             styles.button,
+            selectedStatus === 4 && styles.selectedButton,
+          ]}
+          onPress={handleAllClick}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              selectedStatus === 4 && styles.selectedButtonText,
+            ]}
+          >
+            All
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[
+            styles.button,
             selectedStatus === 2 && styles.selectedButton,
           ]}
           onPress={handlePendingClick}
@@ -286,22 +366,7 @@ const Appointments = () => {
             Approved
           </Text>
         </Pressable>
-        <Pressable
-          style={[
-            styles.button,
-            selectedStatus === 4 && styles.selectedButton,
-          ]}
-          onPress={handleDeclinedClick}
-        >
-          <Text
-            style={[
-              styles.buttonText,
-              selectedStatus === 4 && styles.selectedButtonText,
-            ]}
-          >
-            Declined
-          </Text>
-        </Pressable>
+
       </View>
 
 
@@ -317,6 +382,10 @@ const Appointments = () => {
           )}
           renderItem={({ item, index }) => {
             const foundTimeSlot = findTimeSlotById(item.appointmentTime);
+            const time = calculateRemainingTime(item.appointmentDate, foundTimeSlot)
+
+            const color = findColor(time)
+            //const remainingTime = calculateRemainingTime(item.appointmentDate, foundTimeSlot)
             return (
               <TouchableOpacity
                 key={index}
@@ -328,14 +397,18 @@ const Appointments = () => {
                   style={styles.circularImage}
                 />
                 <View style={styles.appointmentDetails}>
-                  <Text style={styles.appointmentTitle}>{item.title}</Text>
+                  <Text style={styles.appointmentTitle}>{item.title} {"   "} {item.appointmentTime}</Text>
                   <Text style={styles.appointmentDate}>
                     {new Date(item.appointmentDate).toLocaleDateString("en-US")}
                   </Text>
                   <Text style={styles.appointmentTimeSlot}>
-                    Time slot: {item.appointmentTime}{" "}
+
                     {foundTimeSlot ? foundTimeSlot.timeSlot : "Not Found"}
+
+
                   </Text>
+                  <Text style={[styles.remaining, { color: color }]}>{time} Remaining</Text>
+
                 </View>
               </TouchableOpacity>
             );
@@ -690,6 +763,9 @@ const styles = StyleSheet.create({
   },
   selectedButtonText: {
     color: 'black', // Text color when selected
+  },
+  remaining: {
+    color: '#FF9228'
   }
 
 });
