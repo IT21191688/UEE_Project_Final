@@ -42,9 +42,17 @@ const findAllActiveNewsByAddedUser = async (userId: string) => {
     });
 };
 
+const findDetailsById = (id: any) => {
+  return News.findOne({
+    _id: id,
+  });
+};
+
+
 export default {
   save,
   findById,
   findAllActiveNews,
   findAllActiveNewsByAddedUser,
+  findDetailsById
 };

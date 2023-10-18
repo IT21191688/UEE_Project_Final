@@ -52,9 +52,15 @@ const findAllActiveNewsByAddedUser = (userId) => __awaiter(void 0, void 0, void 
         },
     });
 });
+const findDetailsById = (id) => {
+    return news_model_1.default.findOne({
+        _id: id,
+    });
+};
 exports.default = {
     save,
     findById,
     findAllActiveNews,
     findAllActiveNewsByAddedUser,
+    findDetailsById
 };
