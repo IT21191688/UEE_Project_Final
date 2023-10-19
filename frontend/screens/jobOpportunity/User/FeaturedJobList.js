@@ -128,7 +128,7 @@ import { useNavigation } from "@react-navigation/native";
 //   ],
 // };
 
-const HomeScreen = () => {
+const FeaturedJobList = () => {
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -214,6 +214,10 @@ const HomeScreen = () => {
     navigation.navigate("ApplyForm", { job: job });
   };
 
+  const handleSaveJob = (job) => {
+    console.log("Save job:", job);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* <Text style={styles.header}>Featured Jobs</Text> */}
@@ -272,16 +276,25 @@ const HomeScreen = () => {
       {filteredJobs.map((job) => (
         <TouchableOpacity key={job._id} onPress={() => handleJobPress(job)}>
           <View style={styles.jobCard} key={job._id}>
+            <View style={styles.jobSaveButtonContainer}>
+              <TouchableOpacity
+                style={styles.jobSaveButton}
+                onPress={() => handleSaveJob(job)}
+              >
+                <FontAwesome5 name="bookmark" size={30} color="blue" />
+              </TouchableOpacity>
+            </View>
             <View style={styles.jobInfo}>
+              {/* <Image source={{ uri: job.organization.orgImage }} /> */}
               <Text style={styles.jobTitle}>{job.title}</Text>
               <Text style={styles.organization}>
-                {job.organization.orgName}, {job.organization.orgAddress}
+                {job.organization.orgName} . {job.organization.orgAddress}
               </Text>
               {/* <Text style={styles.jobType}>{job.type.name}</Text> */}
               <Text style={styles.jobSalary}>
-                Salary: {formatSalary(job.avgAnnualSalary)}/year
+                $ {formatSalary(job.avgAnnualSalary)}/year
               </Text>
-              <Text style={styles.jobDescription}>{job.description}</Text>
+              {/* <Text style={styles.jobDescription}>{job.description}</Text> */}
             </View>
             {/* Move the "Apply" button inside the jobCard */}
             <View style={styles.applyButtonContainer}>
@@ -354,17 +367,36 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
+  jobSaveButtonContainer: {
+    position: "absolute",
+    top: 10, // Adjust the top position as needed
+    right: 10, // Adjust the right position as needed
+  },
+  jobSaveButton: {
+    // backgroundColor: "blue", // Customize the button color
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+  },
+  jobSaveButtonText: {
+    color: "white",
+    fontSize: 12, // Customize the font size
+    fontWeight: "bold",
+  },
   jobInfo: {
     flex: 1,
   },
   jobTitle: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
   },
 
   jobSalary: {
     color: "blue",
     marginTop: 4,
+    marginBottom: 8,
+    fontSize: 20,
+    fontWeight: "bold",
   },
   jobDescription: {
     marginTop: 8,
@@ -408,4 +440,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default FeaturedJobList;

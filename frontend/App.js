@@ -18,12 +18,22 @@ import CreateNews from "./screens/CreateNews";
 import Sample from "./screens/sample";
 import Appointments from "./screens/Appointments";
 import Dashboard from "./screens/Dashboard";
+import AdminJobList from "./screens/jobOpportunity/Admin/AdminJobList";
+
+/// admin jobs
+import AddJob from "./screens/jobOpportunity/Admin/AddJob";
+import UpdateJob from "./screens/jobOpportunity/Admin/UpdateJob";
 
 //jobOpportunity import
 // User
-import HomeScreen from "./screens/jobOpportunity/User/HomeScreen";
+import FeaturedJobList from "./screens/jobOpportunity/User/FeaturedJobList";
 import SingleJobScreen from "./screens/jobOpportunity/User/SingleJobScreen";
 import ApplyForm from "./screens/jobOpportunity/User/ApplyForm";
+import SuccessNotify from "./screens/jobOpportunity/User/SuccessNotify";
+import JobDashboard from "./screens/jobOpportunity/User/JobDashboard";
+import AppliedJobs from "./screens/jobOpportunity/User/AppliedJobs";
+import SavedJobs from "./screens/jobOpportunity/User/SavedJobs";
+
 //Admin
 
 //bottomTabNavigation import
@@ -38,7 +48,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import homeScreen from "./screens/jobOpportunity/User/HomeScreen";
+import homeScreen from "./screens/jobOpportunity/User/FeaturedJobList";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -66,7 +76,7 @@ const CustomTabBarButton = ({ onPress, focused }) => (
   </TouchableOpacity>
 );
 
-function TabNavigator() {
+function TabNavigator({ userNames }) {
   return (
     <Tab.Navigator
       initialRouteName="HomeScreen"
@@ -86,8 +96,8 @@ function TabNavigator() {
       }}
     >
       <Tab.Screen
-        name="Featured Jobs"
-        component={homeScreen}
+        name={userNames}
+        component={JobDashboard}
         options={{
           tabBarLabel: "",
           tabBarIcon: ({ focused, color, size }) => (
@@ -111,7 +121,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="Add"
-        component={homeScreen}
+        component={AddJob}
         // listeners={({ navigation }) => ({
         //   tabPress: (e) => {
         //     e.preventDefault(); // Prevent navigation to a screen
@@ -141,7 +151,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={AdminJobList}
         options={{
           tabBarLabel: "",
           tabBarIcon: ({ focused, color, size }) => (
@@ -189,9 +199,13 @@ const App = () => {
   });
 
   const [user, setUser] = React.useState(null);
+  const [userNames, setUserNames] = React.useState(null);
 
   useEffect(() => {
-    setUser(true);
+    setUserNames("John Doe");
+    if (!user) {
+      setUser(true);
+    }
   }, []);
 
   if (!fontsLoaded && !error) {
@@ -272,7 +286,7 @@ const App = () => {
           <Stack.Navigator>
             <Stack.Screen
               name="TabNavigator"
-              component={TabNavigator}
+              component={() => <TabNavigator userNames={userNames} />}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -288,6 +302,33 @@ const App = () => {
               options={{
                 headerTitle: "", // Set headerTitle to an empty string to hide it
               }}
+            />
+            <Stack.Screen
+              name="SuccessNotify"
+              component={SuccessNotify}
+              options={{
+                headerTitle: "", // Set headerTitle to an empty string to hide it
+              }}
+            />
+            <Stack.Screen
+              name="FeaturedJobList"
+              component={FeaturedJobList}
+              options={{ headerTitle: "Featured Job List" }}
+            />
+            <Stack.Screen
+              name="AppliedJobs"
+              component={AppliedJobs}
+              options={{ headerTitle: "Applied Jobs" }}
+            />
+            <Stack.Screen
+              name="SavedJobs"
+              component={SavedJobs}
+              options={{ headerTitle: "Saved Jobs" }}
+            />
+            <Stack.Screen
+              name="UpdateJob"
+              component={UpdateJob}
+              options={{ headerTitle: "Job Dashboard" }}
             />
           </Stack.Navigator>
         ) : null}

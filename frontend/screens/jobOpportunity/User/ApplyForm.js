@@ -12,11 +12,14 @@ import axios from "axios";
 
 const ApplyForm = ({ route }) => {
   const { job } = route.params;
+  console.log("job", job._id);
   const [selectedFile, setSelectedFile] = useState(null);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [fileName, setFileName] = useState("");
+
+  console.log("selectedFile", selectedFile);
 
   const apply = async () => {
     if (!fullName || !email || !selectedFile) {
@@ -29,21 +32,23 @@ const ApplyForm = ({ route }) => {
       const formData = new FormData();
       formData.append("fullName", fullName);
       formData.append("email", email);
-      formData.append("phoneNumber", phoneNumber);
-      formData.append("file", {
+      formData.append("mobileNumber", phoneNumber);
+      formData.append("resume", {
         name: selectedFile.assets[0].name,
         type: "application/pdf",
         uri: selectedFile.uri,
       });
 
-      const apiUrl = `https://uee123.onrender.com/api/v1/job/apply/${job.id}`;
+      const apiUrl = `https://uee123.onrender.com/api/v1/job/apply/${job._id}`;
 
       const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTIxYTUxZTVhOThkNzYxZDM4NWU2NzkiLCJlbWFpbCI6Imthc3VuZEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2OTY3MDY5MzIsImV4cCI6MTY5NzMxMTczMn0.ofeqwQDSByMlCfggIM_XNuIIqzC1UMmRmEZK-9cb1Y8"; // Replace with your actual token
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTIxYTFlZjVhOThkNzYxZDM4NWU2NmEiLCJlbWFpbCI6InRoYW51amFkQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjk3MTAzODgxLCJleHAiOjE2OTc3MDg2ODF9.otf6goKGZq80rExh0UL2KHxuciQq0BAAcob-UWeMbPI"; // Replace with your actual token
       const headers = {
         Authorization: `Bearer ${bearerToken}`,
         "Content-Type": "multipart/form-data",
       };
+
+      console.log("formData", selectedFile.uri);
 
       const response = await axios.post(apiUrl, formData, { headers });
 
