@@ -15,6 +15,8 @@ import MyNews from "./screens/MyNews";
 import AdminNews from "./screens/AdminNews";
 import CreateNews from "./screens/CreateNews";
 import Sample from "./screens/sample";
+import UpdateNews from "./screens/UpdateNews";
+import DeleteMsgCertificates from "./screens/DeleteMsgCertificates"
 
 
 import Appointments from "./screens/Appointments";
@@ -103,6 +105,14 @@ const App = () => {
             component={SplashScreenAppointments}
             options={{ headerShown: false }}
           />
+
+          
+          <Stack.Screen
+            name="DeleteMsgCertificates"
+            component={DeleteMsgCertificates}
+            options={{ headerShown: false }}
+          />
+
           <Stack.Screen
             name="SplashScreenCertificates"
             component={SplashScreenCertificates}
@@ -166,7 +176,11 @@ const App = () => {
             component={NewsView}
             options={{ headerShown: false }}
           />
-
+          <Stack.Screen
+            name="UpdateNews"
+            component={UpdateNews}
+            options={{ headerShown: false }}
+          />
 
           <Stack.Screen
             name="MyNews"

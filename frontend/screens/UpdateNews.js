@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from "@react-native-picker/picker";
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 const UpdateNews = () => {
@@ -9,42 +10,70 @@ const UpdateNews = () => {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [content, setContent] = useState('');
+  const [categories, setCategories] = useState([]); // Categories data for the dropdown
 
   const navigation = useNavigation();
   const route = useRoute();
-  
-useEffect(() => {
-  const fetchNewsData = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      if (!token) {
-        console.error('Token is missing in AsyncStorage');
-        return;
+
+  useEffect(() => {
+    const fetchNewsData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          console.error('Token is missing in AsyncStorage');
+          return;
+        }
+
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+        };
+
+        const response = await axios.get(`https://uee123.onrender.com/api/v1/news/getOneNews/${route.params.newsId}`, { headers });
+
+        if (response.status === 200) {
+          const news = response.data.data;
+          setNewsId(news._id);
+          setTitle(news.title);
+          setCategory(news.category._id); // Assuming category is an ID
+          setContent(news.content);
+        } else {
+          Alert.alert('Failed to fetch news data');
+        }
+      } catch (error) {
+        Alert.alert('Error fetching news data: ' + error.message);
       }
+    };
 
-      const headers = {
-        'Authorization': `Bearer ${token}`,
-      };
+    fetchNewsData();
 
-      // Make an API request to get the news details based on newsId
-      const response = await axios.get(`https://uee123.onrender.com/api/v1/news/${route.params.newsId}`, { headers });
+    // Fetch categories for the dropdown
+    const fetchCategories = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          console.error('Token is missing in AsyncStorage');
+          return;
+        }
 
-      if (response.status === 200) {
-        const news = response.data.data;
-        setTitle(news.title);
-        setCategory(news.category.name);
-        setContent(news.content);
-      } else {
-        Alert.alert('Failed to fetch news data');
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+        };
+
+        const response = await axios.get('https://uee123.onrender.com/api/v1/category/getAllCategories/?type=news', { headers });
+
+        if (response.status === 200) {
+          setCategories(response.data.data);
+        } else {
+          Alert.alert('Failed to fetch categories');
+        }
+      } catch (error) {
+        Alert.alert('Error fetching categories: ' + error.message);
       }
-    } catch (error) {
-      Alert.alert('Error fetching news data: ' + error.message);
-    }
-  };
+    };
 
+    fetchCategories();
+  }, [route.params.newsId]);
 
-})
-  
   const updateNews = async () => {
     const token = await AsyncStorage.getItem('token');
 
@@ -93,11 +122,16 @@ useEffect(() => {
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Category</Text>
-          <TextInput
-            style={styles.input}
-            value={category}
-            onChangeText={(text) => setCategory(text)}
-          />
+          <Picker
+            style={styles.picker}
+            selectedValue={category}
+            onValueChange={(itemValue) => setCategory(itemValue)}
+          >
+            <Picker.Item label="Select a category" value="652021f9908ee6af777828aa" />
+            {categories.map((cat) => (
+              <Picker.Item key={cat._id} label={cat.name} value={cat._id} />
+            ))}
+          </Picker>
         </View>
 
         <View style={styles.inputContainer}>
@@ -164,6 +198,12 @@ const styles = StyleSheet.create({
   updateButtonText: {
     color: "white",
     fontWeight: "bold",
+  },
+  picker: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    padding: 8,
   },
 });
 
