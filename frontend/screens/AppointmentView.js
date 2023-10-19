@@ -153,7 +153,7 @@ const AppointmentView = () => {
 
     try {
       const response = await axios.patch( // Use PATCH method to match the server route
-        `http://uee123.onrender.com/api/v1/appointment/delete/${appointmentId}`,
+        `https://uee123.onrender.com/api/v1/appointment/delete/${appointmentId}`,
         null, // Remove the request body
         { headers }
       );
