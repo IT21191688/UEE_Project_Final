@@ -1,10 +1,15 @@
 import * as React from "react";
 import { Image } from "expo-image";
 import { StyleSheet, Text, Pressable, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
+
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
 
 const ApprovedMsg = () => {
+  const navigation = useNavigation();
+  const handleNavigate = () => {
+    navigation.navigate("AdminApprovalGeneral");
+  }
 
   return (
     <View style={styles.splashScreenCertificates}>
@@ -25,7 +30,7 @@ const ApprovedMsg = () => {
 
     <Pressable style={styles.OKbtn} >
     
-        <Text style={styles.buttonTextAdd}>OK</Text>
+        <Text style={styles.buttonTextAdd} onPress={handleNavigate}>OK</Text>
         
       </Pressable>
       

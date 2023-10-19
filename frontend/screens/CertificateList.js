@@ -18,8 +18,8 @@ import DesignSection1 from "../components/DesignSection1";
 import { Button } from "@rneui/base";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 const { width } = Dimensions.get("window");
 
 const isSmallScreen = width < 360;
@@ -28,6 +28,8 @@ const CertificateList = () => {
   const [certificates, setCertificates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState("All");
+    // Add a flag to indicate if icons should be disabled
+    const [isIconsDisabled, setIsIconsDisabled] = useState(false);
 
   const navigation = useNavigation();
   const handleNavigate = () => {
@@ -35,8 +37,8 @@ const CertificateList = () => {
   };
 
   const handleNavigateUpdate = (id) => {
-    console.log(id)
-    navigation.navigate("EditCertificate",{certificateId:id}); // Replace "OtherScreen" with the name of the screen you want to navigate to
+    console.log(id);
+    navigation.navigate("EditCertificate", { certificateId: id }); // Replace "OtherScreen" with the name of the screen you want to navigate to
   };
 
   const handleNavigateDelete = () => {
@@ -67,7 +69,13 @@ const CertificateList = () => {
       if (response.data.isSuccessful) {
         const fetchedCertificates = response.data.data;
         setCertificates(fetchedCertificates);
-        console.log(certificates.length);
+        // Check the status of the first certificate and set isIconsDisabled accordingly
+        if (fetchedCertificates.length > 0) {
+          const firstCertificate = fetchedCertificates[0];
+          if (firstCertificate.status === 3 || firstCertificate.status === 4) {
+            setIsIconsDisabled(true);
+          }
+        }
       } else {
         console.error("Failed to fetch certificates:", response.data.message);
       }
@@ -76,12 +84,41 @@ const CertificateList = () => {
     }
   };
 
+  const handleDeleteCertificate = async (id) => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        console.error("Token is missing in AsyncStorage");
+        return;
+      }
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      // Make an API DELETE request to delete a certificate
+      const response = await axios.put(
+        `https://uee123.onrender.com/api/v1/certificate/delete/${id}`,
+        { headers }
+      );
+
+      if (response.data.isSuccessful) {
+        // Certificate deleted successfully, update the certificate list
+        const updatedCertificates = certificates.filter(cert => cert._id !== id);
+        setCertificates(updatedCertificates);
+      } else {
+        console.error("Failed to delete certificate:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting certificate:", error);
+    }
+  };
+
   const handleAllClick = () => {
     setSelectedStatus("All");
     setFilteredAppointments(CertificateList); // Show all appointments
   };
 
-    const calculateTimeDifference = (createdAt) => {
+  const calculateTimeDifference = (createdAt) => {
     const currentDate = new Date();
     const createdAtDate = new Date(createdAt);
 
@@ -93,7 +130,6 @@ const CertificateList = () => {
     const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
 
     return Math.floor(daysDifference);
-
   };
 
   //https://uee-12.onrender.com
@@ -158,12 +194,11 @@ const CertificateList = () => {
         <Text style={styles.buttonTextAdd}>Request Certificates</Text>
       </TouchableOpacity>
 
-    
-      <FlatList style={styles.main}
+      <FlatList
+        style={styles.main}
         data={certificates} // Assuming certificates is an array of certificate objects
         renderItem={({ item }) => (
           <View style={styles.componentContainer}>
-            
             <View style={styles.contentColumn}>
               <Image
                 source={require("../assets/Icon_licence.png")}
@@ -172,12 +207,35 @@ const CertificateList = () => {
               <View style={styles.textContainer}>
                 <Text style={styles.text}>{item.certificate.description}</Text>
                 <Text style={styles.dateText}>
-                Service Type:{item.serviceType.description}
+                  Service Type:{item.serviceType.description}
                 </Text>
+               
                 <Text style={styles.dateText}>
-                Requested On:{calculateTimeDifference(item.serviceType.createdAt)} seconds ago 
+                  Requested On:
+                  {calculateTimeDifference(item.serviceType.createdAt)} seconds
+                  ago
                 </Text>
               </View>
+              <Text
+                  style={[
+                    styles.dateTextStatus,
+                    {
+                      color:
+                        item.status === 3
+                          ? "green" // Approved (you can change the color)
+                          : item.status === 4
+                          ? "red" // Rejected (you can change the color)
+                          : "blue", // Pending (you can change the color)
+                    },
+                  ]}
+                >
+                  
+                  {item.status === 3
+                    ? "Approved"
+                    : item.status === 4
+                    ? "Rejected"
+                    : "Pending"}
+                </Text>
 
               <View style={styles.iconsContainer}>
                 {/* Edit Icon */}
@@ -187,11 +245,12 @@ const CertificateList = () => {
                     size={25}
                     color="black"
                     style={styles.icon}
-                   
                     onPress={() => handleNavigateUpdate(item._id)}
-                    
+                    // Disable the pencil icon if the status is "Approved" or "Rejected"
+                    disabled={item.status === 3 || item.status === 4}
                   />
                 </View>
+                {/* Delete Icon */}
                 {/* Delete Icon */}
                 <View style={styles.iconColumn}>
                   <FontAwesomeIcon
@@ -199,7 +258,9 @@ const CertificateList = () => {
                     size={25}
                     color="black"
                     style={styles.icon}
-                    onPress={handleNavigateDelete}
+                    onPress={() => handleDeleteCertificate(item._id)}
+                    // Disable the trash icon if the status is "Approved" or "Rejected"
+                    disabled={item.status === 3 || item.status === 4}
                   />
                 </View>
               </View>
@@ -401,7 +462,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between", // Use justifyContent to space elements horizontally
     left: 20,
     marginVertical: 8,
-    marginTop:150,
+    marginTop: 150,
     // Add margin for spacing
   },
 
@@ -468,6 +529,7 @@ const styles = StyleSheet.create({
     height: 100,
     top: 10,
     left: 15,
+    marginBottom:30,
     flexShrink: 0,
     backgroundColor: "#FFFFFF", //#fff
     shadowColor: "rgba(153, 171, 198, 0.18)",
@@ -479,7 +541,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     elevation: 8, // For Android shadow
     borderRadius: 8,
-    
   },
   circularImage: {
     width: 52,
@@ -516,6 +577,10 @@ const styles = StyleSheet.create({
     top: -20,
     letterSpacing: -0.12,
   },
+  dateTextStatus: {
+    left:60,
+    
+  },
   timeSlotText: {
     color: "#95969D", // Change to your desired text color
     textAlign: "right",
@@ -541,11 +606,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     left: -100,
     top: 35,
-    
   },
   iconsContainer: {
     flexDirection: "row",
-    left: 45,
+    left: -2,
     top: -50,
   },
   iconColumn: {
