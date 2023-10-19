@@ -530,7 +530,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fc3a3a'
     },
     buttonText: {
-        color: '', // Text color for both buttons
+        color: 'white', // Text color for both buttons
         fontWeight: 'bold',
     },
 });
