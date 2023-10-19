@@ -5,6 +5,10 @@ import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
 
 const RejectMsg = () => {
+  const navigation = useNavigation();
+  const handleNavigate = () => {
+    navigation.navigate("AdminApprovalGeneral");
+  }
 
   return (
     <View style={styles.splashScreenCertificates}>
@@ -24,7 +28,7 @@ const RejectMsg = () => {
       <Text style={styles.verifyText}>Reject Successfully</Text>
 
     <Pressable style={styles.OKbtn} >
-        <Text style={styles.buttonTextAdd}>OK</Text>
+        <Text style={styles.buttonTextAdd} onPress={handleNavigate}>OK</Text>
       </Pressable>
       
     </View>

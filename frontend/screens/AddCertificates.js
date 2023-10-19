@@ -223,6 +223,8 @@ const AddCertificates = () => {
           onChangeText={(text) => setPhoneNumber(text)} // Update state on change
         />
 
+
+<Text style={styles.sectionTitle}>Certficate Type</Text>
         <Picker
           style={styles.picker}
           selectedValue={cetificate} // Use cetificate as the selected value
@@ -233,6 +235,7 @@ const AddCertificates = () => {
           ))}
         </Picker>
 
+        <Text style={styles.sectionTitle}>Service Type</Text>
         <Picker
           style={styles.picker}
           selectedValue={service} // Use service as the selected value
