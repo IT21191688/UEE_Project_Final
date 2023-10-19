@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ScrollView, StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Pressable, FlatList } from "react-native";
+import { ScrollView, StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Pressable, FlatList, ActivityIndicator } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
 import { useState, useEffect } from "react";
@@ -20,6 +20,8 @@ const AppointmentAdminHome = () => {
     const [appointments, setAppointments] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState("All"); // Initialize with "All"
     const [filteredAppointments, setFilteredAppointments] = useState(appointments);
+
+    const [isLoading, setIsLoading] = useState(true);
 
 
 
@@ -82,39 +84,77 @@ const AppointmentAdminHome = () => {
         },
     ];
 
+    /*
+        useEffect(() => {
+    
+            const fetchAppointments = async () => {
+                try {
+    
+                    const token = await AsyncStorage.getItem('token');
+                    if (!token) {
+                        console.error('Token is missing in AsyncStorage');
+                        return;
+                    }
+                    const headers = {
+                        'Authorization': `Bearer ${token}`,
+                    };
+    
+                    // Make an API GET request to fetch appointments
+                    const response = await axios.get(
+                        "https://uee123.onrender.com/api/v1/appointment/getAllAppointments", { headers }
+                    );
+    
+                    if (response.data.isSuccessful) {
+                        const fetchedAppointments = response.data.data;
+                        setAppointments(fetchedAppointments);
+                        console.log(appointments.length);
+                    } else {
+                        console.error("Failed to fetch appointments:", response.data.message);
+                    }
+                } catch (error) {
+                    console.error("Error fetching appointments:", error);
+                }
+            };
+            fetchAppointments();
+        }, []);
+    
+        */
 
     useEffect(() => {
-        fetchAppointments();
+        const fetchData = async () => {
+            setIsLoading(true); // Set loading to true
+
+            try {
+                const token = await AsyncStorage.getItem('token');
+                if (!token) {
+                    console.error('Token is missing in AsyncStorage');
+                    return;
+                }
+                const headers = {
+                    'Authorization': `Bearer ${token}`,
+                };
+
+                const response = await axios.get("https://uee123.onrender.com/api/v1/appointment/getAllAppointments", { headers });
+
+                if (response.data.isSuccessful) {
+                    const fetchedAppointments = response.data.data;
+                    setAppointments(fetchedAppointments);
+                    setFilteredAppointments(fetchedAppointments);
+                } else {
+                    console.error("Failed to fetch appointments:", response.data.message);
+                }
+            } catch (error) {
+                console.error("Error fetching appointments:", error);
+            } finally {
+                setIsLoading(false); // Set loading state to false when data is fetched
+            }
+        };
+
+        fetchData();
     }, []);
 
-    const fetchAppointments = async () => {
-        try {
 
-            const token = await AsyncStorage.getItem('token');
-            if (!token) {
-                console.error('Token is missing in AsyncStorage');
-                return;
-            }
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-            };
 
-            // Make an API GET request to fetch appointments
-            const response = await axios.get(
-                "https://uee123.onrender.com/api/v1/appointment/getAllAppointments", { headers }
-            );
-
-            if (response.data.isSuccessful) {
-                const fetchedAppointments = response.data.data;
-                setAppointments(fetchedAppointments);
-                console.log(appointments.length);
-            } else {
-                console.error("Failed to fetch appointments:", response.data.message);
-            }
-        } catch (error) {
-            console.error("Error fetching appointments:", error);
-        }
-    };
 
     const handleAppointmentView = (id) => {
         console.log(id)
@@ -176,6 +216,65 @@ const AppointmentAdminHome = () => {
         });
 
         setFilteredAppointments(filtered);
+    };
+
+
+    const calculateRemainingTime = (inputDate, timeSlot) => {
+        if (!inputDate || !timeSlot || !timeSlot.timeSlot) {
+            return "Invalid input data";
+        }
+
+        const now = new Date();
+        const appointmentDateTime = new Date(inputDate);
+
+        // Extract the start time from the timeSlot
+        const timeParts = timeSlot.timeSlot.split('-');
+
+        if (timeParts.length !== 2) {
+            return "Invalid time slot format";
+        }
+
+        // Extract and parse the start time
+        const startTime = timeParts[0].trim();
+        const timeFormat = /(\d+:\d+\s[APap][Mm])/;
+        const startTimeMatch = startTime.match(timeFormat);
+
+        if (!startTimeMatch) {
+            return "Invalid time format";
+        }
+
+        const startTimeParts = startTimeMatch[0].split(':');
+        const hours = parseInt(startTimeParts[0], 10);
+        const minutes = parseInt(startTimeParts[1].slice(0, 2), 10);
+
+        // Calculate the start time based on the input date
+        const startDateTime = new Date(appointmentDateTime);
+        startDateTime.setHours(hours);
+        startDateTime.setMinutes(minutes);
+
+        // Calculate the difference in milliseconds
+        const timeDifference = startDateTime - now;
+
+        // Convert the time difference to hours and minutes
+        const hoursRemaining = Math.floor(timeDifference / 3600000);
+        const minutesRemaining = Math.floor((timeDifference % 3600000) / 60000);
+
+        return `${hoursRemaining}h ${minutesRemaining}m`;
+    };
+
+    const findColor = (time) => {
+        // Split the time string into hours and minutes
+        const [hours, minutes] = time.split('h ').map((part) => parseInt(part, 10));
+
+        // Calculate the total time in minutes
+        const totalTimeInMinutes = hours * 60 + minutes;
+
+        // Check if the total time is less than or equal to 60 minutes (1 hour)
+        if (totalTimeInMinutes <= 60) {
+            return 'red'; // Color for less than 1 hour
+        } else {
+            return '#FF9228'; // Color for 1 hour or more
+        }
     };
 
 
@@ -293,34 +392,51 @@ const AppointmentAdminHome = () => {
 
 
 
-            <ScrollView style={styles.scroller}>
-                {filteredAppointments.map((item, index) => {
-                    const foundTimeSlot = findTimeSlotById(item.appointmentTime);
-
-                    return (
-                        <TouchableOpacity
-                            key={index}
-                            style={styles.appointmentItem}
-                            onPress={() => handleAppointmentView(item._id)}
-                        >
-                            <Image
-                                source={require("../assets/ellipse.png")}
-                                style={styles.circularImage}
-                            />
-                            <View style={styles.appointmentDetails}>
-                                <Text style={styles.appointmentTitle}>{item.title}</Text>
-                                <Text style={styles.appointmentDate}>
-                                    {new Date(item.appointmentDate).toLocaleDateString("en-US")}
-                                </Text>
-                                <Text style={styles.appointmentTimeSlot}>
-                                    Time slot: {item.appointmentTime}{" "}
-                                    {foundTimeSlot ? foundTimeSlot.timeSlot : "Not Found"}
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                    );
-                })}
-            </ScrollView>
+            {/* Loading indicator or content */}
+            {isLoading ? (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color={Color.primary} />
+                    <Text style={styles.loadingText}>Loading Appointments...</Text>
+                </View>
+            ) : (
+                <FlatList
+                    style={styles.scroller}
+                    data={filteredAppointments}
+                    keyExtractor={(item) => item._id}
+                    renderItem={({ item, index }) => {
+                        const foundTimeSlot = findTimeSlotById(item.appointmentTime);
+                        const time = calculateRemainingTime(item.appointmentDate, foundTimeSlot);
+                        const color = findColor(time);
+                        return (
+                            <TouchableOpacity
+                                key={index}
+                                style={styles.appointmentItem}
+                                onPress={() => handleAppointmentView(item._id)}
+                            >
+                                <Image
+                                    source={require("../assets/ellipse.png")}
+                                    style={styles.circularImage}
+                                />
+                                <View style={styles.appointmentDetails}>
+                                    <Text style={styles.appointmentTitle}>
+                                        {item.title} {item.appointmentTime}
+                                    </Text>
+                                    <Text style={styles.appointmentDate}>
+                                        {new Date(item.appointmentDate).toLocaleDateString("en-US")}
+                                    </Text>
+                                    <Text style={styles.appointmentTimeSlot}>
+                                        {foundTimeSlot ? foundTimeSlot.timeSlot : "Not Found"}
+                                    </Text>
+                                    <Text style={[styles.remaining, { color: color }]}>
+                                        {time} Remaining
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        );
+                    }}
+                />
+            )
+            }
 
 
 
@@ -413,7 +529,6 @@ const styles = StyleSheet.create({
         letterSpacing: -0.3,
         lineHeight: 26,
         fontWeight: "700",
-        fontFamily: FontFamily.bold22,
         alignItems: "center",
     },
     headlineParent: {
@@ -451,7 +566,6 @@ const styles = StyleSheet.create({
         top: 15,
         left: 20,
         fontSize: FontSize.size_xs,
-        fontFamily: FontFamily.dMSansRegular,
         color: Color.colorDarkgray_100,
         textAlign: "left",
         position: "absolute",

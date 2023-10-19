@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ScrollView, StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Pressable, FlatList } from "react-native";
+import { ScrollView, StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Pressable, FlatList, ActivityIndicator } from "react-native";
 import { Image } from "expo-image";
 import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
 import { useState, useEffect } from "react";
@@ -86,53 +86,11 @@ const Appointments = () => {
 
 
 
-  useEffect(() => {
-    setIsLoading(true); // Set loading to true
-    console.log("Hello");
 
-    fetchAppointments();
-  }, []);
 
   function forceRerender() {
     this.forceUpdate();
   }
-
-  const fetchAppointments = async () => {
-    try {
-
-      const token = await AsyncStorage.getItem('token');
-      if (!token) {
-        console.error('Token is missing in AsyncStorage');
-        return;
-      }
-      const headers = {
-        'Authorization': `Bearer ${token}`,
-      };
-
-      // Make an API GET request to fetch appointments
-      const response = await axios.get(
-        "https://uee123.onrender.com/api/v1/appointment/getAppointments", { headers }
-      );
-
-      if (response.data.isSuccessful) {
-        const fetchedAppointments = response.data.data;
-        setAppointments(fetchedAppointments);
-
-
-        console.log(fetchedAppointments);
-        setIsLoading(false);
-      } else {
-        console.error("Failed to fetch appointments:", response.data.message);
-      }
-    } catch (error) {
-      console.error("Error fetching appointments:", error);
-    } finally {
-      // Set loading state to false when data is fetched
-      setIsLoading(false);
-      handleAllClick();
-    }
-  };
-
 
   const handleAppointmentView = (id) => {
     console.log(id)
@@ -164,7 +122,7 @@ const Appointments = () => {
   };
 
   const handleAllClick = () => {
-    //setSelectedStatus("All");
+    setSelectedStatus("All");
 
     setFilteredAppointments(appointments); // Show all appointments
   };
@@ -251,6 +209,57 @@ const Appointments = () => {
     }
   };
 
+  /*
+  useEffect(() => {
+    setIsLoading(true); // Set loading to true
+
+
+    fetchAppointments().then(() => {
+      // After data is fetched, set isLoading to false
+
+      setIsLoading(false);
+      setSelectedStatus("All");
+      //setFilteredAppointments(appointments)
+    });
+
+  }, []);
+
+  */
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true); // Set loading to true
+
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+          console.error('Token is missing in AsyncStorage');
+          return;
+        }
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+        };
+
+        const response = await axios.get("https://uee123.onrender.com/api/v1/appointment/getAppointments", { headers });
+
+        if (response.data.isSuccessful) {
+          const fetchedAppointments = response.data.data;
+          setAppointments(fetchedAppointments);
+          setFilteredAppointments(fetchedAppointments);
+        } else {
+          console.error("Failed to fetch appointments:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+      } finally {
+        setIsLoading(false); // Set loading state to false when data is fetched
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
   return (
     <View style={styles.myNews}>
       {/* Rectangle */}
@@ -268,21 +277,16 @@ const Appointments = () => {
         />
         <View style={styles.headlineParent}>
           <TouchableOpacity onPress={handleMainPage}>
-            <Text style={[styles.headline1, styles.headlineFlexBox]} >
+            <Text style={[styles.headline1, styles.headlineFlexBox]}>
               Appointments
             </Text>
           </TouchableOpacity>
-
         </View>
       </View>
 
-
-
-      {/*profile*/}
-
+      {/* Header */}
       <View style={styles.header}>
-
-        <TouchableOpacity >
+        <TouchableOpacity>
           <Image
             style={styles.filterIcon}
             contentFit="cover"
@@ -301,7 +305,7 @@ const Appointments = () => {
             source={require("../assets/icon-search.png")}
           />
           <TextInput
-            onChangeText={handleSearch} // Handle search on text input change
+            onChangeText={handleSearch}
             value={searchQuery}
             style={[styles.search1]}
             placeholder="Search"
@@ -309,14 +313,16 @@ const Appointments = () => {
           />
         </View>
       </View>
-      {/* Header */}
 
+      {/* Add new appointment button */}
       <TouchableOpacity
         style={styles.newAppointment}
         onPress={handleAddNewAppointment}
       >
         <Text style={styles.buttonTextAdd}>Add new Appointment</Text>
       </TouchableOpacity>
+
+      {/* Filter buttons */}
       <View style={styles.btnsetcontainer}>
         <Pressable
           style={[
@@ -366,26 +372,23 @@ const Appointments = () => {
             Approved
           </Text>
         </Pressable>
-
       </View>
 
-
-
-      <ScrollView style={styles.scroller} >
-
+      {/* Loading indicator or content */}
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={Color.primary} />
+          <Text style={styles.loadingText}>Loading Appointments...</Text>
+        </View>
+      ) : (
         <FlatList
-
-          data={isLoading ? [] : filteredAppointments}
+          style={styles.scroller}
+          data={filteredAppointments}
           keyExtractor={(item) => item._id}
-          ListEmptyComponent={() => (
-            <Text>No appointments available</Text>
-          )}
           renderItem={({ item, index }) => {
             const foundTimeSlot = findTimeSlotById(item.appointmentTime);
-            const time = calculateRemainingTime(item.appointmentDate, foundTimeSlot)
-
-            const color = findColor(time)
-            //const remainingTime = calculateRemainingTime(item.appointmentDate, foundTimeSlot)
+            const time = calculateRemainingTime(item.appointmentDate, foundTimeSlot);
+            const color = findColor(time);
             return (
               <TouchableOpacity
                 key={index}
@@ -397,30 +400,29 @@ const Appointments = () => {
                   style={styles.circularImage}
                 />
                 <View style={styles.appointmentDetails}>
-                  <Text style={styles.appointmentTitle}>{item.title} {"   "} {item.appointmentTime}</Text>
+                  <Text style={styles.appointmentTitle}>
+                    {item.title} {item.appointmentTime}
+                  </Text>
                   <Text style={styles.appointmentDate}>
                     {new Date(item.appointmentDate).toLocaleDateString("en-US")}
                   </Text>
                   <Text style={styles.appointmentTimeSlot}>
-
                     {foundTimeSlot ? foundTimeSlot.timeSlot : "Not Found"}
-
-
                   </Text>
-                  <Text style={[styles.remaining, { color: color }]}>{time} Remaining</Text>
-
+                  <Text style={[styles.remaining, { color: color }]}>
+                    {time} Remaining
+                  </Text>
                 </View>
               </TouchableOpacity>
             );
           }}
         />
-      </ScrollView>
-
-
+      )
+      }
     </View>
-  );
-};
 
+  )
+}
 
 const styles = StyleSheet.create({
   scrollableSectionScrollViewContent: {
