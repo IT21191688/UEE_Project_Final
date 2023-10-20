@@ -28,8 +28,10 @@ const CertificateList = () => {
   const [certificates, setCertificates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState("All");
-    // Add a flag to indicate if icons should be disabled
-    const [isIconsDisabled, setIsIconsDisabled] = useState(false);
+  // Add a flag to indicate if icons should be disabled
+  const [isIconsDisabled, setIsIconsDisabled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [filteredCertificates, setFilteredCertificates] = useState([]); // Define the filteredCertificates state
 
   const navigation = useNavigation();
   const handleNavigate = () => {
@@ -43,6 +45,17 @@ const CertificateList = () => {
 
   const handleNavigateDelete = () => {
     navigation.navigate("DeleteMsgCertificates"); // Replace "OtherScreen" with the name of the screen you want to navigate to
+  };
+
+  const handleSearch = () => {
+    // Filter certificates based on the search query
+    const filtered = certificates.filter((certificate) =>
+      certificate.certificate.description
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    );
+
+    setFilteredCertificates(filtered);
   };
 
   useEffect(() => {
@@ -103,13 +116,17 @@ const CertificateList = () => {
 
       if (response.data.isSuccessful) {
         // Certificate deleted successfully, update the certificate list
-        const updatedCertificates = certificates.filter(cert => cert._id !== id);
+        const updatedCertificates = certificates.filter(
+          (cert) => cert._id !== id
+        );
         setCertificates(updatedCertificates);
       } else {
         console.error("Failed to delete certificate:", response.data.message);
       }
     } catch (error) {
-      console.error("Error deleting certificate:", error);
+      //console.error("Error deleting certificate:", error);
+      navigation.navigate("DeleteMsgCertificates");
+
     }
   };
 
@@ -182,6 +199,9 @@ const CertificateList = () => {
             style={[styles.search1]}
             placeholder="Search"
             placeholderTextColor="rgba(13, 1, 64, 0.6)"
+            value={searchQuery}
+            onChangeText={(text) => setSearchQuery(text)}
+            onEndEditing={handleSearch} // Handle search on pressing Enter or Search
           />
         </View>
       </View>
@@ -196,7 +216,9 @@ const CertificateList = () => {
 
       <FlatList
         style={styles.main}
-        data={certificates} // Assuming certificates is an array of certificate objects
+        data={
+          filteredCertificates.length > 0 ? filteredCertificates : certificates
+        } // Show filtered certificates if there are any, otherwise show all certificates
         renderItem={({ item }) => (
           <View style={styles.componentContainer}>
             <View style={styles.contentColumn}>
@@ -206,10 +228,17 @@ const CertificateList = () => {
               />
               <View style={styles.textContainer}>
                 <Text style={styles.text}>{item.certificate.description}</Text>
-                <Text style={styles.dateText}>
-                  Service Type:{item.serviceType.description}
+                <Text
+                  style={[
+                    styles.dateText,
+                    {
+                      color: item.serviceType.isUrgent ? "#FF9228" : "#95969D",
+                    },
+                  ]}
+                >
+                  Service Type: {item.serviceType.description}
                 </Text>
-               
+
                 <Text style={styles.dateText}>
                   Requested On:
                   {calculateTimeDifference(item.serviceType.createdAt)} seconds
@@ -217,25 +246,24 @@ const CertificateList = () => {
                 </Text>
               </View>
               <Text
-                  style={[
-                    styles.dateTextStatus,
-                    {
-                      color:
-                        item.status === 3
-                          ? "green" // Approved (you can change the color)
-                          : item.status === 4
-                          ? "red" // Rejected (you can change the color)
-                          : "blue", // Pending (you can change the color)
-                    },
-                  ]}
-                >
-                  
-                  {item.status === 3
-                    ? "Approved"
-                    : item.status === 4
-                    ? "Rejected"
-                    : "Pending"}
-                </Text>
+                style={[
+                  styles.dateTextStatus,
+                  {
+                    color:
+                      item.status === 3
+                        ? "green" // Approved (you can change the color)
+                        : item.status === 4
+                        ? "#E06464" // Rejected (you can change the color)
+                        : "blue", // Pending (you can change the color)
+                  },
+                ]}
+              >
+                {item.status === 3
+                  ? "Approved"
+                  : item.status === 4
+                  ? "Rejected"
+                  : "Pending"}
+              </Text>
 
               <View style={styles.iconsContainer}>
                 {/* Edit Icon */}
@@ -529,7 +557,7 @@ const styles = StyleSheet.create({
     height: 100,
     top: 10,
     left: 15,
-    marginBottom:30,
+    marginBottom: 30,
     flexShrink: 0,
     backgroundColor: "#FFFFFF", //#fff
     shadowColor: "rgba(153, 171, 198, 0.18)",
@@ -578,8 +606,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.12,
   },
   dateTextStatus: {
-    left:60,
-    
+    left: 60,
   },
   timeSlotText: {
     color: "#95969D", // Change to your desired text color
