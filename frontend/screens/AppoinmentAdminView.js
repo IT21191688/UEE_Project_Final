@@ -331,7 +331,6 @@ const styles = StyleSheet.create({
     },
     timeSlotTypo: {
         color: Color.colorDarkgray_200,
-        fontFamily: FontFamily.medium14,
         letterSpacing: -0.1,
         fontWeight: "500",
         position: "absolute",
@@ -355,7 +354,6 @@ const styles = StyleSheet.create({
     sedUtPerspiciatis: {
         marginTop: -50,
         marginLeft: -163.5,
-        fontFamily: FontFamily.dMSansRegular,
         color: Color.colorDimgray,
         width: 329,
         textAlign: "left",
@@ -489,7 +487,6 @@ const styles = StyleSheet.create({
         top: 31,
         fontSize: FontSize.medium13_size,
         fontWeight: "700",
-        fontFamily: FontFamily.dMSansBold,
         color: Color.colorDarkgray_200,
         width: 153,
         height: 16,
@@ -533,7 +530,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fc3a3a'
     },
     buttonText: {
-        color: '', // Text color for both buttons
+        color: 'white', // Text color for both buttons
         fontWeight: 'bold',
     },
 });

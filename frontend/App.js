@@ -32,12 +32,27 @@ import AppoinmentAdminView from "./screens/AppoinmentAdminView";
 import UserHomePage from "./screens/UserHomePage";
 import AdminHomePage from "./screens/AdminHomePage";
 
+
 import AddCertificates from "./screens/AddCertificates";
 import AdminApprovalGeneral from "./screens/AdminApprovalGeneral";
 import CertificateList from "./screens/CertificateList";
+import AdminApprovalCertificates from "./screens/AdminApprovalCertificates"
+import ApprovedMsg from "./screens/ApprovedMsg";
+import RejectMsg from "./screens/RejectMsg";
+import PaymentUI from "./screens/PaymentUI";
+import EditCertificate from "./screens/EditCertificate";
+import SuccessMsgCertificates from "./screens/SuccessMsgCertificates";
+import UpdateMsgCertificates from "./screens/UpdateMsgCertificates";
+import DeleteMsgCertificates from "./screens/DeleteMsgCertificates";
+import AdminCertificateView from "./screens/AdminCertificateView";
+
+
+
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import ChatInterface from "./screens/ChatInterface";
+import ChatInterfaceAdminSide from "./screens/ChatInterfaceAdminSide";
 
 
 const App = () => {
@@ -204,6 +219,19 @@ const App = () => {
 
 
           <Stack.Screen
+            name="ChatInterface"
+            component={ChatInterface}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ChatInterfaceAdminSide"
+            component={ChatInterfaceAdminSide}
+            options={{ headerShown: false }}
+          />
+
+
+
+          <Stack.Screen
             name="AppoinmentSuccess"
             component={AppoinmentSuccess}
             options={{ headerShown: false }}
@@ -249,6 +277,54 @@ const App = () => {
             component={CertificateList}
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="AdminCertificateView"
+            component={AdminCertificateView}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="PaymentUI"
+            component={PaymentUI}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SuccessMsgCertificates"
+            component={SuccessMsgCertificates}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="AdminApprovalCertificates"
+            component={AdminApprovalCertificates}
+            options={{ headerShown: false }}
+          />
+           <Stack.Screen
+            name="DeleteMsgCertificates"
+            component={DeleteMsgCertificates}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="UpdateMsgCertificates"
+            component={UpdateMsgCertificates}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="EditCertificate"
+            component={EditCertificate}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="RejectMsg"
+            component={RejectMsg}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ApprovedMsg"
+            component={ApprovedMsg}
+            options={{ headerShown: false }}
+          />
+
+
+
 
 
         </Stack.Navigator>

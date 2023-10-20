@@ -302,17 +302,19 @@ const UpdateAppointment = async (req: Request, res: Response) => {
 };
 
 const DeleteAppointment = async (req: Request, res: Response) => {
-  const appointmentID: any = req.params.appointmentId.toString();
+  const appointmentID: any = req.params.appointmentId;
   const auth: any = req.auth;
 
   const appointment: any = await appointmentService.findById(appointmentID);
-console.log(appointmentID)
+  console.log(appointmentID)
 
   if (!appointment) throw new NotFoundError("Appointment not found!");
 
+  /*
   if (appointment.addedBy.toString() != auth._id)
     throw new ForbiddenError("You are not authorized to perform this action!");
 
+    */
   appointment.status = constants.WELLKNOWNSTATUS.DELETED;
 
   try {
