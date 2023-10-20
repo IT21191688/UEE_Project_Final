@@ -43,7 +43,7 @@ import PaymentUI from "./screens/PaymentUI";
 import EditCertificate from "./screens/EditCertificate";
 import SuccessMsgCertificates from "./screens/SuccessMsgCertificates";
 import UpdateMsgCertificates from "./screens/UpdateMsgCertificates";
-import DeleteMsgCertificates from "./screens/DeleteMsgCertificates";
+//import DeleteMsgCertificates from "./screens/DeleteMsgCertificates";
 import AdminCertificateView from "./screens/AdminCertificateView";
 
 
@@ -121,7 +121,7 @@ const App = () => {
             options={{ headerShown: false }}
           />
 
-          
+
           <Stack.Screen
             name="DeleteMsgCertificates"
             component={DeleteMsgCertificates}
@@ -295,11 +295,6 @@ const App = () => {
           <Stack.Screen
             name="AdminApprovalCertificates"
             component={AdminApprovalCertificates}
-            options={{ headerShown: false }}
-          />
-           <Stack.Screen
-            name="DeleteMsgCertificates"
-            component={DeleteMsgCertificates}
             options={{ headerShown: false }}
           />
           <Stack.Screen
