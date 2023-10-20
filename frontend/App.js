@@ -36,6 +36,8 @@ import CertificateList from "./screens/CertificateList";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
+import ChatInterface from "./screens/ChatInterface";
+import ChatInterfaceAdminSide from "./screens/ChatInterfaceAdminSide";
 
 
 const App = () => {
@@ -184,6 +186,19 @@ const App = () => {
           <Stack.Screen
             name="AppoinmentUpdateSuccess"
             component={AppoinmentUpdateSuccess}
+            options={{ headerShown: false }}
+          />
+
+
+
+          <Stack.Screen
+            name="ChatInterface"
+            component={ChatInterface}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ChatInterfaceAdminSide"
+            component={ChatInterfaceAdminSide}
             options={{ headerShown: false }}
           />
 
