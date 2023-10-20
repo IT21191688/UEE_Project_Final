@@ -201,13 +201,12 @@ const UpdateNews = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
       if (news.addedBy.toString() != auth._id)
         throw new ForbiddenError("You are not authorized to perform this action!");
     
-      for (let key in body) {
-        if (key !== "addedBy") {
-          news[key] = body[key];
-        }
-      }
-    
       */
+    for (let key in body) {
+        if (key !== "addedBy") {
+            news[key] = body[key];
+        }
+    }
     try {
         yield news_service_1.default.save(news, null);
         (0, response_1.default)(res, true, http_status_codes_1.StatusCodes.OK, "Appointment updated successfully!", news);
