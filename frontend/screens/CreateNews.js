@@ -7,6 +7,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from '@react-navigation/native';
 
 const CreateNews = () => {
+  const navigation = useNavigation();
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('64eaf5224b77b2ddf24cfabc');
   const [content, setContent] = useState('');
@@ -71,9 +72,13 @@ const CreateNews = () => {
     }
   };
 
+  const handleViewNews = () => {
+    // Use navigation.navigate to navigate to the "NewsView" screen
+    navigation.navigate('NewsView');
+  };
+
   const handleAddAppointment = async () => {
-
-
+  
 
     try {
       const token = await AsyncStorage.getItem('token');
@@ -192,16 +197,16 @@ const CreateNews = () => {
             onChangeText={(text) => setNewsImage(text)}
           />
         </View>
-      
+
         <TouchableOpacity style={styles.publishButton} onPress={handleAddAppointment}>
           <Text style={styles.publishText}>Upload News</Text>
         </TouchableOpacity>
 
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.viewNewsButton} onPress={handleAddAppointment}>
+        <TouchableOpacity style={styles.viewNewsButton} onPress={handleViewNews}>
         <Text style={styles.viewNewsButtonText}>View News</Text>
       </TouchableOpacity>
-    </View>
+
+    
 
     </View>
 
@@ -290,7 +295,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingTop: 12,
   },
+
+  viewNewsButton: {
+    backgroundColor: '#007bff',
+    borderRadius: 20,
+    padding: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  viewNewsButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
+
 
 
 

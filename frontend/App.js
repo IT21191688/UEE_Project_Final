@@ -16,7 +16,7 @@ import AdminNews from "./screens/AdminNews";
 import CreateNews from "./screens/CreateNews";
 import Sample from "./screens/sample";
 import UpdateNews from "./screens/UpdateNews";
-import DeleteMsgCertificates from "./screens/DeleteMsgCertificates"
+//import DeleteMsgCertificates from "./screens/DeleteMsgCertificates"
 
 
 import Appointments from "./screens/Appointments";
@@ -53,6 +53,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import ChatInterface from "./screens/ChatInterface";
 import ChatInterfaceAdminSide from "./screens/ChatInterfaceAdminSide";
+import NewsAdminHome from "./screens/NewsAdminHome";
 
 
 const App = () => {
@@ -122,12 +123,7 @@ const App = () => {
           />
 
           
-          <Stack.Screen
-            name="DeleteMsgCertificates"
-            component={DeleteMsgCertificates}
-            options={{ headerShown: false }}
-          />
-
+         
           <Stack.Screen
             name="SplashScreenCertificates"
             component={SplashScreenCertificates}
@@ -200,6 +196,12 @@ const App = () => {
           <Stack.Screen
             name="MyNews"
             component={MyNews}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="NewsAdminHome"
+            component={NewsAdminHome}
             options={{ headerShown: false }}
           />
 
