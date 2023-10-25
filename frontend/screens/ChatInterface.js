@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import axios from 'axios';
@@ -7,7 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const ChatInterface = () => {
     const [messages, setMessages] = useState([]);
     const [conversationId, setConversationId] = useState('653175493353b53b29c2711d');
-    const [userRole, setUserRole] = useState("user")
+    const [userRole, setUserRole] = useState("user");
+    //const giftedChatRef = useRef(null);
+
 
     const createConversation = async () => {
         try {
@@ -130,6 +132,8 @@ const ChatInterface = () => {
         setMessages((prevMessages) => GiftedChat.append(prevMessages, newMessages));
         const text = newMessages[0].text;
         sendMessage(text);
+        //giftedChatRef.scrollToBottom();
+
     };
 
     const renderBubble = (props) => (
@@ -152,9 +156,10 @@ const ChatInterface = () => {
                 messages={messages}
                 onSend={(newMessages) => onSend(newMessages)}
                 user={{
-                    _id: "6525f5773f7f885c87a6de37",
+                    _id: '6525f5773f7f885c87a6de37',
                 }}
                 renderBubble={renderBubble}
+                inverted={false} // Set this prop to 'false'
             />
         </View>
     );

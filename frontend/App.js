@@ -10,12 +10,8 @@ import SplashScreenCertificates from "./screens/SplashScreenCertificates";
 import SplashScreenJobs from "./screens/SplashScreenJobs";
 import SplashScreenNews from "./screens/SplashScreenNews";
 import Property1Unselected from "./components/Property1Unselected";
-import NewsView from "./screens/NewsView";
-import MyNews from "./screens/MyNews";
-import AdminNews from "./screens/AdminNews";
-import CreateNews from "./screens/CreateNews";
+
 import Sample from "./screens/sample";
-import UpdateNews from "./screens/UpdateNews";
 //import DeleteMsgCertificates from "./screens/DeleteMsgCertificates"
 
 
@@ -50,10 +46,17 @@ import AdminCertificateView from "./screens/AdminCertificateView";
 
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
+
+import UserNewsView from "./screens/UserNewsView";
+import NewsView from "./screens/NewsView";
+import MyNews from "./screens/MyNews";
+import UpdateNews from "./screens/UpdateNews";
+import AdminNews from "./screens/AdminNews";
+import CreateNews from "./screens/CreateNews";
 import ChatInterface from "./screens/ChatInterface";
 import ChatInterfaceAdminSide from "./screens/ChatInterfaceAdminSide";
 import NewsAdminHome from "./screens/NewsAdminHome";
+import NewsUserHome from "./screens/NewsUserHome";
 
 
 const App = () => {
@@ -187,6 +190,22 @@ const App = () => {
             component={NewsView}
             options={{ headerShown: false }}
           />
+
+          <Stack.Screen
+            name="UserNewsView"
+            component={UserNewsView}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="NewsUserHome"
+            component={NewsUserHome}
+            options={{ headerShown: false }}
+          />
+
+
+
+
           <Stack.Screen
             name="UpdateNews"
             component={UpdateNews}
