@@ -17,7 +17,7 @@ const NewsUserHome = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>News Admin Home</Text>
+      <Text style={styles.header}>News User Home</Text>
       <TouchableOpacity style={styles.button} onPress={handleChatInterface}>
         <Text style={styles.buttonText}>Chat</Text>
       </TouchableOpacity>
