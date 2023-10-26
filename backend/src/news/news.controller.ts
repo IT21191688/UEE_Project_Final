@@ -214,13 +214,15 @@ const UpdateNews = async (req: Request, res: Response) => {
   if (news.addedBy.toString() != auth._id)
     throw new ForbiddenError("You are not authorized to perform this action!");
 
+  */
+
   for (let key in body) {
     if (key !== "addedBy") {
       news[key] = body[key];
     }
   }
 
-  */
+
 
   try {
     await newsService.save(news, null);

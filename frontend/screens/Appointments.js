@@ -716,9 +716,6 @@ const styles = StyleSheet.create({
     letterSpacing: -0.12,
   },
 
-
-
-
   appointmentItem: {
     flexDirection: "row",
     alignItems: "center",
