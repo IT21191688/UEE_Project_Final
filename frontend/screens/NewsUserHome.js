@@ -15,7 +15,7 @@ const NewsUserHome = () => {
   };
 
   const handleNewsView = () => {
-    navigation.navigate('NewsView'); // Navigate to the NewsView screen
+    navigation.navigate('UserNewsView'); // Navigate to the NewsView screen
   };
 
 
@@ -23,105 +23,105 @@ const NewsUserHome = () => {
   return (
 
     <View style={styles.myNews}>
-    {/* Rectangle */}
-    <Image
-      style={[styles.myNewsChild, styles.searchPosition]}
-      contentFit="cover"
-      source={require("../assets/rectangle-5.png")}
-    />
-
-    <View style={styles.AppoinmentTextAndProfile}>
+      {/* Rectangle */}
       <Image
-        style={styles.ellipseIcon}
+        style={[styles.myNewsChild, styles.searchPosition]}
         contentFit="cover"
-        source={require("../assets/ellipse.png")}
+        source={require("../assets/rectangle-5.png")}
       />
-      <View style={styles.headlineParent}>
-        <TouchableOpacity >
-          <Text style={[styles.headline1, styles.headlineFlexBox]}>
-            News User Home
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
 
-    {/*profile*/}
-    <View style={styles.header}>
-      <View>
+      <View style={styles.AppoinmentTextAndProfile}>
         <Image
-          style={styles.filterIcon}
+          style={styles.ellipseIcon}
           contentFit="cover"
-          source={require("../assets/filter.png")}
+          source={require("../assets/ellipse.png")}
         />
+        <View style={styles.headlineParent}>
+          <TouchableOpacity >
+            <Text style={[styles.headline1, styles.headlineFlexBox]}>
+              News User Home
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={[styles.search, styles.headerLayout]}>
-        <Image
-          style={styles.searchChild}
-          contentFit="cover"
-          source={require("../assets/rectangle-3.png")}
-        />
-        <Image
-          style={styles.iconSearch}
-          contentFit="cover"
-          source={require("../assets/icon-search.png")}
-        />
-        <TextInput
-          style={[styles.search1]}
-          placeholder="Search"
-          placeholderTextColor="rgba(13, 1, 64, 0.6)"
-        />
-      </View>
-    </View>
-    {/* Header */}
 
-    <Text style={styles.verifyText}>Welcome to News & </Text>
+      {/*profile*/}
+      <View style={styles.header}>
+        <View>
+          <Image
+            style={styles.filterIcon}
+            contentFit="cover"
+            source={require("../assets/filter.png")}
+          />
+        </View>
+        <View style={[styles.search, styles.headerLayout]}>
+          <Image
+            style={styles.searchChild}
+            contentFit="cover"
+            source={require("../assets/rectangle-3.png")}
+          />
+          <Image
+            style={styles.iconSearch}
+            contentFit="cover"
+            source={require("../assets/icon-search.png")}
+          />
+          <TextInput
+            style={[styles.search1]}
+            placeholder="Search"
+            placeholderTextColor="rgba(13, 1, 64, 0.6)"
+          />
+        </View>
+      </View>
+      {/* Header */}
+
+      <Text style={styles.verifyText}>Welcome to News & </Text>
       <Text style={styles.verifyText}>Feedback Section</Text>
 
 
 
-    <View style={styles.container}>
-      
-      <TouchableOpacity style={styles.newAppoinment} onPress={handleChatInterface}>
-        <Text style={styles.buttonTextAdd}>Chat</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.newAppoinment} onPress={handleNewsView}>
-        <Text style={styles.buttonTextAdd}>News View</Text>
-      </TouchableOpacity>
+      <View style={styles.container}>
 
-    </View>
+        <TouchableOpacity style={styles.newAppoinment} onPress={handleChatInterface}>
+          <Text style={styles.buttonTextAdd}>Chat</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.newAppoinment} onPress={handleNewsView}>
+          <Text style={styles.buttonTextAdd}>News View</Text>
+        </TouchableOpacity>
+
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  
+
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
- 
+
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
   },
 
-   /*
-  button: {
-    backgroundColor: '#007bff',
-    borderRadius: 20,
-    padding: 18,
-    margin: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  */
+  /*
+ button: {
+   backgroundColor: '#007bff',
+   borderRadius: 20,
+   padding: 18,
+   margin: 10,
+   alignItems: 'center',
+   justifyContent: 'center',
+ },
+ buttonText: {
+   color: 'white',
+   fontWeight: 'bold',
+ },
+ */
 
 
   searchPosition: {
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginTop: 100,
     // Add margin for spacing
-    
+
   },
   buttonTextAdd: {
     fontSize: 16,
