@@ -1,30 +1,54 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity,StyleSheet,Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from "@react-navigation/native";
+//import { useNavigation } from '@navigation/native'; // Please adjust the import path to match your project's setup.
+import { useNavigation } from '@react-navigation/native';
 
 
 const NewsView = () => {
   const [newsData, setNewsData] = useState([]);
   const [error, setError] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
+  
   const navigation = useNavigation();
   const handleNavigate = () => {
-    navigation.navigate("CreateNews"); // Replace "OtherScreen" with the name of the screen you want to navigate to
+    navigation.navigate('CreateNews');
   };
+
+  
 
   const handleNavigateUpdate = (id) => {
-    console.log(id)
-    navigation.navigate("UpdateNews",{newsId:id}); // Replace "OtherScreen" with the name of the screen you want to navigate to
+    navigation.navigate('UpdateNews', { newsId: id });
   };
 
-  const handleNavigateDelete = () => {
-    navigation.navigate("DeleteMsgCertificates"); // Replace "OtherScreen" with the name of the screen you want to navigate to
+  const handleDeleteNews = async (newsId) => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        console.error('Token is missing in AsyncStorage');
+        return;
+      }
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const response = await axios.delete(`https://uee123.onrender.com/api/v1/news/deleteNews/${newsId}`, { headers });
+
+      if (response.status === 200) {
+        // News item deleted successfully
+        fetchData(); // Refetch the updated list
+      } else {
+        setError('Failed to delete news item');
+      }
+    } catch (error) {
+      setError('Error deleting news item: ' + error.message);
+    }
   };
 
   useEffect(() => {
-    // Fetch news data when the component mounts
     fetchData();
   }, []);
 
@@ -35,8 +59,9 @@ const NewsView = () => {
         console.error('Token is missing in AsyncStorage');
         return;
       }
+
       const headers = {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       };
 
       const response = await axios.get('https://uee123.onrender.com/api/v1/news/getAllActiveNews', { headers });
@@ -51,50 +76,75 @@ const NewsView = () => {
     }
   };
 
+  const filterNewsByCategory = (category) => {
+    setSelectedCategory(category);
+  };
 
+  // Filter the news based on the selected category
+  const filteredNews = selectedCategory
+    ? newsData.filter((item) => item.category.name === selectedCategory)
+    : newsData;
+
+    const localNewsButtonStyle = {
+      ...styles.categoryButton,
+      backgroundColor: selectedCategory === 'Local News' ? 'green' : '#007bff',
+    };
+
+    const eventsButtonStyle = {
+      ...styles.categoryButton,
+      backgroundColor: selectedCategory === 'Events' ? 'green' : '#007bff',
+    };
 
   return (
-    
     <View style={styles.container}>
-
-<TouchableOpacity style={styles.newAppoinment} onPress={handleNavigate}>
-        <Text style={styles.buttonTextAdd}>Request Certificates</Text>
+      <TouchableOpacity style={styles.newAppointment} onPress={handleNavigate}>
+        <Text style={styles.buttonTextAdd}>View News</Text>
       </TouchableOpacity>
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
       ) : (
-        <FlatList
-          data={newsData}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => (
-            <View style={styles.newsItem}>
-              <Image
-                  source={{ uri: item.newsImage }} // Assuming the URL is stored in the 'newsImage' field
-                  style={styles.newsImage}
-              />
-              <Text style={styles.category}>{item.category.name}</Text>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.content}>{item.content}</Text>
-
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={styles.updateButton}
-                  onPress={() => handleNavigateUpdate(item._id)}
-                >
-                  <Text style={styles.buttonText}>Update</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={handleNavigateDelete}
-                >
-                  <Text style={styles.buttonText}>Delete</Text>
-                </TouchableOpacity>
+        <View>
+          <View style={styles.buttonContainer}>
+          <TouchableOpacity
+          style={localNewsButtonStyle}
+          onPress={() => filterNewsByCategory('Local News')}
+        >
+          <Text style={styles.buttonText}>Local News</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+          style={eventsButtonStyle}
+          onPress={() => filterNewsByCategory('Events')}
+        >
+          <Text style={styles.buttonText}>Events</Text>
+        </TouchableOpacity>
+          </View>
+          <FlatList
+            data={filteredNews}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item }) => (
+              <View style={styles.newsItem}>
+                <Image source={{ uri: item.newsImage }} style={styles.newsImage} />
+                <Text style={styles.category}>{item.category.name}</Text>
+                <Text style={styles.title}>{item.title}</Text>
+                <Text style={styles.content}>{item.content}</Text>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.updateButton}
+                    onPress={() => handleNavigateUpdate(item._id)}
+                  >
+                    <Text style={styles.buttonText}>Update</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleDeleteNews(item._id)}
+                  >
+                    <Text style={styles.buttonText}>Delete</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-      
-            </View>
-            
-          )}
-        />
+            )}
+          />
+        </View>
       )}
     </View>
   );
@@ -103,10 +153,10 @@ const NewsView = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 18,
   },
   newsItem: {
-    marginBottom: 16,
+    marginBottom: 50,
   },
   category: {
     fontSize: 18,
@@ -122,13 +172,53 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'red',
   },
-
   newsImage: {
-    width: 200, // Adjust the width and height as needed
+    width: 200,
     height: 200,
     resizeMode: 'cover',
   },
+  newAppointment: {
+    // Define styles for the "Request Certificates" button
+  },
+  buttonTextAdd: {
+    // Define styles for the button text
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  updateButton: {
+    backgroundColor: '#007bff',
+    borderRadius: 20,
+    padding: 12,
+    alignItems: 'center',
+    margin: 10,
 
+    
+  },
+  deleteButton: {
+
+    backgroundColor: '#007bff',
+    borderRadius: 20,
+    padding: 12,
+    alignItems: 'center',
+    margin: 10,
+ 
+  },
+  buttonText: {
+    // Define styles for the button text
+  },
+  categoryButton: {
+    backgroundColor: '#007bff',
+    borderRadius: 20,
+    padding: 12,
+    alignItems: 'center',
+    margin: 8,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
 
-export default NewsView; 
+export default NewsView;

@@ -30,7 +30,7 @@ const AdminHomePage = () => {
         //navigation.navigate('Appointments')
     };
     const handleNewsView = () => {
-        navigation.navigate('NewsView')
+        navigation.navigate('NewsAdminHome')
     };
     const handleCetificateView = () => {
         navigation.navigate('AdminApprovalGeneral')

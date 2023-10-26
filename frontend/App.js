@@ -10,13 +10,9 @@ import SplashScreenCertificates from "./screens/SplashScreenCertificates";
 import SplashScreenJobs from "./screens/SplashScreenJobs";
 import SplashScreenNews from "./screens/SplashScreenNews";
 import Property1Unselected from "./components/Property1Unselected";
-import NewsView from "./screens/NewsView";
-import MyNews from "./screens/MyNews";
-import AdminNews from "./screens/AdminNews";
-import CreateNews from "./screens/CreateNews";
+
 import Sample from "./screens/sample";
-import UpdateNews from "./screens/UpdateNews";
-import DeleteMsgCertificates from "./screens/DeleteMsgCertificates"
+//import DeleteMsgCertificates from "./screens/DeleteMsgCertificates"
 
 
 import Appointments from "./screens/Appointments";
@@ -50,9 +46,17 @@ import AdminCertificateView from "./screens/AdminCertificateView";
 
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
+
+import UserNewsView from "./screens/UserNewsView";
+import NewsView from "./screens/NewsView";
+import MyNews from "./screens/MyNews";
+import UpdateNews from "./screens/UpdateNews";
+import AdminNews from "./screens/AdminNews";
+import CreateNews from "./screens/CreateNews";
 import ChatInterface from "./screens/ChatInterface";
 import ChatInterfaceAdminSide from "./screens/ChatInterfaceAdminSide";
+import NewsAdminHome from "./screens/NewsAdminHome";
+import NewsUserHome from "./screens/NewsUserHome";
 
 
 const App = () => {
@@ -121,12 +125,16 @@ const App = () => {
             options={{ headerShown: false }}
           />
 
+          
+         
+
 
           <Stack.Screen
             name="DeleteMsgCertificates"
             component={DeleteMsgCertificates}
             options={{ headerShown: false }}
           />
+
 
           <Stack.Screen
             name="SplashScreenCertificates"
@@ -191,6 +199,22 @@ const App = () => {
             component={NewsView}
             options={{ headerShown: false }}
           />
+
+          <Stack.Screen
+            name="UserNewsView"
+            component={UserNewsView}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="NewsUserHome"
+            component={NewsUserHome}
+            options={{ headerShown: false }}
+          />
+
+
+
+
           <Stack.Screen
             name="UpdateNews"
             component={UpdateNews}
@@ -200,6 +224,12 @@ const App = () => {
           <Stack.Screen
             name="MyNews"
             component={MyNews}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="NewsAdminHome"
+            component={NewsAdminHome}
             options={{ headerShown: false }}
           />
 

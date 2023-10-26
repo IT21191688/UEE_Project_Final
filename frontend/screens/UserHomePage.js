@@ -25,7 +25,7 @@ const UserHomePage = () => {
         //navigation.navigate('Appointments')
     };
     const handleNewsView = () => {
-        //navigation.navigate('Appointments')
+        navigation.navigate('NewsUserHome')
     };
     const handleCetificateView = () => {
         navigation.navigate('CertificateList')
