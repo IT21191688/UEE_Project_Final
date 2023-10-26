@@ -12,7 +12,7 @@ import SplashScreenNews from "./screens/SplashScreenNews";
 import Property1Unselected from "./components/Property1Unselected";
 
 import Sample from "./screens/sample";
-//import DeleteMsgCertificates from "./screens/DeleteMsgCertificates"
+import DeleteMsgCertificates from "./screens/DeleteMsgCertificates"
 
 
 import Appointments from "./screens/Appointments";
@@ -125,8 +125,8 @@ const App = () => {
             options={{ headerShown: false }}
           />
 
-          
-         
+
+
 
 
           <Stack.Screen
