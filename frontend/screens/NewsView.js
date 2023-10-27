@@ -78,6 +78,8 @@ const NewsView = () => {
 
       const response = await axios.get('https://uee123.onrender.com/api/v1/news/getAllActiveNews', { headers });
 
+            
+
       if (response.status === 200) {
         setNewsData(response.data.data);
       } else {
@@ -93,13 +95,18 @@ const NewsView = () => {
   };
 
   const filteredNews = selectedCategory
+    ? newsData.filter((item) => item.category.name === selectedCategory)
+    : newsData;
+
+/*
+  const filteredNews = selectedCategory
     ? newsData.filter(
         (item) =>
           item.category.name === selectedCategory &&
           item.status === 1
       )
     : newsData.filter((item) => item.status === 1);
-
+*/
 
 
 
@@ -268,8 +275,6 @@ const styles = StyleSheet.create({
   newsImage: {
     width: '100%',
     height: 200,
-
-
     resizeMode: 'cover',
   },
   buttonContainer: {

@@ -206,6 +206,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   buttonContainer: {
+    width:400,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -299,7 +300,7 @@ const styles = StyleSheet.create({
     top: -110, // Updated top for responsiveness
     // Updated left for responsiveness
     width: 300,
-    left: 170, // Updated width for responsiveness
+    left: 190, // Updated width for responsiveness
     height: 300, // Updated height for responsiveness
     position: "absolute",
   },
@@ -312,8 +313,8 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   iconSearch: {
-    top: 20,
-    left: -5,
+    top: 19,
+    left: -3,
     width: 24,
     height: 24,
     position: "absolute",
@@ -422,6 +423,16 @@ const styles = StyleSheet.create({
   image: {
     left: 110,
     top: -35,
+  },
+
+  searchInput: {
+    top: 15,
+    left: 20,
+    fontSize: FontSize.size_xs,
+    fontFamily: FontFamily.dMSansRegular,
+    color: Color.colorDarkgray_100,
+    textAlign: "left",
+    position: "absolute",
   },
 
 });

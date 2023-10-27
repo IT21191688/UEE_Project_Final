@@ -55,21 +55,9 @@ const NewsUserHome = () => {
           />
         </View>
         <View style={[styles.search, styles.headerLayout]}>
-          <Image
-            style={styles.searchChild}
-            contentFit="cover"
-            source={require("../assets/rectangle-3.png")}
-          />
-          <Image
-            style={styles.iconSearch}
-            contentFit="cover"
-            source={require("../assets/icon-search.png")}
-          />
-          <TextInput
-            style={[styles.search1]}
-            placeholder="Search"
-            placeholderTextColor="rgba(13, 1, 64, 0.6)"
-          />
+         
+          
+          
         </View>
       </View>
       {/* Header */}
@@ -175,10 +163,10 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   filterIcon: {
-    top: -110, // Updated top for responsiveness
+    top: -150, // Updated top for responsiveness
     // Updated left for responsiveness
     width: 300,
-    left: 170, // Updated width for responsiveness
+    left: 120, // Updated width for responsiveness
     height: 300, // Updated height for responsiveness
     position: "absolute",
   },

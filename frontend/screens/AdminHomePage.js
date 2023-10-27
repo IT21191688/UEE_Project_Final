@@ -55,7 +55,7 @@ const AdminHomePage = () => {
                 <View style={styles.headlineParent}>
                     <TouchableOpacity>
                         <Text style={[styles.headline1, styles.headlineFlexBox]} >
-                            Appointments
+                            Admin Home Page
                         </Text>
                     </TouchableOpacity>
 
