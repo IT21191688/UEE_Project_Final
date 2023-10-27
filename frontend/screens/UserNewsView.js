@@ -179,6 +179,7 @@ const UserNewsView = () => {
 const styles = StyleSheet.create({
   container: {
     marginTop: 120,
+    marginBottom:100,
     //justifyContent: 'center',
     alignItems: 'center',
     width: '100%'
