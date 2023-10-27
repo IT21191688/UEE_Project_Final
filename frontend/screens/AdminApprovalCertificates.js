@@ -225,7 +225,7 @@ const AdminApprovalCertificates = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.rejectButton]}
-            onPress={() => handleApprove()}
+            onPress={() => handleReject()}
           >
             <Text>Reject</Text>
           </TouchableOpacity>

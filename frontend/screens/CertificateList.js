@@ -13,7 +13,7 @@ import {
 import { Image } from "expo-image";
 import Philippines from "../components/NewsCard";
 import Property1Unselected from "../components/Property1Unselected";
-import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
+import { Color,FontSize, Border, Padding } from "../GlobalStyles";
 import DesignSection1 from "../components/DesignSection1";
 import { Button } from "@rneui/base";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
@@ -132,7 +132,7 @@ const CertificateList = () => {
 
   const handleAllClick = () => {
     setSelectedStatus("All");
-    setFilteredAppointments(CertificateList); // Show all appointments
+    setFilteredAppointments(CertificateList); // Show all certificates
   };
 
   const calculateTimeDifference = (createdAt) => {
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   type8Typo: {
-    fontFamily: FontFamily.medium14,
+   
     fontWeight: "500",
     lineHeight: 21,
     letterSpacing: -0.1,
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
   },
   headline: {
     alignItems: "center",
-    fontFamily: FontFamily.medium14,
+    
     fontWeight: "500",
     lineHeight: 21,
     letterSpacing: -0.1,
@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
     lineHeight: 26,
     fontWeight: "700",
-    fontFamily: FontFamily.bold22,
+    
     alignItems: "center",
   },
   headlineParent: {
@@ -423,7 +423,7 @@ const styles = StyleSheet.create({
     top: 15,
     left: 20,
     fontSize: FontSize.size_xs,
-    fontFamily: FontFamily.dMSansRegular,
+   
     color: Color.colorDarkgray_100,
     textAlign: "left",
     position: "absolute",
@@ -611,7 +611,7 @@ const styles = StyleSheet.create({
   timeSlotText: {
     color: "#95969D", // Change to your desired text color
     textAlign: "right",
-    fontFamily: "Poppins",
+    
     fontSize: 12,
     left: -100,
     padding: 10,

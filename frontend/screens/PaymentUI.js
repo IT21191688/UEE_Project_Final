@@ -57,14 +57,14 @@ const PaymentUI = () => {
                 <Text style={styles.sectionTitle}>Expiration Date</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Enter Email address"
+                    placeholder="2023/10/11"
                     placeholderTextColor="#AAA6B9"
                     
                 />
                 <Text style={styles.sectionTitle}>CVV</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Enter Email address"
+                    placeholder="cvv"
                     placeholderTextColor="#AAA6B9"
                     
                 />
@@ -109,8 +109,8 @@ const styles = StyleSheet.create({
         textAlign: "left",
     },
     image: {
-        width:400,
-        height:320,
+        width:350,
+        height:350,
         right:30,
     },
     form: {

@@ -1,22 +1,26 @@
 import * as React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, Text, Pressable, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Pressable,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontSize, Color, FontFamily, Border } from "../GlobalStyles";
 
 const SplashScreenCertificates = () => {
-
-
   const navigation = useNavigation();
 
   const handleSkip = () => {
     // Navigate to the next screen
-    navigation.navigate('SplashScreenJobs');
+    navigation.navigate("SplashScreenJobs");
   };
 
   const handleSkipSkip = () => {
-    navigation.navigate("Login")
-  }
+    navigation.navigate("Login");
+  };
 
   return (
     <View style={styles.splashScreenCertificates}>
@@ -34,8 +38,8 @@ const SplashScreenCertificates = () => {
         <Text style={styles.grabYour}>Easily!</Text>
       </Text>
       <Text style={[styles.exploreAllTheContainer, styles.nextTypo]}>
-        Explore all the most exciting job roles based on your interest and study
-        major.
+        You can now access your government certificates from your Div_Link on
+        your mobile devices. .
       </Text>
       <TouchableOpacity
         style={[styles.skip, styles.skipPosition]}
@@ -46,7 +50,7 @@ const SplashScreenCertificates = () => {
       <Image
         style={styles.calendarBro1Icon}
         contentFit="cover"
-        source={require("../assets/calendarbro-1.png")}
+        source={require("../assets/certificationbro-1.png")}
       />
       <TouchableOpacity
         style={[styles.save, styles.saveLayout]}
@@ -63,7 +67,7 @@ const SplashScreenCertificates = () => {
 const styles = StyleSheet.create({
   skipPosition: {
     left: 32,
-    top: "50%",
+    top: "48%",
     position: "absolute",
   },
   nextTypo: {
@@ -101,6 +105,13 @@ const styles = StyleSheet.create({
     lineHeight: 40,
     fontWeight: "700",
     textAlign: "left",
+  },
+  calendarBro1Icon: {
+    top: 120,
+    left: 37,
+    width: 260,
+    height: 260,
+    position: "absolute",
   },
   exploreAllTheContainer: {
     marginTop: 203,
