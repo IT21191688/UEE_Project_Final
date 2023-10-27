@@ -480,19 +480,8 @@ const styles = StyleSheet.create({
     left: -100,
     top: 35,
   },
-  iconsContainer: {
-    flexDirection: "row",
-    left: -2,
-    top: -50,
-  },
-  iconColumn: {
-    flexDirection: "column", // Each icon in a separate column
-    alignItems: "center", // Center icons vertically
-    marginRight: 20, // Adjust the margin between columns
-  },
-  icon: {
-    marginBottom: 10, // Adjust the margin below each icon
-  },
+ 
+
   image: {
     left: 110,
     top: -35,
