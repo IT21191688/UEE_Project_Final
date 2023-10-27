@@ -63,6 +63,8 @@ const CreateNews = () => {
 
       if (response.data.isSuccessful) {
         Alert.alert("Successfully Created");
+        navigation.navigate('NewsView', { newsId: response.data.newsId });
+
       } else {
         Alert.alert("Failed Try Again: " + response.data.message);
       }

@@ -70,7 +70,7 @@ const NewsUserHome = () => {
       <View style={styles.container}>
 
         <TouchableOpacity style={styles.newAppoinment} onPress={handleChatInterface}>
-          <Text style={styles.buttonTextAdd}>Chat</Text>
+          <Text style={styles.buttonTextAddChat}>Chat</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.newAppoinment} onPress={handleNewsView}>
           <Text style={styles.buttonTextAdd}>News View</Text>
@@ -244,7 +244,8 @@ const styles = StyleSheet.create({
   },
   newAppoinment: {
     display: "flex",
-    width: 320,
+    width: 300,
+    //height:20,
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 97,
@@ -253,8 +254,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#130160", // Use backgroundColor instead of background
     flexDirection: "row", // Use flexDirection to control the layout direction
     justifyContent: "space-between", // Use justifyContent to space elements horizontally
-    left: 20,
-    marginVertical: 8,
+    left: 10,
+    marginVertical: 18,
     marginTop: 100,
     // Add margin for spacing
 
@@ -264,6 +265,13 @@ const styles = StyleSheet.create({
     color: "white",
     alignItems: "center",
     left: "350%",
+  },
+
+  buttonTextAddChat: {
+    fontSize: 14,
+    color: "white",
+    alignItems: "center",
+    left: "550%",
   },
 
   verifyText: {

@@ -530,7 +530,7 @@ const styles = StyleSheet.create({
   iconsContainer: {
     flexDirection: "row",
     left: 300,
-    top: 230,
+    top: 200,
     position: "absolute",
 
   },
