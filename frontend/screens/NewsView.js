@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //import { useNavigation } from '@navigation/native'; // Please adjust the import path to match your project's setup.
 import { useNavigation } from '@react-navigation/native';
 import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
+import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 
 
 const NewsView = () => {
@@ -222,6 +223,8 @@ const NewsView = () => {
                   <Text style={styles.category}>{item.category.name}</Text>
                   <Text style={styles.title}>{item.title}</Text>
                   <Text style={styles.content}>{item.content}</Text>
+
+                  {/*
                   <View style={styles.buttonContainer}>
                     <TouchableOpacity
                       style={styles.updateButton}
@@ -236,6 +239,32 @@ const NewsView = () => {
                       <Text style={styles.buttonText}>Delete</Text>
                     </TouchableOpacity>
                   </View>
+              */}
+                  <View style={styles.iconsContainer}>
+                {/* Edit Icon */}
+                <View style={styles.iconColumn}>
+                  <FontAwesomeIcon
+                    name="pencil"
+                    size={25}
+                    color="black"
+                    style={styles.icon}
+                    onPress={() => handleNavigateUpdate(item._id)}
+                    // Disable the pencil icon if the status is "Approved" or "Rejected"
+                  />
+                </View>
+                {/* Delete Icon */}
+                {/* Delete Icon */}
+                <View style={styles.iconColumn}>
+                  <FontAwesomeIcon
+                    name="trash"
+                    size={25}
+                    color="black"
+                    style={styles.icon}
+                    onPress={() => handleDeleteNews(item._id)}
+                    // Disable the trash icon if the status is "Approved" or "Rejected"
+                  />
+                </View>
+              </View>
                 </View>
               )}
             />
@@ -251,9 +280,26 @@ const NewsView = () => {
 const styles = StyleSheet.create({
   container: {
     marginTop: 120,
+    marginBottom:100,
     //justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+  },
+
+  updateButton:{
+    backgroundColor: '#007bff',
+    borderRadius: 20,
+    padding: 12,
+    alignItems: 'center',
+    margin: 8,
+  },
+
+  deleteButton:{
+    backgroundColor: '#D5D8D6',
+    borderRadius: 20,
+    padding: 12,
+    alignItems: 'center',
+    margin: 8,
   },
   newsItem: {
     marginBottom: 50,
@@ -479,6 +525,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     left: -100,
     top: 35,
+  },
+
+  iconsContainer: {
+    flexDirection: "row",
+    left: 300,
+    top: 230,
+    position: "absolute",
+
+  },
+  iconColumn: {
+    flexDirection: "column", // Each icon in a separate column
+    alignItems: "center", // Center icons vertically
+    marginRight: 20, // Adjust the margin between columns
+  },
+  icon: {
+    marginBottom: 10, // Adjust the margin below each icon
   },
  
 

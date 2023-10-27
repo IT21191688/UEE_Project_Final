@@ -78,8 +78,20 @@ const CreateNews = () => {
           source={require("../assets/akariconschevronleft.png")}
           style={styles.backIcon}
         />
+
+
         <Text style={styles.title}>Publish a News</Text>
       </View>
+
+      <View style={styles.footer}>
+        <Image
+          source={require("../assets/ellipse-1.png")}
+          style={styles.footerIcon}
+        />
+        <Text style={styles.footerText}>DIV-LINK News</Text>
+    </View>
+
+      
 
       <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
@@ -141,7 +153,7 @@ const CreateNews = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#f5f5f5",
-    paddingVertical: 20,
+    paddingVertical: 40,
     paddingHorizontal: 16,
     flex: 1,
   },
@@ -154,6 +166,20 @@ const styles = StyleSheet.create({
     paddingEnd: 10,
     width: 24,
     height: 24,
+  },
+
+  footer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 16,
+  },
+  footerIcon: {
+    width: 24,
+    height: 24,
+  },
+  footerText: {
+    fontSize: 16,
+    marginLeft: 8,
   },
   title: {
     paddingTop: 38,
@@ -208,15 +234,16 @@ const styles = StyleSheet.create({
   publishButton: {
     backgroundColor: "#007bff",
     borderRadius: 20,
-    padding: 18,
+    padding: 10,
     alignItems: "center",
     justifyContent: "center",
     paddingTop: 12,
+    marginBottom:10,
   },
   viewNewsButton: {
     backgroundColor: '#007bff',
     borderRadius: 20,
-    padding: 18,
+    padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
