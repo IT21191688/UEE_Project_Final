@@ -85,7 +85,7 @@ const ApplyJobMail = (data) => {
 const NewAppointmentAlertTemplate = (data) => {
     return `
           <div>
-          <h1>Hi ${data.orgName},</h1>
+          <h1>For ${data.orgName},</h1>
           <p>You got new appointment</p>
           <p>Appointment Details:</p>
           <p>Date: ${data.appointmentDate}</p>
@@ -96,7 +96,7 @@ const NewAppointmentAlertTemplate = (data) => {
 const AppointmentApprovedTemplate = (data) => {
     return `
           <div>
-          <h1>Hi ${data.userName},</h1>
+          <h1>For ${data.userName},</h1>
           <p>Your appointment has been approved</p>
           <p>Appointment Details:</p>
           <p>Date: ${data.appointmentDate}</p>
@@ -107,7 +107,7 @@ const AppointmentApprovedTemplate = (data) => {
 const AppointmentRejectedTemplate = (data) => {
     return `
               <div>
-              <h1>Hi ${data.userName},</h1>
+              <h1>For ${data.userName},</h1>
               <p>Your appointment has been rejected</p>
               <p>Appointment Details:</p>
               <p>Date: ${data.appointmentDate}</p>
@@ -118,7 +118,7 @@ const AppointmentRejectedTemplate = (data) => {
 const AppointmentReminderTemplate = (data) => {
     return `
                 <div>
-                <h1>Hi ${data.userName},</h1>
+                <h1>For ${data.userName},</h1>
                 <p>Your appointment is due in Today</p>
                 <p>Appointment Details:</p>
                 <p>Date: ${data.appointmentDate}</p>
