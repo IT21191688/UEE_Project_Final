@@ -178,11 +178,13 @@ const UserNewsView = () => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingLeft:10,
+    
     marginTop: 120,
     marginBottom:100,
     //justifyContent: 'center',
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
   },
   newsItem: {
     marginBottom: 50,
@@ -193,9 +195,21 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+    color: '#130160',
+    paddingBottom:20,
+    paddingTop:10,
+
+    fontSize: FontSize.bold22_size,
+    letterSpacing: -0.3,
+    lineHeight: 26,
+    fontWeight: "700",
+    fontFamily: FontFamily.bold22,
+    alignItems: "center",
   },
   content: {
-    fontSize: 16,
+    fontSize: 13,
+    paddingBottom:15,
+    paddingTop:10,
   },
   errorText: {
     fontSize: 16,
@@ -341,6 +355,9 @@ const styles = StyleSheet.create({
     height: 40,
     flexDirection: "row",
     alignItems: "center",
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   myNews: {
     backgroundColor: Color.colorWhitesmoke,
@@ -384,14 +401,13 @@ const styles = StyleSheet.create({
     left: 20,
     marginVertical: 8,
     marginTop: 100,
-    // Add margin for spacing
 
   },
   buttonTextAdd: {
-    fontSize: 16,
-    color: "white",
+    flexDirection: "row",
     alignItems: "center",
-    left: "350%",
+    left: -100,
+    top: 35,
   },
 
   verifyText: {
@@ -410,8 +426,9 @@ const styles = StyleSheet.create({
   },
   iconsContainer: {
     flexDirection: "row",
-    left: -2,
-    top: -50,
+    left: 300,
+    top: 200,
+    position: "absolute",
   },
   iconColumn: {
     flexDirection: "column", // Each icon in a separate column

@@ -224,6 +224,8 @@ const NewsView = () => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingLeft:10,
+    
     marginTop: 120,
     marginBottom:100,
     //justifyContent: 'center',
@@ -255,9 +257,21 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+    color: '#130160',
+    paddingBottom:20,
+    paddingTop:10,
+
+    fontSize: FontSize.bold22_size,
+    letterSpacing: -0.3,
+    lineHeight: 26,
+    fontWeight: "700",
+    fontFamily: FontFamily.bold22,
+    alignItems: "center",
   },
   content: {
-    fontSize: 16,
+    fontSize: 13,
+    paddingBottom:15,
+    paddingTop:10,
   },
   errorText: {
     fontSize: 16,
