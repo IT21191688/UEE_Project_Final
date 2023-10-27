@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 //import { useNavigation } from '@navigation/native'; // Please adjust the import path to match your project's setup.
 import { useNavigation } from '@react-navigation/native';
 import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
@@ -28,6 +29,8 @@ const NewsView = () => {
   const handleDeleteNews = async (newsId) => {
     try {
       const token = await AsyncStorage.getItem('token');
+      console.log('Token:', token);
+
       if (!token) {
         console.error('Token is missing in AsyncStorage');
         return;
@@ -37,17 +40,24 @@ const NewsView = () => {
         Authorization: `Bearer ${token}`,
       };
 
-      const response = await axios.delete(`https://uee123.onrender.com/api/v1/news/deleteNews/${newsId}`, { headers });
+      const response = await axios.put(`https://uee123.onrender.com/api/v1/news/deleteNews/${newsId}`, { headers });
 
-      if (response.status === 200) {
+
+      if (response.status === 5) {
+        console.log('Response status:', response.status);
+
+        
         // News item deleted successfully
         fetchData(); // Refetch the updated list
       } else {
         setError('Failed to delete news item');
       }
     } catch (error) {
+      console.log('Request Error:', error);
+
       setError('Error deleting news item: ' + error.message);
     }
+
   };
 
   useEffect(() => {
@@ -68,6 +78,8 @@ const NewsView = () => {
 
       const response = await axios.get('https://uee123.onrender.com/api/v1/news/getAllActiveNews', { headers });
 
+            
+
       if (response.status === 200) {
         setNewsData(response.data.data);
       } else {
@@ -85,6 +97,17 @@ const NewsView = () => {
   const filteredNews = selectedCategory
     ? newsData.filter((item) => item.category.name === selectedCategory)
     : newsData;
+
+/*
+  const filteredNews = selectedCategory
+    ? newsData.filter(
+        (item) =>
+          item.category.name === selectedCategory &&
+          item.status === 1
+      )
+    : newsData.filter((item) => item.status === 1);
+*/
+
 
 
   const searchNews = () => {
@@ -230,7 +253,7 @@ const styles = StyleSheet.create({
     marginTop: 120,
     //justifyContent: 'center',
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
   },
   newsItem: {
     marginBottom: 50,
@@ -255,6 +278,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   buttonContainer: {
+    width: 400,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -264,6 +288,7 @@ const styles = StyleSheet.create({
     padding: 12,
     alignItems: 'center',
     margin: 8,
+  
   },
   buttonText: {
     color: 'white',
@@ -345,10 +370,10 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   filterIcon: {
-    top: -110, // Updated top for responsiveness
+    top: -100, // Updated top for responsiveness
     // Updated left for responsiveness
     width: 300,
-    left: 170, // Updated width for responsiveness
+    left: 180, // Updated width for responsiveness
     height: 300, // Updated height for responsiveness
     position: "absolute",
   },
@@ -367,7 +392,7 @@ const styles = StyleSheet.create({
     height: 24,
     position: "absolute",
   },
-  search1: {
+  searchInput: {
     top: 15,
     left: 20,
     fontSize: FontSize.size_xs,
@@ -379,7 +404,7 @@ const styles = StyleSheet.create({
   search: {
     width: "90%", // Updated width for responsiveness
     left: 40,
-    top: 28,
+    top: 38,
   },
   header: {
     top: 100, // Updated top for responsiveness
