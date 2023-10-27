@@ -1,65 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  TextInput,
+} from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-//import { useNavigation } from '@navigation/native'; // Please adjust the import path to match your project's setup.
 import { useNavigation } from '@react-navigation/native';
-import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 
+import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
 
 const NewsView = () => {
   const [newsData, setNewsData] = useState([]);
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [searchQuery, setSearchQuery] = useState(''); // State for search input
-
+  const [searchQuery, setSearchQuery] = useState('');
 
   const navigation = useNavigation();
-  const handleNavigate = () => {
-    navigation.navigate('CreateNews');
-  };
-
-
-
-  const handleNavigateUpdate = (id) => {
-    navigation.navigate('UpdateNews', { newsId: id });
-  };
-
-  const handleDeleteNews = async (newsId) => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      console.log('Token:', token);
-
-      if (!token) {
-        console.error('Token is missing in AsyncStorage');
-        return;
-      }
-
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-
-      const response = await axios.put(`https://uee123.onrender.com/api/v1/news/deleteNews/${newsId}`, { headers });
-
-
-      if (response.status === 5) {
-        console.log('Response status:', response.status);
-
-        
-        // News item deleted successfully
-        fetchData(); // Refetch the updated list
-      } else {
-        setError('Failed to delete news item');
-      }
-    } catch (error) {
-      console.log('Request Error:', error);
-
-      setError('Error deleting news item: ' + error.message);
-    }
-
-  };
 
   useEffect(() => {
     fetchData();
@@ -78,16 +40,37 @@ const NewsView = () => {
       };
 
       const response = await axios.get('https://uee123.onrender.com/api/v1/news/getAllActiveNews', { headers });
-
-            
-
-      if (response.status === 200) {
-        setNewsData(response.data.data);
-      } else {
-        setError('Failed to fetch news data');
-      }
+      const activeNews = response.data.data.filter(news => news.status === 1);
+      setNewsData(activeNews);
     } catch (error) {
       setError('Error fetching news data: ' + error.message);
+    }
+  };
+
+  const handleNavigate = () => {
+    navigation.navigate('CreateNews');
+  };
+
+  const handleNavigateUpdate = (id) => {
+    navigation.navigate('UpdateNews', { newsId: id });
+  };
+
+  const handleDeleteNews = async (newsId) => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        console.error('Token is missing in AsyncStorage');
+        return;
+      }
+
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+      };
+
+      const response = await axios.put(`https://uee123.onrender.com/api/v1/news/deleteNews/${newsId}`, {}, { headers });
+      fetchData();
+    } catch (error) {
+      setError('Error deleting news item: ' + error.message);
     }
   };
 
@@ -95,32 +78,15 @@ const NewsView = () => {
     setSelectedCategory(category);
   };
 
-  const filteredNews = selectedCategory
-    ? newsData.filter((item) => item.category.name === selectedCategory)
-    : newsData;
-
-/*
-  const filteredNews = selectedCategory
-    ? newsData.filter(
-        (item) =>
-          item.category.name === selectedCategory &&
-          item.status === 1
-      )
-    : newsData.filter((item) => item.status === 1);
-*/
-
-
-
   const searchNews = () => {
-    // Filter news based on searchQuery
-    const filteredNews = newsData.filter(
-      (item) =>
-        item.category.name === selectedCategory &&
-        (item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.content.toLowerCase().includes(searchQuery.toLowerCase()))
+    return newsData.filter(item =>
+      item.category.name === selectedCategory &&
+      (item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.content.toLowerCase().includes(searchQuery.toLowerCase()))
     );
-    return filteredNews;
   };
+
+  const filteredNews = searchQuery ? searchNews() : (selectedCategory ? newsData.filter(item => item.category.name === selectedCategory) : newsData);
 
   const localNewsButtonStyle = {
     ...styles.categoryButton,
@@ -131,7 +97,6 @@ const NewsView = () => {
     ...styles.categoryButton,
     backgroundColor: selectedCategory === 'Events' ? 'green' : '#007bff',
   };
-
 
   return (
     <View style={styles.myNews}>
@@ -157,7 +122,6 @@ const NewsView = () => {
         </View>
       </View>
 
-      {/*profile*/}
       <View style={styles.header}>
         <View>
           <Image
@@ -185,7 +149,6 @@ const NewsView = () => {
           />
         </View>
       </View>
-      {/* Header */}
 
       <Text style={styles.verifyText}>Welcome to News & </Text>
       <Text style={styles.verifyText}>Feedback Section</Text>
@@ -224,24 +187,8 @@ const NewsView = () => {
                   <Text style={styles.title}>{item.title}</Text>
                   <Text style={styles.content}>{item.content}</Text>
 
-                  {/*
-                  <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                      style={styles.updateButton}
-                      onPress={() => handleNavigateUpdate(item._id)}
-                    >
-                      <Text style={styles.buttonText}>Update</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.deleteButton}
-                      onPress={() => handleDeleteNews(item._id)}
-                    >
-                      <Text style={styles.buttonText}>Delete</Text>
-                    </TouchableOpacity>
-                  </View>
-              */}
+                  
                   <View style={styles.iconsContainer}>
-                {/* Edit Icon */}
                 <View style={styles.iconColumn}>
                   <FontAwesomeIcon
                     name="pencil"
@@ -249,11 +196,9 @@ const NewsView = () => {
                     color="black"
                     style={styles.icon}
                     onPress={() => handleNavigateUpdate(item._id)}
-                    // Disable the pencil icon if the status is "Approved" or "Rejected"
                   />
                 </View>
-                {/* Delete Icon */}
-                {/* Delete Icon */}
+            
                 <View style={styles.iconColumn}>
                   <FontAwesomeIcon
                     name="trash"
@@ -551,4 +496,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default NewsView;
+export default NewsView;
