@@ -13,13 +13,13 @@ import {
 import { Image } from "expo-image";
 import Philippines from "../components/NewsCard";
 import Property1Unselected from "../components/Property1Unselected";
-import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
+import { Color,FontSize, Border, Padding } from "../GlobalStyles";
 import DesignSection1 from "../components/DesignSection1";
 import { Button } from "@rneui/base";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 const { width } = Dimensions.get("window");
 
 const isSmallScreen = width < 360;
@@ -31,6 +31,18 @@ const AdminApprovalGeneral = () => {
   const [filteredCertificates, setFilteredCertificates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState("All");
+  const [searchText, setSearchText] = useState(""); // State to store search text
+  const [selectedButton, setSelectedButton] = useState(null);
+
+  // Function to filter certificates based on description
+  const filterCertificatesByDescription = (certificates, text) => {
+    if (!text) return certificates; // If search text is empty, return all certificates
+    return certificates.filter((certificate) =>
+      certificate.certificate.description
+        .toLowerCase()
+        .includes(text.toLowerCase())
+    );
+  };
 
   const handleNavigateUrgent = () => {
     navigation.navigate("AdminApprovalUrgent");
@@ -38,7 +50,7 @@ const AdminApprovalGeneral = () => {
 
   const handleCertificateApproval = (id) => {
     console.log(id);
-    navigation.navigate('AdminApprovalCertificates', { certificateId: id });
+    navigation.navigate("AdminApprovalCertificates", { certificateId: id });
   };
 
   useEffect(() => {
@@ -56,7 +68,7 @@ const AdminApprovalGeneral = () => {
         Authorization: `Bearer ${token}`,
       };
 
-      // Make an API GET request to fetch certificates
+      // Make an API GET request to fetch all certificates
       const response = await axios.get(
         "https://uee123.onrender.com/api/v1/certificate/getAll",
         { headers }
@@ -65,7 +77,8 @@ const AdminApprovalGeneral = () => {
       if (response.data.isSuccessful) {
         const fetchedCertificates = response.data.data;
         setCertificates(fetchedCertificates);
-        console.log(certificates.length);
+        // Initially, show all certificates
+        setFilteredCertificates(fetchedCertificates);
       } else {
         console.error("Failed to fetch certificates:", response.data.message);
       }
@@ -89,26 +102,31 @@ const AdminApprovalGeneral = () => {
   };
 
   const handleUrgentClick = () => {
-    setServiceType('65227386068658c5a5e1ae9a');
-    console.log('helooo');
-    certificatesDetails('65227386068658c5a5e1ae9a');
+    setServiceType("65227386068658c5a5e1ae9a");
+    console.log("helooo");
+    certificatesDetails("65227386068658c5a5e1ae9a");
     setSelectedStatus(7);
+    setSelectedButton("general");
   };
 
   const handleGeneralClick = () => {
-    setServiceType('652273b1068658c5a5e1ae9c');
-    certificatesDetails('652273b1068658c5a5e1ae9c');
+    setServiceType("652273b1068658c5a5e1ae9c");
+    certificatesDetails("652273b1068658c5a5e1ae9c");
     setSelectedStatus(8);
+    setSelectedButton("urgent");
   };
 
   const handleApprovedClick = () => {
     setSelectedStatus(3); // Use numeric value
     filtercertificatesDetails(3); // Use numeric value
+    setSelectedButton("approved");
+
   };
-  
 
   const certificatesDetails = (status) => {
-    const filtered = certificates.filter((certificate) => certificate.serviceType._id === status);
+    const filtered = certificates.filter(
+      (certificate) => certificate.serviceType._id === status
+    );
     setFilteredCertificates(filtered);
   };
 
@@ -160,9 +178,11 @@ const AdminApprovalGeneral = () => {
             source={require("../assets/icon-search.png")}
           />
           <TextInput
-            style={[styles.search1]}
+            style={styles.search1}
             placeholder="Search"
-            placeholderTextColor="rgba(13, 1, 64, 0.6)"
+            placeholderTextColor="rgba(13, 1, 64, 0.6"
+            value={searchText} // Set the value of the search input to the state
+            onChangeText={(text) => setSearchText(text)} // Update the state with search input text
           />
         </View>
       </View>
@@ -173,23 +193,30 @@ const AdminApprovalGeneral = () => {
       <Text style={styles.verifyText1}>Verify User Certficates</Text>
 
       <View style={styles.btnsetcontainer}>
-        <TouchableOpacity style={[styles.button,selectedStatus === 7 && styles.button1]} onPress={handleUrgentClick}>
-          <Text style={styles.buttonText}>General</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, selectedStatus === 8 && styles.button1]} onPress={handleGeneralClick}>
-          <Text style={styles.buttonText}>Urgent</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, selectedStatus === 3 && styles.button1]}
-          onPress={handleApprovedClick}
-        >
-          <Text style={styles.buttonText}>Approved</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        style={[styles.button, selectedButton === "general" && styles.button1]}
+        onPress={handleUrgentClick}
+        
+      >
+        <Text style={[styles.buttonText, selectedButton === "general" && styles.buttonText1]}>General</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, selectedButton === "urgent" && styles.button1]}
+        onPress={handleGeneralClick}
+      >
+        <Text style={[styles.buttonText, selectedButton === "urgent" && styles.buttonText1]}>Urgent</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, selectedButton === "approved" && styles.button1]}
+        onPress={handleApprovedClick}
+      >
+        <Text style={[styles.buttonText, selectedButton === "approved" && styles.buttonText1]}>Approved</Text>
+      </TouchableOpacity>
+            </View>
 
       <FlatList
         style={styles.main}
-        data={filteredCertificates}
+        data={filterCertificatesByDescription(filteredCertificates, searchText)}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handleCertificateApproval(item._id)}>
             <View style={styles.componentContainer}>
@@ -199,18 +226,25 @@ const AdminApprovalGeneral = () => {
                   style={[styles.circularImage, styles.image]}
                 />
                 <View style={styles.textContainer}>
-                  <Text style={styles.text}>{item.certificate.description}</Text>
+                  <Text style={styles.text}>
+                    {item.certificate.description}
+                  </Text>
                   <Text style={styles.dateText}>
                     Service Type: {item.serviceType.description}
                   </Text>
                   <Text style={styles.dateText}>
-                    Requested On: {calculateTimeDifference(item.serviceType.createdAt)} seconds ago
+                    Requested On:{" "}
+                    {calculateTimeDifference(item.serviceType.createdAt)}{" "}
+                    seconds ago
                   </Text>
-                  
-                  <Text style={styles.dateText1}>
-   {item.status === 3 ? "Approved" : item.status === 4 ? "Rejected" : "Pending"}
-</Text>
 
+                  <Text style={styles.dateText1}>
+                    {item.status === 3
+                      ? "Approved"
+                      : item.status === 4
+                      ? "Rejected"
+                      : "Pending"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -258,7 +292,6 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   type8Typo: {
-    fontFamily: FontFamily.medium14,
     fontWeight: "500",
     lineHeight: 21,
     letterSpacing: -0.1,
@@ -292,7 +325,6 @@ const styles = StyleSheet.create({
   },
   headline: {
     alignItems: "center",
-    fontFamily: FontFamily.medium14,
     fontWeight: "500",
     lineHeight: 21,
     letterSpacing: -0.1,
@@ -307,7 +339,6 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
     lineHeight: 26,
     fontWeight: "700",
-    fontFamily: FontFamily.bold22,
     alignItems: "center",
   },
   headlineParent: {
@@ -344,7 +375,6 @@ const styles = StyleSheet.create({
     top: 15,
     left: 20,
     fontSize: FontSize.size_xs,
-    fontFamily: FontFamily.dMSansRegular,
     color: Color.colorDarkgray_100,
     textAlign: "left",
     position: "absolute",
@@ -411,7 +441,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between", // Use justifyContent to space elements horizontally
     left: 20,
     marginVertical: 8,
-    marginTop:150,
+    marginTop: 150,
     // Add margin for spacing
   },
 
@@ -440,7 +470,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     //top: 150,
-    marginTop:140,
+    marginTop: 140,
   },
   button: {
     flex: 1,
@@ -462,7 +492,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     justifyContent: "center",
     alignItems: "center",
-    color:'#FFFFFF',
+    color: "#FFFFFF",
     marginHorizontal: 8,
   },
   buttonText: {
@@ -480,7 +510,7 @@ const styles = StyleSheet.create({
     height: 100,
     top: 40,
     left: 15,
-    marginBottom:28,
+    marginBottom: 28,
     flexShrink: 0,
     backgroundColor: "#FFFFFF", //#fff
     shadowColor: "rgba(153, 171, 198, 0.18)",
@@ -492,8 +522,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     elevation: 8, // For Android shadow
     borderRadius: 8,
-    
-    
   },
   circularImage: {
     width: 52,
@@ -511,9 +539,8 @@ const styles = StyleSheet.create({
     left: 100,
     top: -8,
   },
-  textContainer1:{
-    
-    left:50,
+  textContainer1: {
+    left: 50,
   },
   text: {
     color: "#0D0D26", // Change to your desired text color
@@ -534,22 +561,20 @@ const styles = StyleSheet.create({
     top: -20,
     letterSpacing: -0.12,
   },
-  dateText1:{
+  dateText1: {
     color: "#95969D", // Change to your desired text color
     fontSize: 12,
     fontWeight: "500",
     lineHeight: 19.2,
     top: -20,
     letterSpacing: -0.12,
-    left:200,
-    top:-90,
-    
+    left: 200,
+    top: -90,
   },
-  
+
   timeSlotText: {
     color: "#95969D", // Change to your desired text color
     textAlign: "right",
-    fontFamily: "Poppins",
     fontSize: 12,
     left: -100,
     padding: 10,
@@ -573,14 +598,12 @@ const styles = StyleSheet.create({
     marginLeft: 20, // Adjust the margin as needed
     marginTop: 10, // Adjust the margin as needed
     top: 130,
-    
   },
   contentColumn: {
     flexDirection: "row",
     alignItems: "center",
     left: -100,
     top: 35,
-    
   },
   iconsContainer: {
     flexDirection: "row",
